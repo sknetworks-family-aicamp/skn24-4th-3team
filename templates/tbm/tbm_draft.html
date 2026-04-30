@@ -1,0 +1,124 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBM 현장관리 - TBM 초안 확인</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tbm.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">←</button>
+            <span class="title">TBM 작성</span>
+        </div>
+
+        <!-- 제목 및 녹음 시간 (고정) -->
+        <div class="draft-header">
+            <h2>TBM 초안 확인</h2>
+            <div class="recording-time">
+                <span>🕐</span>
+                <span>녹음 시간 : <span id="recording-duration">07:39</span></span>
+            </div>
+        </div>
+
+        <!-- 콘텐츠 (스크롤 가능) -->
+        <div class="content">
+            <div class="draft-container">
+                <!-- AI 안내 메시지 -->
+                <div class="ai-notice">
+                    AI가 생성한 초안입니다. 내용을 확인하고 수정이 필요한 경우 편집 버튼을 클릭하세요.
+                </div>
+
+                <!-- 기본 정보 -->
+                <div class="draft-info">
+                    <div class="info-row">
+                        <div class="info-group">
+                            <label>업체명</label>
+                            <input type="text" id="company-name" value="주식회사 한도 철강" readonly>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-group">
+                            <label>날짜</label>
+                            <input type="text" id="work-date" value="2026.11.11" readonly>
+                        </div>
+                    </div>
+
+                    <!-- 날씨 정보  -->
+                    <div class="weather-mini-box" style="margin-bottom: 30px;">
+                        <label style="display: block; font-size: 16px; font-weight: 700; color: #333; margin-bottom: 12px;">날씨</label>
+                        <table class="weather-mini-table">
+                            <tr>
+                                <th>상태</th>
+                                <td>구름 조금</td>
+                            </tr>
+                            <tr>
+                                <th>기온</th>
+                                <td>23℃</td>
+                            </tr>
+                            <tr>
+                                <th>습도</th>
+                                <td>65%</td>
+                            </tr>
+                            <tr>
+                                <th>강수확률</th>
+                                <td>20%</td>
+                            </tr>
+                            <tr>
+                                <th>풍속</th>
+                                <td>2.5m/s</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                <!-- TBM 초안 -->
+                <div class="draft-content-section">
+                    <label>TBM 초안</label>
+                    <div class="draft-text-box" id="draft-content">
+(1) 작업자의 건강 이상 여부
+- 김반장 발열
+
+(2) 예상 위험 요인과 대책
+- A구역 상부 배관 연결 및 용접 작업 중 손가락 끼임 사고 위험 → 작업 시 반팔 주의 및 손가락 사고 주의
+- 고소 작업 시 안전 고리 미착인 위험 → 김 씨와 이 씨는 안전대 착용 필수
+                    </div>
+                </div>
+
+                <div class="draft-content-section">
+                    <label>참조 출처</label>
+                    <div class="draft-reference-box" id="draft-references">참조 출처가 없습니다.</div>
+                </div>
+
+                <!-- 버튼 -->
+                <div class="draft-buttons">
+                    <button class="btn btn-secondary" onclick="editDraft()">편집</button>
+                    <button class="btn btn-primary" onclick="completeDraft()">완료</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 팝업: 저장 완료 (여기에 추가!) -->
+    <div class="popup-overlay" id="popup-save-complete">
+        <div class="popup-box">
+            <h3>저장 완료</h3>
+            <p>TBM 내용이 성공적으로 저장되었습니다.</p>
+            <div class="popup-buttons">
+                <button class="btn btn-primary" onclick="confirmSaveComplete()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/common.js' %}"></script>
+    <script src="{% static 'js/tbm.js' %}"></script>
+</body>
+</html>

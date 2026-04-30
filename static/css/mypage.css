@@ -1,0 +1,51 @@
+﻿/* mypage.css - 留덉씠?섏씠吏 ?꾩슜 */
+
+/* 怨듯넻 ??硫붾돱 (TBM ?곸꽭? 怨듯넻) */
+.tab-menu { display: flex; border-bottom: 2px solid #f0f0f0; background-color: #ffffff; flex-shrink: 0; }
+.tab-btn { flex: 1; padding: 16px 20px; background: none; border: none; font-size: 16px; font-weight: 600; color: #999; cursor: pointer; position: relative; transition: all 0.2s; white-space: nowrap; min-width: 0; }
+.tab-btn:hover { color: #666; }
+.tab-btn.active { color: #2B83FF; }
+.tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background-color: #2B83FF; }
+.tab-content-wrapper { flex: 1; overflow-y: auto; padding: 30px 40px; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.mypage-content { padding: 0; overflow: hidden; }
+.mypage-container { display: flex; flex-direction: column; height: 100%; }
+.mypage-form { max-width: 800px; min-width: 600px; margin: 0 auto; width: 100%; }
+.form-group { margin-bottom: 24px; }
+.form-group label { display: block; font-size: 15px; font-weight: 600; color: #333; margin-bottom: 8px; }
+.form-group input { width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; min-height: 48px; height: 48px; }
+.form-group input:focus { outline: none; border-color: #2B83FF; background-color: #EBF3FF; }
+
+/* ?뚯썝 ?덊눜 */
+.withdrawal-notice { background-color: #FFF3F3; border: 1px solid #FFD6D6; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+.withdrawal-notice h4 { font-size: 16px; font-weight: 700; color: #FF3B3B; margin-bottom: 12px; }
+.withdrawal-notice ul { list-style: disc; padding-left: 24px; color: #666; }
+.withdrawal-notice li { margin-bottom: 8px; color: #C62828; }
+.withdrawal-instruction { font-size: 14px; text-align: center; }
+
+/* ?섎떒 踰꾪듉 ?곸뿭 */
+.mypage-buttons, .withdrawal-buttons { display: flex; justify-content: center; padding: 20px 40px; background-color: #ffffff; border-top: 1px solid #f0f0f0; flex-shrink: 0; }
+.mypage-buttons .btn { min-width: 200px; padding: 16px 32px; }
+.withdrawal-buttons .btn { min-width: 300px; padding: 16px 32px; }
+.withdrawal-buttons .btn:disabled { background: #ccc; cursor: not-allowed; opacity: 0.5; }
+
+
+
+/* ?뚯썝?덊눜 踰꾪듉 ?쒖꽦???곹깭 (?낅젰 ?꾨즺 ??鍮④컙?? */
+.withdrawal-buttons .btn-delete:not(:disabled) {
+    background: linear-gradient(135deg, #FF5757 0%, #FF3B3B 100%);
+    color: #ffffff;
+    cursor: pointer;
+    opacity: 1;
+    border: none;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(255, 59, 59, 0.3);
+}
+
+/* ?쒖꽦?붾맂 踰꾪듉??留덉슦?ㅻ? ?щ졇?????댁쭩 ?⑤뒗 ?④낵 */
+.withdrawal-buttons .btn-delete:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 59, 59, 0.4);
+}

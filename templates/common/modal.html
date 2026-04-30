@@ -1,0 +1,126 @@
+﻿{% load static %}
+<style>
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-box {
+        background: #fff;
+        border-radius: 16px;
+        padding: 36px 32px 28px;
+        width: 100%;
+        max-width: 380px;
+        text-align: center;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .modal-content {
+        font-size: 15px;
+        color: #2c3350;
+        line-height: 1.7;
+        margin-bottom: 28px;
+        white-space: pre-line;
+    }
+
+    .modal-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .modal-btn-confirm {
+        background: #4a90e2;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 11px 36px;
+        font-size: 15px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .modal-btn-confirm:hover { background: #357abd; }
+
+    .modal-btn-cancel {
+        background: #f0f0f0;
+        color: #666;
+        border: none;
+        border-radius: 10px;
+        padding: 11px 36px;
+        font-size: 15px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .modal-btn-cancel:hover { background: #e0e0e0; }
+</style>
+
+<!-- 확인만 있는 모달 -->
+<div class="modal-overlay" id="modal-alert">
+    <div class="modal-box">
+        <div class="modal-content" id="modal-alert-content"></div>
+        <div class="modal-buttons">
+            <button class="modal-btn-confirm" id="modal-alert-ok">확인</button>
+        </div>
+    </div>
+</div>
+
+<!-- 확인/취소가 있는 모달 -->
+<div class="modal-overlay" id="modal-confirm">
+    <div class="modal-box">
+        <div class="modal-content" id="modal-confirm-content"></div>
+        <div class="modal-buttons">
+            <button class="modal-btn-confirm" id="modal-confirm-ok">확인</button>
+            <button class="modal-btn-cancel" id="modal-confirm-cancel">취소</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 확인만 있는 모달
+    function openAlert(content, callback) {
+        document.getElementById('modal-alert-content').textContent = content;
+        document.getElementById('modal-alert').classList.add('active');
+
+        document.getElementById('modal-alert-ok').onclick = function () {
+            closeModal('modal-alert');
+            if (callback) callback();
+        };
+    }
+
+    // 확인/취소가 있는 모달
+    function openConfirm(content, onConfirm, confirmText, cancelText) {
+        document.getElementById('modal-confirm-content').textContent = content;
+        document.getElementById('modal-confirm-ok').textContent = confirmText || '확인';
+        document.getElementById('modal-confirm-cancel').textContent = cancelText || '취소';
+        document.getElementById('modal-confirm').classList.add('active');
+
+        document.getElementById('modal-confirm-ok').onclick = function () {
+            closeModal('modal-confirm');
+            if (onConfirm) onConfirm();
+        };
+
+        document.getElementById('modal-confirm-cancel').onclick = function () {
+            closeModal('modal-confirm');
+        };
+    }
+
+    // 모달 닫기
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+</script>

@@ -1,0 +1,88 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBM 현장관리 - 회원가입</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">←</button>
+            <span class="title">안전한 하루의 시작, HelpMet과 함께</span>
+        </div>
+
+        <!-- 콘텐츠 -->
+        <div class="content">
+            <div class="form-section">
+                <h2 class="form-title">계정 정보</h2>
+
+                <!-- 아이디(이메일) -->
+                <div class="input-group">
+                    <label>아이디(이메일)<span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="email" id="register-email" placeholder="ex) example@helpmet.net">
+                        <button class="btn btn-primary btn-small" id="check-email-btn" onclick="checkEmailDuplicate()">인증번호 발송</button>
+                    </div>
+                    <div class="error-message" id="register-email-error"></div>
+                    <div class="success-message" id="register-email-success"></div>
+                </div>
+
+                <!-- 인증번호 -->
+                <div class="input-group">
+                    <label>인증번호<span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="text" id="register-verification-code" placeholder="인증번호를 입력해주세요.">
+                        <button class="btn btn-primary btn-small" id="verify-register-code-btn" onclick="verifyRegisterCode()">확인</button>
+                    </div>
+                    <div class="error-message" id="register-code-error"></div>
+                    <div class="success-message" id="register-code-success"></div>
+                    <div class="timer" id="register-verification-timer" style="display: none;">05:00</div>
+                </div>
+
+                <!-- 비밀번호 -->
+                <div class="input-group">
+                    <label>비밀번호<span class="required">*</span></label>
+                    <div class="input-wrapper single">
+                        <input type="password" id="register-password" placeholder="영문 대소문자, 숫자, 특수문자를 각각 최소 1개 이상 포함하여 8~16자 이상 만들어주세요.">
+                    </div>
+                    <div class="error-message" id="register-password-error"></div>
+                </div>
+
+                <!-- 비밀번호 확인 -->
+                <div class="input-group">
+                    <label>비밀번호 확인<span class="required">*</span></label>
+                    <div class="input-wrapper single">
+                        <input type="password" id="register-password-confirm" placeholder="************">
+                    </div>
+                    <div class="error-message" id="register-password-confirm-error"></div>
+                    <div class="success-message" id="register-password-confirm-success"></div>
+                </div>
+
+                <div style="text-align: right; margin-top: 40px;">
+                    <button class="btn btn-primary" onclick="completeRegistration()" style="width: auto; min-width: 120px;">다음</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 인증번호 모달 팝업 -->
+    <div class="popup-overlay" id="verification-modal-popup">
+        <div class="popup">
+            <h3>인증번호</h3>
+            <p>인증번호 발송이 완료되었습니다.<br>10분 이내에 인증번호를 입력해주세요</p>
+            <button class="btn btn-primary" onclick="closePopup('verification-modal-popup')">확인</button>
+        </div>
+    </div>
+
+    <script src="{% static 'js/common.js' %}"></script>
+    <script src="{% static 'js/auth.js' %}"></script>
+</body>
+</html>

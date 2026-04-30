@@ -1,0 +1,85 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBM 현장관리 - TBM 작성</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tbm.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">←</button>
+            <span class="title">TBM 작성</span>
+        </div>
+
+        <!-- 콘텐츠 -->
+        <div class="content">
+            <div class="form-section">
+                <h2 class="form-title">작업 정보 입력</h2>
+
+                <!-- 작업명 -->
+                <div class="input-group">
+                    <label>작업명<span class="required">*</span></label>
+                    <div class="input-wrapper single">
+                        <input type="text" id="work-name" placeholder="최대 30자 ex) 거푸집 공사, 교량 도장 작업" maxlength="30">
+                    </div>
+                    <div class="error-message" id="work-name-error"></div>
+                </div>
+
+                <!-- 작업 장소 -->
+                <div class="input-group">
+                    <label>작업 장소<span class="required">*</span></label>
+                    <div class="input-wrapper" style="gap: 10px;">
+                        <select id="work-location-city" class="location-select" onchange="updateDistricts()">
+                            <option value="" disabled selected>시/도/특시</option>
+                            <option value="seoul">서울특별시</option>
+                            <option value="busan">부산광역시</option>
+                            <option value="daegu">대구광역시</option>
+                            <option value="incheon">인천광역시</option>
+                            <option value="gwangju">광주광역시</option>
+                            <option value="daejeon">대전광역시</option>
+                            <option value="ulsan">울산광역시</option>
+                            <option value="sejong">세종특별자치시</option>
+                            <option value="gyeonggi">경기도</option>
+                            <option value="gangwon">강원특별자치도</option>
+                            <option value="chungbuk">충청북도</option>
+                            <option value="chungnam">충청남도</option>
+                            <option value="jeonbuk">전북특별자치도</option>
+                            <option value="jeonnam">전라남도</option>
+                            <option value="gyeongbuk">경상북도</option>
+                            <option value="gyeongnam">경상남도</option>
+                            <option value="jeju">제주특별자치도</option>
+                        </select>
+                        <select id="work-location-district" class="location-select">
+                            <option value="" disabled selected>구/군</option>
+                        </select>
+                    </div>
+                    <div class="error-message" id="work-location-error"></div>
+                </div>
+
+                <!-- 상세 장소 -->
+                <div class="input-group">
+                    <label>상세 장소</label>
+                    <div class="input-wrapper single">
+                        <input type="text" id="work-detail-location" placeholder="최대 30글자 ex) 101동 앞, 교량하부" maxlength="30">
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 40px;">
+                    <button class="btn btn-primary" id="tbm-next-btn" onclick="goToNextStep()" style="width: 280px; padding: 16px 0;">다음</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/common.js' %}"></script>
+    <script src="{% static 'js/tbm.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+﻿/* auth.css - 濡쒓렇?? ?뚯썝媛?? ?쎄?, 鍮꾨?踰덊샇 李얘린 ?꾩슜 */
+
+/* ?쎄? ?숈쓽 ?섏씠吏 */
+.terms-container { width: 100%; max-width: 750px; }
+.terms-header-check { display: flex; align-items: center; gap: 12px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; margin-bottom: 30px; }
+.terms-header-check input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+.terms-header-check label { font-size: 15px; font-weight: 500; color: #333; cursor: pointer; }
+.terms-section { margin-bottom: 30px; }
+.terms-section h3 { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 16px; }
+.terms-box { background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; max-height: 200px; overflow-y: auto; font-size: 14px; line-height: 1.8; color: #333; }
+.terms-box::-webkit-scrollbar { width: 8px; }
+.terms-box::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+.terms-box::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+.terms-box::-webkit-scrollbar-thumb:hover { background: #999; }
+.terms-box p { margin-bottom: 12px; }
+.terms-box ul { margin-left: 20px; margin-bottom: 12px; }
+.terms-box li { margin-bottom: 6px; }
+.terms-footer-check { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-bottom: 30px; }
+.terms-footer-check input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+.terms-footer-check label { font-size: 14px; color: #333; cursor: pointer; }
+.button-group { display: flex; gap: 16px; }
+.button-group .btn { flex: 1; }
+
+/* ?뚯썝媛???꾨즺 諛?鍮꾨?踰덊샇 李얘린 ?꾨즺 ?섏씠吏 */
+.success-complete, .success-container { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 80px 40px; }
+.success-icon { width: 120px; height: 120px; margin: 0 auto 40px; background-color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+.success-icon svg { width: 80px; height: 80px; }
+.success-message-text { margin-bottom: 40px; }
+.success-message-text p { font-size: 20px; font-weight: 500; color: #333 !important; line-height: 1.6; }
+.password-success-message { font-size: 20px; font-weight: 700; color: #333; line-height: 1.6; margin-bottom: 40px; }
+.success-container .btn { max-width: 200px; margin: 0 auto; }
