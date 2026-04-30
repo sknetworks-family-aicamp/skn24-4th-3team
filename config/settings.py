@@ -81,12 +81,25 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+## settings.py 에 "DATABASES" 값을 아래 코드로 대체
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql', # 1. 엔진 설정
+        'NAME': 'helpmet',              # 2. 생성한 DB 이름
+        'USER': 'mysqlhelpmet',                     # 3. DB 접속 계정명
+        'PASSWORD': 'skn24',                # 4. 계정 비밀번호
+        'HOST': 'localhost',                  # 5. DB 서버 주소 (로컬일 경우 localhost)
+        'PORT': '3306',                       # 6. MySQL 기본 포트
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8mb4',             # 이모지 및 한글 지원을 위해 필수
+        },
     }
 }
+AUTH_USER_MODEL = 'account.User'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 
 # Password validation
@@ -141,13 +154,26 @@ CACHES = {
     }
 }
 
-AUTH_USER_MODEL = 'account.User'
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-]
+LOGIN_URL = "/account/login/"
 
 AI_SERVER_BASE_URL = os.getenv("AI_SERVER_BASE_URL", "http://127.0.0.1:8001")
 AI_SERVER_TIMEOUT = int(os.getenv("AI_SERVER_TIMEOUT", "120"))
 AI_SERVER_LONG_TIMEOUT = int(os.getenv("AI_SERVER_LONG_TIMEOUT", "1800"))
 
-LOGIN_URL = '/account/login/'
+
+# 이메일 백엔드 설정 (AWS SES SMTP 기준)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'email-smtp.ap-northeast-2.amazonaws.com'  # 본인의 SES 리전 확인
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'username'  # IAM에서 발급받은 SMTP 사용자 아이디
+EMAIL_HOST_PASSWORD = 'password' # IAM에서 발급받은 SMTP 비밀번호
+DEFAULT_FROM_EMAIL = 'noreply@helpmet.com' # SES에 인증된 이메일 주소
+
+# django cache 사용 설정
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'otp-verification-cache',
+    }
+}

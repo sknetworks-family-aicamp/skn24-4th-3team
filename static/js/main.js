@@ -3,9 +3,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('calendar-body')) {
         generateCalendar();
-        updateTBMList(new Date().getDate());
+        const today = new Date().getDate();
+        selectDate(today);
     }
 });
+
+
 
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
@@ -42,8 +45,10 @@ function generateCalendar() {
 }
 
 function selectDate(day) {
+    const now = new Date();
+    const month = now.getMonth() + 1;
     const selectedDateEl = document.getElementById('selected-date');
-    if (selectedDateEl) selectedDateEl.textContent = `${day}일 기록`;
+    if (selectedDateEl) selectedDateEl.textContent = `${month}월 ${day}일 기록`;
     updateTBMList(day);
 }
 

@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function handleLogin() {
+async function handleLogin() {
     const email = document.getElementById('login-email')?.value.trim();
     const password = document.getElementById('login-password')?.value;
 
@@ -25,7 +25,25 @@ function handleLogin() {
         return;
     }
 
-    document.getElementById('login-form').submit();
+    const response = await fetch('/account/login/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken(),
+        },
+        body: JSON.stringify({
+            email: email,
+            password: password,
+        }),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+        window.location.href = result.redirect_url || '/core/dashboard/';
+    } else {
+        showError('login-password', 'password-error', result.message || '로그인에 실패했습니다.');
+    }
 }
 
 let verificationTimer;
@@ -186,4 +204,19 @@ function checkUserInfoComplete() {
 
 function completeUserRegistration() {
     navigateTo('register-complete.html');
+}
+
+function getCsrfToken() {
+    const name = 'csrftoken';
+    const cookies = document.cookie.split(';');
+
+    for (let cookie of cookies) {
+        cookie = cookie.trim();
+
+        if (cookie.startsWith(name + '=')) {
+            return decodeURIComponent(cookie.substring(name.length + 1));
+        }
+    }
+
+    return '';
 }

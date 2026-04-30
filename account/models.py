@@ -10,6 +10,8 @@ class User(AbstractUser):
     # 2. email 필드를 필수 및 유니크하게 설정 (로그인용)
     email = models.EmailField(max_length=100, unique=True, help_text="로그인 아이디로 사용하는 이메일")
     
+    username = None
+
     # 3. 커스텀 필드
     name = models.CharField(max_length=60, help_text="사용자 이름")
     company_name = models.CharField(max_length=150, null=True, blank=True, help_text="사용자가 소속된 업체명")
@@ -17,7 +19,7 @@ class User(AbstractUser):
 
     # --- 핵심 설정 ---
     USERNAME_FIELD = 'email'      # 로그인을 이메일로 하겠다고 선언
-    REQUIRED_FIELDS = ['username', 'name']  # 이메일 외에 필수 입력받을 필드(관리자 계정 생성 시 필요)
+    REQUIRED_FIELDS = ['name']  # 이메일 외에 필수 입력받을 필드(관리자 계정 생성 시 필요)
     # ----------------
 
     class Meta:
