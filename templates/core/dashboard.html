@@ -1,17 +1,13 @@
-﻿{% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TBM 현장관리 - 메인</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}TBM 현장관리 - 메인{% endblock %}
+
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
     <div class="container">
         <!-- 사이드바 (컨테이너 내부) -->
         <div class="sidebar" id="sidebar">
@@ -46,7 +42,7 @@
             </div>
         </div>
 
-        <!-- 헤더 -->
+        <!-- 헤더 (개별적인 헤더이므로 include 하지 않고 그대로 유지) -->
         <div class="header main-header">
             <button class="menu-btn" onclick="toggleSidebar()">☰</button>
             <div class="header-content">
@@ -116,8 +112,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <script src="{% static 'js/common.js' %}"></script>
+{% block extra_script %}
     <script src="{% static 'js/main.js' %}"></script>
-</body>
-</html>
+{% endblock %}
