@@ -41,7 +41,7 @@ class WeatherInfo(models.Model):
     weather_status = models.CharField(max_length=60, null=True, blank=True, help_text="날씨 상태")
     temperature = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True, help_text="섭씨 기온")
     humidity = models.IntegerField(null=True, blank=True, help_text="습도(%)")
-    precipitation_probability = models.IntegerField(null=True, blank=True, help_text="강수확률(%)")
+    precipitation = models.DecimalField(max_digits=2, decimal_places=0, null=True, blank=True, help_text="강수량(mm)")
     wind_speed = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True, help_text="풍속(m/s)")
     created_at = models.DateTimeField(auto_now_add=True, help_text="저장 일시")
 

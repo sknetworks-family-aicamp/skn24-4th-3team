@@ -32,6 +32,41 @@ document.addEventListener('DOMContentLoaded', () => {
     populateDraftPage();
 });
 
+// =====================
+// 공통 유틸
+// =====================
+
+function showPopup(popupId) {
+    const popup = document.getElementById(popupId);
+    if (popup) popup.style.display = 'flex';
+}
+
+function closePopup(popupId) {
+    const popup = document.getElementById(popupId);
+    if (popup) popup.style.display = 'none';
+}
+
+function goBack() {
+    history.back();
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(cookie => {
+            const c = cookie.trim();
+            if (c.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(c.substring(name.length + 1));
+            }
+        });
+    }
+    return cookieValue;
+}
+
+// =====================
+// create 페이지
+// =====================
+
 function updateDistricts() {
     const citySelect = document.getElementById('work-location-city');
     const districtSelect = document.getElementById('work-location-district');
@@ -53,6 +88,7 @@ function goToNextStep() {
     const workName = document.getElementById('work-name');
     const city = document.getElementById('work-location-city');
     const district = document.getElementById('work-location-district');
+    const detailLocation = document.getElementById('work-detail-location');
 
     hideError('work-name', 'work-name-error');
     hideError('work-location-city', 'work-location-error');
@@ -72,8 +108,9 @@ function goToNextStep() {
         workName: workName.value.trim(),
         locationCity: city.value,
         locationDistrict: district.value,
+        locationDetail: detailLocation?.value.trim() || '',
     }));
-    navigateTo('tbm-recording.html');
+    location.href = '/tbm/recording/';
 }
 
 function restoreTBMWorkData() {
@@ -96,6 +133,10 @@ function restoreTBMWorkData() {
         }
     } catch (error) {}
 }
+
+// =====================
+// recording 페이지
+// =====================
 
 function changeRecordingState(state) {
     document.querySelectorAll('.recording-state').forEach(el => {
@@ -211,7 +252,6 @@ function getCurrentPositionSafe() {
             resolve(null);
             return;
         }
-
         navigator.geolocation.getCurrentPosition(
             position => resolve({
                 lat: position.coords.latitude,
@@ -231,6 +271,7 @@ async function createDraft() {
 
     const formData = new FormData();
     formData.append('audio_file', recordedBlob, 'tbm-recording.webm');
+    formData.append('recording_duration_sec', recordingSeconds);
 
     const position = await getCurrentPositionSafe();
     if (position) {
@@ -242,8 +283,10 @@ async function createDraft() {
     if (workData) {
         try {
             const data = JSON.parse(workData);
+            if (data.workName) formData.append('task_name', data.workName);
             if (data.locationCity) formData.append('sido', data.locationCity);
             if (data.locationDistrict) formData.append('sigungu', data.locationDistrict);
+            if (data.locationDetail) formData.append('detail', data.locationDetail);
         } catch (error) {}
     }
 
@@ -261,11 +304,16 @@ async function createDraft() {
 
         sessionStorage.setItem('tbmDraftResult', JSON.stringify(result.data));
         sessionStorage.setItem('tbmRecordingDuration', document.getElementById('timer')?.textContent || '');
-        navigateTo('tbm-draft.html');
+        sessionStorage.setItem('tbmDraftId', result.draft_id);
+        location.href = '/tbm/draft/';
     } catch (error) {
         alert(error.message);
     }
 }
+
+// =====================
+// draft 페이지
+// =====================
 
 function populateDraftPage() {
     const raw = sessionStorage.getItem('tbmDraftResult');
@@ -273,27 +321,178 @@ function populateDraftPage() {
 
     try {
         const data = JSON.parse(raw);
-        const draftContent = document.getElementById('draft-content');
-        const duration = document.getElementById('recording-duration');
 
+        // TBM 초안
+        const draftContent = document.getElementById('draft-content');
         if (draftContent && data.draft) draftContent.textContent = data.draft;
-        if (duration) duration.textContent = sessionStorage.getItem('tbmRecordingDuration') || duration.textContent;
+
+        // 참조 출처 (기존 코드 유지)
+        const referencesContent = document.getElementById('draft-references');
+        if (referencesContent) {
+            const references = Array.isArray(data.references) ? data.references : [];
+            referencesContent.innerHTML = '';
+            if (!references.length) {
+                referencesContent.textContent = '참조 출처가 없습니다.';
+            } else {
+                const list = document.createElement('ul');
+                list.className = 'draft-reference-list';
+                references.forEach((item) => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = item;
+                    list.appendChild(listItem);
+                });
+                referencesContent.appendChild(list);
+            }
+        }
+
+        // 녹음 시간
+        const duration = document.getElementById('recording-duration');
+        if (duration) duration.textContent = sessionStorage.getItem('tbmRecordingDuration') || '--:--';
+
+        // 날짜
+        const workDate = document.getElementById('work-date');
+        if (workDate) workDate.value = new Date().toLocaleDateString('ko-KR');
+
+        // 날씨 파싱
+        const weatherText = data.weather_text || '';
+        if (weatherText) {
+            const temperature   = weatherText.match(/기온\s*([\d.]+)도/);
+            const humidity      = weatherText.match(/습도\s*(\d+)%/);
+            const windSpeed     = weatherText.match(/풍속\s*([\d.]+)m\/s/);
+            const precipitation = weatherText.match(/강수량\s*([\d.]+)mm/);
+            const status        = weatherText.match(/날씨\s*(.+?)(?:,|$)/);
+
+            const el = (id) => document.getElementById(id);
+            if (el('weather-status'))        el('weather-status').textContent        = status        ? status[1].trim()        : '-';
+            if (el('weather-temperature'))   el('weather-temperature').textContent   = temperature   ? temperature[1] + '℃'   : '-';
+            if (el('weather-humidity'))      el('weather-humidity').textContent      = humidity      ? humidity[1] + '%'       : '-';
+            if (el('weather-precipitation')) el('weather-precipitation').textContent = precipitation ? precipitation[1] + 'mm' : '-';
+            if (el('weather-wind'))          el('weather-wind').textContent          = windSpeed     ? windSpeed[1] + 'm/s'    : '-';
+        }
+
     } catch (error) {}
 }
 
-function editDraft() { navigateTo('tbm-edit.html'); }
-function completeDraft() { showPopup('popup-save-complete'); }
-function confirmCancelEdit() { showPopup('popup-cancel-edit'); }
-function cancelEdit() { closePopup('popup-cancel-edit'); goBack(); }
-function confirmDeleteTBM() { showPopup('popup-delete-tbm'); }
-function deleteTBM() { closePopup('popup-delete-tbm'); alert('TBM이 삭제되었습니다.'); navigateTo('main.html'); }
-function saveEditedTBM() { showPopup('popup-save-complete'); }
-function confirmSaveComplete() { closePopup('popup-save-complete'); navigateTo('main.html'); }
-function viewTBMDetail(date) { navigateTo('tbm-detail.html'); }
+function editDraft() {
+    const draftId = sessionStorage.getItem('tbmDraftId');
+    if (draftId) {
+        location.href = `/tbm/edit/${draftId}/`;
+    } else {
+        alert('초안 정보를 찾을 수 없습니다.');
+    }
+}
+
+function completeDraft() {
+    showPopup('popup-save-complete');
+}
+
+function confirmSaveComplete() {
+    closePopup('popup-save-complete');
+    sessionStorage.removeItem('tbmDraftResult');
+    sessionStorage.removeItem('tbmRecordingDuration');
+    sessionStorage.removeItem('tbmDraftId');
+    location.href = '/tbm/list/';
+}
+
+// =====================
+// list 페이지
+// =====================
+
+function viewTBMDetail(draftId) {
+    location.href = `/tbm/detail/${draftId}/`;
+}
+
 function changePage(direction) {}
-function confirmDeleteTBMDetail() { showPopup('popup-delete-detail'); }
-function deleteTBMDetail() { closePopup('popup-delete-detail'); navigateTo('main.html'); }
-function editTBMDetail() { navigateTo('tbm-edit.html'); }
+
+// =====================
+// detail 페이지
+// =====================
+
+function confirmDeleteTBMDetail(draftId) {
+    document.getElementById('btn-delete-confirm').setAttribute('data-draft-id', draftId);
+    showPopup('popup-delete-detail');
+}
+
+function deleteTBMDetail() {
+    const draftId = document.getElementById('btn-delete-confirm').getAttribute('data-draft-id');
+
+    fetch(`/tbm/delete/${draftId}/`, {
+        method: 'DELETE',
+        headers: { 'X-CSRFToken': getCookie('csrftoken') }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            closePopup('popup-delete-detail');
+            location.href = '/tbm/list/';
+        } else {
+            alert(data.error || '삭제에 실패했습니다.');
+        }
+    })
+    .catch(() => alert('삭제 요청 중 오류가 발생했습니다.'));
+}
+
+function editTBMDetail(draftId) {
+    location.href = `/tbm/edit/${draftId}/`;
+}
+
+// =====================
+// edit 페이지
+// =====================
+
+function confirmDeleteTBM(draftId) {
+    document.getElementById('btn-delete-tbm-confirm').setAttribute('data-draft-id', draftId);
+    showPopup('popup-delete-tbm');
+}
+
+function deleteTBM() {
+    const draftId = document.getElementById('btn-delete-tbm-confirm').getAttribute('data-draft-id');
+    fetch(`/tbm/delete/${draftId}/`, {
+        method: 'DELETE',
+        headers: { 'X-CSRFToken': getCookie('csrftoken') }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            closePopup('popup-delete-tbm');
+            location.href = '/tbm/list/';
+        } else {
+            alert(data.error || '삭제에 실패했습니다.');
+        }
+    })
+    .catch(() => alert('삭제 요청 중 오류가 발생했습니다.'));
+}
+
+function saveEditedTBM(draftId) {
+    const draftText = document.getElementById('edit-draft-content').value;
+
+    fetch(`/tbm/update/${draftId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `draft_text=${encodeURIComponent(draftText)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            showPopup('popup-save-complete');
+        } else {
+            alert(data.error || '저장에 실패했습니다.');
+        }
+    })
+    .catch(() => alert('저장 요청 중 오류가 발생했습니다.'));
+}
+
+function cancelEdit(draftId) {
+    closePopup('popup-cancel-edit');
+    location.href = `/tbm/detail/${draftId}/`;
+}
+
+// =====================
+// 탭 전환
+// =====================
 
 function switchTab(tabName) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));

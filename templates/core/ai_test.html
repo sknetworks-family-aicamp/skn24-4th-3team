@@ -1,5 +1,4 @@
-﻿{% load static %}
-<!doctype html>
+﻿<!doctype html>
 <html lang="ko">
 <head>
     <meta charset="utf-8">
@@ -48,17 +47,17 @@
 
     <section>
         <h2>Chatbot</h2>
-        <textarea id="chat-message" rows="4" placeholder="吏덈Ц???낅젰?섏꽭??">鍮꾧퀎 ?묒뾽 ??二쇱슂 ?덉쟾議곗튂??</textarea>
-        <button type="button" id="chat-button">梨쀫큸 ?뚯뒪??/button>
+        <textarea id="chat-message" rows="4" placeholder="질문을 입력하세요.">비계 작업 시 주요 안전조치는?</textarea>
+        <button type="button" id="chat-button">챗봇 테스트</button>
         <pre id="chat-result"></pre>
     </section>
 
     <section>
         <h2>TBM Draft</h2>
         <input type="file" id="audio-file" accept="audio/*">
-        <input type="text" id="lat" placeholder="lat ?? 37.5665">
-        <input type="text" id="lon" placeholder="lon ?? 126.9780">
-        <button type="button" id="tbm-button">TBM ?뚯뒪??/button>
+        <input type="text" id="lat" placeholder="lat 예: 37.5665">
+        <input type="text" id="lon" placeholder="lon 예: 126.9780">
+        <button type="button" id="tbm-button">TBM 테스트</button>
         <pre id="tbm-result"></pre>
     </section>
 
@@ -72,7 +71,7 @@
             formData.append("message", message);
             formData.append("csrfmiddlewaretoken", csrfToken);
 
-            result.textContent = "?붿껌 以?..";
+            result.textContent = "요청 중...";
 
             try {
                 const response = await fetch("{% url 'chatbot-ask' %}", {
@@ -91,7 +90,7 @@
             const audioFile = document.getElementById("audio-file").files[0];
 
             if (!audioFile) {
-                result.textContent = "?뚯꽦 ?뚯씪???좏깮?섏꽭??";
+                result.textContent = "음성 파일을 선택하세요.";
                 return;
             }
 
@@ -101,7 +100,7 @@
             formData.append("lon", document.getElementById("lon").value);
             formData.append("csrfmiddlewaretoken", csrfToken);
 
-            result.textContent = "?붿껌 以?..";
+            result.textContent = "요청 중...";
 
             try {
                 const response = await fetch("{% url 'tbm-create' %}", {

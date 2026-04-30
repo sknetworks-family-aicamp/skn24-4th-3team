@@ -23,33 +23,43 @@
             </div>
 
             <!-- 로그인 폼 -->
-            <div class="form-section">
-                <div class="input-group">
-                    <div class="input-wrapper single">
-                        <span class="input-icon">✉</span>
-                        <input type="email" id="login-email" placeholder="아이디 (이메일)">
+            <form id="login-form" method="post" action="/account/login/">
+                {% csrf_token %}
+                <div class="form-section">
+                    {% if error_message %}
+                        <div class="error-message show" style="margin-bottom: 12px;">{{ error_message }}</div>
+                    {% endif %}
+                    {% if locked %}
+                        <div class="error-message show" style="margin-bottom: 12px;">비밀번호를 5회 잘못 입력하였습니다. 10분 후 다시 시도해 주세요.</div>
+                    {% endif %}
+
+                    <div class="input-group">
+                        <div class="input-wrapper single">
+                            <span class="input-icon">✉</span>
+                            <input type="email" id="login-email" name="email" placeholder="아이디 (이메일)" value="{{ email|default:'' }}">
+                        </div>
+                        <div class="error-message" id="email-error"></div>
                     </div>
-                    <div class="error-message" id="email-error"></div>
-                </div>
 
-                <div class="input-group">
-                    <div class="input-wrapper single">
-                        <span class="input-icon">🔒</span>
-                        <input type="password" id="login-password" placeholder="비밀번호">
+                    <div class="input-group">
+                        <div class="input-wrapper single">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="login-password" name="password" placeholder="비밀번호">
+                        </div>
+                        <div class="error-message" id="password-error"></div>
                     </div>
-                    <div class="error-message" id="password-error"></div>
+
+                    <div class="forgot-password">
+                        <a href="/account/password/find/">비밀번호 찾기</a>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="handleLogin()">로그인</button>
+
+                    <div class="divider">or</div>
+
+                    <button type="button" class="btn btn-secondary" onclick="navigateTo('register-terms.html')">회원가입</button>
                 </div>
-
-                <div class="forgot-password">
-                    <a href="/account/password/find/">비밀번호 찾기</a>
-                </div>
-
-                <button class="btn btn-primary" onclick="handleLogin()">로그인</button>
-
-                <div class="divider">or</div>
-
-                <button class="btn btn-secondary" onclick="navigateTo('register-terms.html')">회원가입</button>
-            </div>
+            </form>
         </div>
     </div>
 

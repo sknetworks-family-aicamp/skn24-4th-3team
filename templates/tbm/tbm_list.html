@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load tbm_filters %}
 
 {% block title %}TBM 현장관리 - TBM 목록{% endblock %}
 
@@ -8,158 +9,69 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <!-- 헤더 -->
-        {% include "../common/header.html" with page_name="TBM 목록" %}
+<div class="container">
+    {% include "../common/header.html" with page_name="TBM 목록" %}
 
-        <!-- 콘텐츠 -->
-        <div class="content">
-            <div class="tbm-list-container">
-                <!-- TBM 카드 그리드 -->
-                <div class="tbm-grid">
-                    <!-- 카드 1 (편집가능) -->
-                    <div class="tbm-card" onclick="viewTBMDetail('2026-11-11')">
-                        <div class="card-header">
-                            <span class="card-date">2026년 11월 11일 (수)</span>
+    <div class="content">
+        <div class="tbm-list-container">
+            <div class="tbm-grid">
+
+                {% for draft in page_obj %}
+                <div class="tbm-card" onclick="viewTBMDetail('{{ draft.draft_id }}')">
+                    <div class="card-header">
+                        <span class="card-date">{{ draft.work_date|korean_date }}</span>
+                        {% if draft.is_editable %}
                             <span class="badge badge-editable">편집가능</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-info">
-                                <span class="icon">🔧</span>
-                                <span class="text">콘크리트 작업</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="icon">📍</span>
-                                <span class="text">서울시 - 금천구</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="icon">🕐</span>
-                                <span class="text">07:04</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 카드 2 (편집불가) -->
-                    <div class="tbm-card" onclick="viewTBMDetail('2026-11-10')">
-                        <div class="card-header">
-                            <span class="card-date">2026년 11월 10일 (화)</span>
+                        {% else %}
                             <span class="badge badge-readonly">편집불가</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-info">
-                                <span class="icon">🔧</span>
-                                <span class="text">콘크리트 작업</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="icon">📍</span>
-                                <span class="text">서울시 - 금천구</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="icon">🕐</span>
-                                <span class="text">07:04</span>
-                            </div>
-                        </div>
+                        {% endif %}
                     </div>
-
-                    <!-- 카드 3 (편집불가) -->
-                    <div class="tbm-card" onclick="viewTBMDetail('2026-11-09')">
-                        <div class="card-header">
-                            <span class="card-date">2026년 11월 9일 (월)</span>
-                            <span class="badge badge-readonly">편집불가</span>
+                    <div class="card-body">
+                        <div class="card-info">
+                            <span class="icon">🔧</span>
+                            <span class="text">{{ draft.task_name|default:"작업명 없음" }}</span>
                         </div>
-                        <div class="card-body">
-                            <div class="card-info">
-                                <span class="icon">🔧</span>
-                                <span class="text">콘크리트 작업</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="icon">📍</span>
-                                <span class="text">서울시 - 금천구</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="icon">🕐</span>
-                                <span class="text">07:04</span>
-                            </div>
+                        <div class="card-info">
+                            <span class="icon">📍</span>
+                            <span class="text">{{ draft.region_large|default:"-" }} - {{ draft.region_middle|default:"-" }}</span>
                         </div>
-                    </div>
-
-                    <!-- 카드 4 (편집불가) -->
-                    <div class="tbm-card" onclick="viewTBMDetail('2026-11-06')">
-                        <div class="card-header">
-                            <span class="card-date">2026년 11월 6일 (금)</span>
-                            <span class="badge badge-readonly">편집불가</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-info">
-                                <span class="icon">🔧</span>
-                                <span class="text">콘크리트 작업</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="icon">📍</span>
-                                <span class="text">서울시 - 금천구</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="icon">🕐</span>
-                                <span class="text">07:04</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 카드 5 (편집불가) -->
-                    <div class="tbm-card" onclick="viewTBMDetail('2026-11-05')">
-                        <div class="card-header">
-                            <span class="card-date">2026년 11월 5일 (목)</span>
-                            <span class="badge badge-readonly">편집불가</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-info">
-                                <span class="icon">🔧</span>
-                                <span class="text">콘크리트 작업</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="icon">📍</span>
-                                <span class="text">서울시 - 금천구</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="icon">🕐</span>
-                                <span class="text">07:04</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 카드 6 (편집불가) -->
-                    <div class="tbm-card" onclick="viewTBMDetail('2026-11-04')">
-                        <div class="card-header">
-                            <span class="card-date">2026년 11월 4일 (수)</span>
-                            <span class="badge badge-readonly">편집불가</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-info">
-                                <span class="icon">🔧</span>
-                                <span class="text">콘크리트 작업</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="icon">📍</span>
-                                <span class="text">서울시 - 금천구</span>
-                            </div>
-                            <div class="card-info">
-                                <span class="icon">🕐</span>
-                                <span class="text">07:04</span>
-                            </div>
+                        <div class="card-info">
+                            <span class="icon">🕐</span>
+                            <span class="text">{{ draft.duration_display }}</span>
                         </div>
                     </div>
                 </div>
-
-                <!-- 페이지네이션 -->
-                <div class="pagination">
-                    <button class="page-btn" onclick="changePage('prev')">〈</button>
-                    <span class="page-number active">1</span>
-                    <span class="page-number">2</span>
-                    <button class="page-btn" onclick="changePage('next')">〉</button>
+                {% empty %}
+                <div class="empty-state">
+                    <p>등록된 TBM이 없습니다.</p>
                 </div>
+                {% endfor %}
+
             </div>
+
+            <!-- 페이지네이션 -->
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <button class="page-btn" onclick="location.href='?page={{ page_obj.previous_page_number }}'">〈</button>
+                {% else %}
+                    <button class="page-btn" disabled>〈</button>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    <span class="page-number {% if num == page_obj.number %}active{% endif %}"
+                          onclick="location.href='?page={{ num }}'">{{ num }}</span>
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <button class="page-btn" onclick="location.href='?page={{ page_obj.next_page_number }}'">〉</button>
+                {% else %}
+                    <button class="page-btn" disabled>〉</button>
+                {% endif %}
+            </div>
+
         </div>
     </div>
+</div>
 {% endblock %}
 
 {% block extra_script %}

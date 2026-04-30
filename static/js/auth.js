@@ -25,7 +25,7 @@ function handleLogin() {
         return;
     }
 
-    navigateTo('main.html');
+    document.getElementById('login-form').submit();
 }
 
 let verificationTimer;
