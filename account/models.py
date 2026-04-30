@@ -1,38 +1,29 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-# 유저 생성 관리자
-class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError("이메일은 필수입니다.")
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save()
-        return user
-
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
-        return self.create_user(email, password, **extra_fields)
+from django.conf import settings
 
 
-# 커스텀 User 모델
-class CustomUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True, max_length=29)  # 아이디
-    name = models.CharField(max_length=20)                 # 성명
-    company = models.CharField(max_length=50)              # 업체명
-    position = models.CharField(max_length=50)             # 직책
+class User(AbstractUser):
+    # 1. user_id를 PK로 사용 (자동 증가하는 BIGINT)
+    user_id = models.BigAutoField(primary_key=True, help_text="유저 고유 식별자")
     
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    # 2. email 필드를 필수 및 유니크하게 설정 (로그인용)
+    email = models.EmailField(max_length=100, unique=True, help_text="로그인 아이디로 사용하는 이메일")
+    
+    # 3. 커스텀 필드
+    name = models.CharField(max_length=60, help_text="사용자 이름")
+    company_name = models.CharField(max_length=150, null=True, blank=True, help_text="사용자가 소속된 업체명")
+    position = models.CharField(max_length=150, null=True, blank=True, help_text="사용자의 직책")
 
-    # 로그인 시 email을 아이디로 사용
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["name"]
+    # --- 핵심 설정 ---
+    USERNAME_FIELD = 'email'      # 로그인을 이메일로 하겠다고 선언
+    REQUIRED_FIELDS = ['username', 'name']  # 이메일 외에 필수 입력받을 필드(관리자 계정 생성 시 필요)
+    # ----------------
 
-    objects = CustomUserManager()
+    class Meta:
+        db_table = 'users'
 
     def __str__(self):
         return self.email
+    
+
