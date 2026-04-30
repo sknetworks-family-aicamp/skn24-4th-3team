@@ -293,7 +293,7 @@ body {
     right: 0;
 }
 
-/* ?앹뾽 ?ㅻ쾭?덉씠 */
+/* 모달 열기 전 기본 상태 */
 .popup-overlay {
     position: fixed;
     top: 0;
@@ -304,47 +304,60 @@ body {
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 9999;
 }
 
-.popup-overlay.show {
-    display: flex;
+.popup-overlay.active {
+    display: flex; 
+    justify-content: center; /* 가로 중앙 */
+    align-items: center;     /* 세로 중앙 */
 }
 
-/* ?앹뾽 */
-.popup {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 12px;
-    text-align: center;
-    min-width: 300px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-}
+
 
 .popup-box {
     background-color: #ffffff;
     padding: 40px;
     border-radius: 12px;
-    text-align: center;
+    
+    /* 중앙 정렬을 위한 필수 설정 */
     min-width: 400px;
     max-width: 500px;
+    min-height: 300px; /* 높이가 어느 정도 있어야 상/중/하 분리가 보입니다 */
+    
+    /* 내부 레이아웃 설정 */
+    display: flex;
+    flex-direction: column;    /* 위에서 아래로 흐르게 */
+    justify-content: space-between; /* 요소 사이 간격을 최대화하여 상/중/하 배치 */
+    
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
-.popup h3,
+/* 개별 요소 세부 조정 */
 .popup-box h3 {
-    font-size: 18px;
+    margin: 0; /* 기본 마진 제거 */
+    text-align: center;
     font-weight: 700;
+    font-size: 18px;
     color: #333;
-    margin-bottom: 16px;
 }
 
-.popup p,
 .popup-box p {
+    flex-grow: 1;      /* 중앙 메시지가 남은 공간을 다 차지하게 함 */
     font-size: 14px;
+    display: flex;
     color: #666;
+    align-items: center; /* 메시지 글자를 세로 중앙으로 */
     line-height: 1.6;
-    margin-bottom: 24px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.popup-buttons {
+    width: 100%;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
 }
 
 .popup .btn {
