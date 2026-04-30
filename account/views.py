@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
-
+import json
+from django.http import JsonResponse
 
 # ----------------------------
 # 로그인 실패 횟수 관련 설정
@@ -183,3 +184,15 @@ def register_complete_view(request):
 
 def password_find_view(request):
     return render(request, "account/password_find.html")
+
+
+def api_sample_page(request):
+    return render(request, "account/apisample.html")
+
+def api_sample_response(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_name = data.get('username')
+        return JsonResponse({'status': 'success', 'message': f'{user_name} 님 환영합니다!'}, status=200)
+    else :
+        return JsonResponse({'status': 'fail', 'message':"POST 로 요청주세요"}, status=400)

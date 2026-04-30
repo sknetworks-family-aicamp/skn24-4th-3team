@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1> api sample </h1>
+    {% csrf_token %}
+    <div>user name: <input id="user-name" /></div>
+    <button onclick="onclickBtn()"> click here </button>
+    <div id="print-div">여기에 출력됩니다 </div>
+    <script>
+        function onclickBtn(){
+            const name = document.getElementById('user-name').value;
+
+            // Django API 호출 (Fetch API 사용)
+            fetch('/account/api/response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}' // Django 보안 토큰 필수
+                },
+                body: JSON.stringify({ username: name })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    printname = document.getElementById("print-div");
+                    printname.innerText = data.message;
+                } else {
+                    alert("에러: " + data.message);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
