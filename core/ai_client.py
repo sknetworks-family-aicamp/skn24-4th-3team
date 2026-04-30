@@ -4,7 +4,7 @@ from time import perf_counter
 import requests
 from django.conf import settings
 
-# from core.models import AIUsageLog
+from core.models import AIUsageLog
 
 
 class AiServerError(RuntimeError):
@@ -49,15 +49,15 @@ def _create_usage_log(
 ) -> None:
     response_payload = _safe_response_payload(response) if response is not None else {}
 
-    # AIUsageLog.objects.create(
-    #     endpoint=endpoint,
-    #     request_payload=request_payload,
-    #     response_payload=response_payload,
-    #     status_code=response.status_code if response is not None else None,
-    #     elapsed_ms=elapsed_ms,
-    #     success=bool(response is not None and response.ok and not error_message),
-    #     error_message=error_message,
-    # )
+    AIUsageLog.objects.create(
+        endpoint=endpoint,
+        request_payload=request_payload,
+        response_payload=response_payload,
+        status_code=response.status_code if response is not None else None,
+        elapsed_ms=elapsed_ms,
+        success=bool(response is not None and response.ok and not error_message),
+        error_message=error_message,
+    )
 
 
 def ask_chatbot(message: str, thread_id: str | None = None, reset: bool = False) -> dict:
