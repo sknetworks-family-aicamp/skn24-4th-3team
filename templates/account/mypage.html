@@ -35,19 +35,19 @@
                         <div class="mypage-form">
                             <div class="form-group">
                                 <label>성명</label>
-                                <input type="text" id="info-name" placeholder="남다람" maxlength="20">
+                                <input type="text" id="info-name" value="{{ request.user.name }}" maxlength="20">
                                 <div class="error-message" id="info-name-error"></div>
                             </div>
 
                             <div class="form-group">
                                 <label>업체명</label>
-                                <input type="text" id="info-company" placeholder="뉴런건설" maxlength="50">
+                                <input type="text" id="info-company" value="{{ request.user.company_name }}" maxlength="50">
                                 <div class="error-message" id="info-company-error"></div>
                             </div>
 
                             <div class="form-group">
                                 <label>직책</label>
-                                <input type="text" id="info-position" placeholder="현장소장" maxlength="50">
+                                <input type="text" id="info-position" value="{{ request.user.position }}" maxlength="50">
                                 <div class="error-message" id="info-position-error"></div>
                             </div>
                         </div>
