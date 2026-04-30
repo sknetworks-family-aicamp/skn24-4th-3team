@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelpMet - 로그인</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #eef0f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 52px 48px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+        }
+
+        .card-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2c3350;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: #9a9fb0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* 입력 필드 */
+        .input-group {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #b0b5c4;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            border: 1.5px solid #e8eaf0;
+            border-radius: 14px;
+            font-size: 15px;
+            font-family: inherit;
+            color: #2c3350;
+            background: #f8f9fc;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .input-field::placeholder { color: #b0b5c4; }
+
+        .input-field:focus {
+            border-color: #6c63ff;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(108,99,255,0.08);
+        }
+
+        /* 에러 메시지 */
+        .error-msg {
+            background: #fff0f0;
+            border: 1px solid #ffcdd2;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #e53935;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        /* 비밀번호 찾기 */
+        .forgot-pw {
+            text-align: right;
+            margin-bottom: 24px;
+        }
+
+        .forgot-pw a {
+            font-size: 13px;
+            color: #6c63ff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-pw a:hover { text-decoration: underline; }
+
+        /* 로그인 버튼 */
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: #6c63ff;
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .btn-login:hover {
+            background: #5a52e0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(108,99,255,0.3);
+        }
+
+        .btn-login:active { transform: translateY(0); }
+
+        /* 구분선 */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e8eaf0;
+        }
+
+        .divider span {
+            font-size: 13px;
+            color: #b0b5c4;
+        }
+
+        /* 회원가입 버튼 */
+        .btn-signup {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #fff;
+            color: #6c63ff;
+            border: 1.5px solid #e8eaf0;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-signup:hover {
+            border-color: #6c63ff;
+            background: #f8f7ff;
+        }
+
+        /* 잠금 안내 */
+        .lock-msg {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #f57f17;
+            margin-bottom: 16px;
+            text-align: center;
+            display: none;
+        }
+
+        .lock-msg.show { display: block; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="card-title">스마트한 TBM 현장관리</div>
+    <div class="card-subtitle">안전한 하루의 시작, HelpMet과 함께</div>
+
+    {% include 'common/modal.html' %}
+
+    {% if error_message %}
+    <p style="color: #e53935; font-size: 13px; margin-top: 6px;">{{ error_message }}</p>    
+    {% endif %}
+
+    {% if locked %}
+    <script>
+        openAlert('비밀번호를 5회 잘못 입력하였습니다. 10분 후 다시 시도해 주세요.');
+    </script>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="input-group">
+            <span class="input-icon">✉</span>
+            <input
+                type="email"
+                name="email"
+                class="input-field"
+                placeholder="아이디 (이메일)"
+                value="{{ email|default:'' }}"
+                required
+            >
+        </div>
+
+        <div class="input-group">
+            <span class="input-icon">🔒</span>
+            <input
+                type="password"
+                name="password"
+                class="input-field"
+                placeholder="비밀번호"
+                required
+            >
+        </div>
+
+        <div class="forgot-pw">
+            <a href="#">비밀번호 찾기</a>
+        </div>
+
+        <button type="submit" class="btn-login">로그인</button>
+    </form>
+
+    <div class="divider"><span>or</span></div>
+
+    <a href="{% url 'signup' %}" class="btn-signup">회원가입</a>
+</div>
+
+</body>
+</html>

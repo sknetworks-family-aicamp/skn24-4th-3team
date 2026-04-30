@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelpMet - 마이페이지</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #eef0f5;
+            min-height: 100vh;
+            color: #2c3350;
+        }
+
+        /* 상단 헤더 */
+        .topbar {
+            background: #eef0f5;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #2c3350;
+            padding: 4px;
+            text-decoration: none;
+        }
+
+        .topbar-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2c3350;
+        }
+
+        /* 메인 카드 */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 24px 40px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        /* 이메일 헤더 */
+        .email-header {
+            background: #4a90e2;
+            padding: 24px 28px;
+        }
+
+        .email-label {
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 6px;
+        }
+
+        .email-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .email-notice {
+            font-size: 12px;
+            color: rgba(255,255,255,0.75);
+        }
+
+        /* 탭 */
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            border-bottom: 1px solid #e8eaf0;
+        }
+
+        .tab-btn {
+            padding: 18px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 500;
+            color: #9a9fb0;
+            cursor: pointer;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover { color: #4a90e2; }
+
+        .tab-btn.active {
+            color: #4a90e2;
+            font-weight: 700;
+            border-bottom: 2px solid #4a90e2;
+        }
+
+        /* 탭 컨텐츠 */
+        .tab-content {
+            display: none;
+            padding: 32px 28px;
+        }
+
+        .tab-content.active { display: block; }
+
+        /* 폼 */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3350;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #e8eaf0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #2c3350;
+            background: #f8f9fc;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-input::placeholder { color: #b0b5c4; }
+
+        .form-input:focus {
+            border-color: #4a90e2;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(74,144,226,0.08);
+        }
+
+        /* 버튼 */
+        .btn-submit {
+            display: block;
+            margin-left: auto;
+            padding: 12px 28px;
+            background: #4a90e2;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #357abd;
+            transform: translateY(-1px);
+        }
+
+        /* 성공/에러 메시지 */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            color: #2e7d32;
+        }
+
+        .alert-error {
+            background: #fff0f0;
+            border: 1px solid #ffcdd2;
+            color: #e53935;
+        }
+
+        /* 회원 탈퇴 */
+        .withdrawal-notice {
+            background: #fff5f5;
+            border: 1px solid #ffcdd2;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 28px;
+        }
+
+        .withdrawal-notice-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #e53935;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .withdrawal-notice ul {
+            list-style: disc;
+            padding-left: 20px;
+        }
+
+        .withdrawal-notice li {
+            font-size: 14px;
+            color: #e53935;
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .withdrawal-confirm-text {
+            font-size: 14px;
+            color: #2c3350;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .withdrawal-confirm-text strong {
+            color: #e53935;
+        }
+
+        .withdrawal-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .withdrawal-input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 1.5px solid #e8eaf0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #2c3350;
+            background: #f8f9fc;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .withdrawal-input:focus {
+            border-color: #e53935;
+            background: #fff;
+        }
+
+        .btn-withdrawal {
+            padding: 14px 20px;
+            background: #e53935;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .btn-withdrawal:hover { background: #c62828; }
+        .btn-withdrawal:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 상단 헤더 -->
+<div class="topbar">
+    <a href="{% url 'dashboard' %}" class="back-btn">←</a>
+    <div class="topbar-title">마이페이지</div>
+</div>
+
+<div class="container">
+    <div class="card">
+
+        <!-- 이메일 헤더 -->
+        <div class="email-header">
+            <div class="email-label">아이디 (이메일)</div>
+            <div class="email-value">{{ request.user.email }}</div>
+            <div class="email-notice">아이디 (이메일)은 수정할 수 없습니다.</div>
+        </div>
+
+        <!-- 탭 -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('info')">정보 수정</button>
+            <button class="tab-btn" onclick="switchTab('password')">비밀번호 변경</button>
+            <button class="tab-btn" onclick="switchTab('withdrawal')">회원 탈퇴</button>
+        </div>
+
+        <!-- 탭1: 정보 수정 -->
+        <div class="tab-content active" id="tab-info">
+
+            {% if info_success %}
+            <div class="alert alert-success">✓ 정보가 수정되었습니다.</div>
+            {% endif %}
+
+            {% if info_error %}
+            <div class="alert alert-error">{{ info_error }}</div>
+            {% endif %}
+
+            <form method="POST" action="?tab=info">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="update_info">
+
+                <div class="form-group">
+                    <label class="form-label">성명</label>
+                    <input
+                        type="text"
+                        name="name"
+                        class="form-input"
+                        placeholder="최대 20자"
+                        maxlength="20"
+                        value="{{ request.user.name|default:'' }}"
+                        pattern="[가-힣a-zA-Z0-9]+"
+                        title="한글, 영어, 숫자만 입력 가능합니다"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">업체명</label>
+                    <input
+                        type="text"
+                        name="company"
+                        class="form-input"
+                        placeholder="최대 50자"
+                        maxlength="50"
+                        value="{{ request.user.company|default:'' }}"
+                        pattern="[가-힣a-zA-Z0-9]+"
+                        title="한글, 영어, 숫자만 입력 가능합니다"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">직책</label>
+                    <input
+                        type="text"
+                        name="position"
+                        class="form-input"
+                        placeholder="최대 50자"
+                        maxlength="50"
+                        value="{{ request.user.position|default:'' }}"
+                        pattern="[가-힣a-zA-Z0-9]+"
+                        title="한글, 영어, 숫자만 입력 가능합니다"
+                    >
+                </div>
+
+                <button type="submit" class="btn-submit">저장</button>
+            </form>
+        </div>
+
+        <!-- 탭2: 비밀번호 변경 -->
+        <div class="tab-content" id="tab-password">
+
+            {% if pw_success %}
+            <div class="alert alert-success">✓ 비밀번호가 변경되었습니다.</div>
+            {% endif %}
+
+            {% if pw_error %}
+            <div class="alert alert-error">{{ pw_error }}</div>
+            {% endif %}
+
+            <form method="POST" action="?tab=password">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="change_password">
+
+                <div class="form-group">
+                    <label class="form-label">현재 비밀번호</label>
+                    <input
+                        type="password"
+                        name="current_password"
+                        class="form-input"
+                        placeholder="현재 비밀번호를 입력하세요"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">새 비밀번호</label>
+                    <input
+                        type="password"
+                        name="new_password"
+                        class="form-input"
+                        placeholder="영문 대소문자, 숫자, 특수문자를 각각 최소 1개 이상 포함하여 8~16자"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">새 비밀번호 확인</label>
+                    <input
+                        type="password"
+                        name="new_password_confirm"
+                        class="form-input"
+                        placeholder="새 비밀번호를 다시 입력하세요"
+                    >
+                </div>
+
+                <button type="submit" class="btn-submit">비밀번호 변경</button>
+            </form>
+        </div>
+
+        <!-- 탭3: 회원 탈퇴 -->
+        <div class="tab-content" id="tab-withdrawal">
+
+            {% if withdrawal_error %}
+            <div class="alert alert-error">{{ withdrawal_error }}</div>
+            {% endif %}
+
+            <div class="withdrawal-notice">
+                <div class="withdrawal-notice-title">✖ 회원 탈퇴 시 주의사항</div>
+                <ul>
+                    <li>계정 정보가 영구적으로 삭제 됩니다.</li>
+                    <li>TBM 기록이 모두 삭제됩니다.</li>
+                    <li>삭제된 데이터는 복구할 수 없습니다.</li>
+                </ul>
+            </div>
+
+            <div class="withdrawal-confirm-text">
+                회원 탈퇴를 진행하시려면 아래에 <strong>"회원탈퇴"</strong>를 입력해주세요.
+            </div>
+
+            <form method="POST" action="?tab=withdrawal">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="withdraw">
+
+                <div class="withdrawal-row">
+                    <input
+                        type="text"
+                        name="confirm_text"
+                        class="withdrawal-input"
+                        placeholder="회원 탈퇴"
+                        id="withdrawal-input"
+                        oninput="checkWithdrawal()"
+                    >
+                    <button
+                        type="submit"
+                        class="btn-withdrawal"
+                        id="withdrawal-btn"
+                        disabled
+                    >
+                        회원 탈퇴
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// 탭 전환
+function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+    document.getElementById(`tab-${tab}`).classList.add('active');
+    event.target.classList.add('active');
+}
+
+// 회원 탈퇴 버튼 활성화
+function checkWithdrawal() {
+    const input = document.getElementById('withdrawal-input').value;
+    const btn = document.getElementById('withdrawal-btn');
+    btn.disabled = input !== '회원탈퇴';
+}
+
+// URL 파라미터로 탭 유지
+const urlParams = new URLSearchParams(window.location.search);
+const tab = urlParams.get('tab');
+if (tab === 'password') {
+    document.querySelectorAll('.tab-btn')[1].click();
+} else if (tab === 'withdrawal') {
+    document.querySelectorAll('.tab-btn')[2].click();
+}
+</script>
+
+</body>
+</html>

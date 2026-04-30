@@ -1,0 +1,23 @@
+django
+python-dotenv
+requests
+
+# STT
+faster-whisper
+
+# LLM / LangChain
+langchain
+langchain-core
+langchain-openai
+langgraph
+
+# RAG
+chromadb
+cohere
+rank-bm25
+sentence-transformers
+kiwipiepy
+
+# Jargon (HuggingFace)
+transformers
+torch
