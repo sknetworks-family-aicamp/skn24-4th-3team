@@ -11,9 +11,9 @@
 {% block content %}
     <div class="container">
 
-        <!-- header 가 있는 경우만 포함 
-        {% include "../common/header.html"  with page_name="로그인 페이지" %} 
-        -->
+        {% comment %} <!-- header 가 있는 경우에만 넣기 -->
+        {% include "../common/header.html" with page_name="로그인 페이지" %} 
+        {% endcomment %}
 
         <div class="content">
             <!-- 로고/제목 영역 -->

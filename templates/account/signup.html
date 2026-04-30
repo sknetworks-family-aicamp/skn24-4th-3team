@@ -1,11 +1,9 @@
-﻿{% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HelpMet - ?뚯썝媛??/title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}HelpMet - 회원가입{% endblock %}
+
+{% block extra_head %}
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -15,7 +13,7 @@
             min-height: 100vh;
         }
 
-        /* ?곷떒 ?ㅻ뜑 */
+        /* 상단 바 */
         .topbar {
             background: #DCE8FF;
             padding: 24px 28px;
@@ -47,7 +45,7 @@
             color: #818692;
         }
 
-        /* ?④퀎 ?쒖떆 */
+        /* 단계 표시 */
         .step-indicator {
             display: flex;
             align-items: center;
@@ -71,18 +69,18 @@
             border-radius: 4px;
         }
 
-        /* ?ㅽ겕濡??곸뿭 */
+        /* 스크롤 영역 */
         .scroll-area {
             max-width: 480px;
             margin: 0 auto;
             padding: 24px 20px 0;
         }
 
-        /* ?④퀎 而⑦뀗痢?*/
+        /* 단계 콘텐츠 */
         .step-content { display: none; }
         .step-content.active { display: block; }
 
-        /* ?? 1?④퀎: ?쎄? ?? */
+        /* 단계 1: 약관 동의 */
         .term-section { margin-bottom: 24px; }
 
         .term-title {
@@ -164,7 +162,7 @@
         }
 
         .custom-checkbox.checked::after {
-            content: '??;
+            content: '✓';
             color: #fff;
             font-size: 11px;
             font-weight: 700;
@@ -191,7 +189,7 @@
             flex: 1;
         }
 
-        /* ?? 2?④퀎: 怨꾩젙 ?뺣낫 ?? */
+        /* 단계 2: 계정 정보 */
         .step-desc {
             font-size: 13px;
             color: #9a9fb0;
@@ -234,7 +232,7 @@
             color: #9a9fb0;
         }
 
-        /* ?대찓????*/
+        /* 이메일 확인 */
         .email-row {
             display: flex;
             gap: 8px;
@@ -267,7 +265,7 @@
         .input-hint.error { color: #e53935; }
         .input-hint.success { color: #27ae60; }
 
-        /* 鍮꾨?踰덊샇 議곌굔 */
+        /* 비밀번호 조건 */
         .pw-conditions {
             margin-top: 8px;
             display: flex;
@@ -289,7 +287,7 @@
             color: #27ae60;
         }
 
-        /* ?? ?섎떒 踰꾪듉 ?? */
+        /* 하단 버튼 */
         .footer {
             max-width: 480px;
             margin: 20px auto 0;
@@ -329,7 +327,7 @@
 
         .hidden { display: none !important; }
 
-        /* 4?④퀎: 媛???꾨즺 */
+        /* 단계 4: 가입 완료 */
         .complete-area {
             display: flex;
             flex-direction: column;
@@ -383,16 +381,16 @@
             display: block;
         }
     </style>
-</head>
-<body>
+{% endblock %}
 
-<!-- ?곷떒 ?ㅻ뜑 -->
+{% block content %}
+<!-- 상단 헤더 -->
 <div class="topbar">
-    <button class="back-btn" id="back-btn" onclick="prevStep()">??/button>
-    <div class="topbar-title" id="topbar-title">?뚯썝媛???쎄? ?숈쓽</div>
+    <button class="back-btn" id="back-btn" onclick="prevStep()">←</button>
+    <div class="topbar-title" id="topbar-title">회원가입 약관 동의</div>
 </div>
 
-<!-- ?④퀎 ?쒖떆 -->
+<!-- 단계 표시 -->
 <div class="step-indicator">
     <div class="step-dot active" id="dot-1"></div>
     <div class="step-dot" id="dot-2"></div>
@@ -402,226 +400,226 @@
 <form method="POST" id="signup-form">
     {% csrf_token %}
 
-    <!-- ?? 1?④퀎: ?쎄? ?숈쓽 ?? -->
+    <!-- 단계 1: 약관 동의 -->
     <div class="step-content active" id="step-1">
         <div class="scroll-area">
 
-            <!-- 1. ?쒕퉬???댁슜?쎄? -->
+            <!-- 1. 서비스 이용약관 -->
             <div class="term-section">
-                <div class="term-title">1. ?쒕퉬???댁슜?쎄? ?숈쓽 <span class="badge badge-required">?꾩닔</span></div>
+                <div class="term-title">1. 서비스 이용약관 동의 <span class="badge badge-required">필수</span></div>
                 <div class="term-box">
-                    <p>嫄댁꽕?덉쟾 TBM Helmet ?쒕퉬???댄븯 "?쒕퉬??)瑜??댁슜?섍린 ?꾪빐 ?댁슜?쎄????숈쓽?댁＜?몄슂.</p>
-                    <h4>?쒕퉬??紐⑹쟻</h4>
+                    <p>건설안전 TBM Helmet 서비스(이하 "서비스")를 이용하기 위해 이용약관에 동의해주세요.</p>
+                    <h4>서비스 목적</h4>
                     <ul>
-                        <li>嫄댁꽕 ?꾩옣??TBM(Tool Box Meeting) 湲곕줉 ?묒꽦 諛??덉쟾 愿由?吏??/li>
-                        <li>?덉쟾 ?뺣낫 ?쒓났 諛??꾩옣 ?꾪뿕 ?덈갑 ?쒕룞 吏??/li>
+                        <li>건설 현장의 TBM(Tool Box Meeting) 기록 작성 및 안전 관리 지원</li>
+                        <li>안전 정보 제공 및 현장 위험 예방 활동 지원</li>
                     </ul>
-                    <h4>?댁슜???섎Т</h4>
+                    <h4>이용자 의무</h4>
                     <ul>
-                        <li>??몄쓽 怨꾩젙???꾩슜?섍굅???덉쐞 ?뺣낫瑜??깅줉?댁꽌?????⑸땲??</li>
-                        <li>?꾩옣 ?덉쟾怨?臾닿????⑸룄濡??쒕퉬?ㅻ? ?ъ슜?????놁뒿?덈떎.</li>
-                        <li>?쒕퉬?????묒꽦??TBM 湲곕줉? ?꾩옣 ?덉쟾 紐⑹쟻?쇰줈留??쒖슜?댁빞 ?⑸땲??</li>
+                        <li>타인의 계정을 도용하거나 허위 정보를 등록해서는 안 됩니다.</li>
+                        <li>현장 안전과 무관한 용도로 서비스를 사용할 수 없습니다.</li>
+                        <li>서비스 내 작성된 TBM 기록은 현장 안전 목적으로만 활용해야 합니다.</li>
                     </ul>
-                    <h4>湲덉? ?됱쐞</h4>
+                    <h4>금지 행위</h4>
                     <ul>
-                        <li>?덉쐞 TBM 湲곕줉 ?묒꽦 諛??덉쟾 ?뺣낫 ?쒓끝</li>
-                        <li>?ㅻⅨ ?댁슜?먯쓽 ?뺣낫 臾대떒 ?섏쭛 諛??좏룷</li>
-                        <li>?쒕퉬???쒖뒪?쒖뿉 ???臾대떒 ?묎렐 諛??댄궧 ?쒕룄</li>
+                        <li>허위 TBM 기록 작성 및 안전 정보 왜곡</li>
+                        <li>다른 이용자의 정보 무단 수집 및 유포</li>
+                        <li>서비스 시스템에 대한 무단 접근 및 해킹 시도</li>
                     </ul>
                 </div>
                 <div class="check-row">
                     <label class="check-label" onclick="toggleCheck('check-1')">
                         <div class="custom-checkbox" id="check-1"></div>
-                        ?쒕퉬???댁슜?쎄????숈쓽?⑸땲??
+                        서비스 이용약관에 동의합니다.
                     </label>
                 </div>
             </div>
 
-            <!-- 2. 媛쒖씤?뺣낫 ?섏쭛 諛??댁슜 -->
+            <!-- 2. 개인정보 수집 및 이용 -->
             <div class="term-section">
-                <div class="term-title">2. 媛쒖씤?뺣낫 ?섏쭛 諛??댁슜 ?숈쓽 <span class="badge badge-required">?꾩닔</span></div>
+                <div class="term-title">2. 개인정보 수집 및 이용 동의 <span class="badge badge-required">필수</span></div>
                 <div class="term-box">
-                    <p>?쒕퉬???댁슜???꾪빐 ?꾨옒 媛쒖씤?뺣낫瑜??섏쭛쨌?댁슜?⑸땲??</p>
-                    <h4>?섏쭛 ??ぉ</h4>
+                    <p>서비스 이용을 위해 아래 개인정보를 수집·이용합니다.</p>
+                    <h4>수집 항목</h4>
                     <ul>
-                        <li>?대찓?? 鍮꾨?踰덊샇, ?깅챸, ?낆껜紐? 吏곸콉</li>
-                        <li>?뚯냽 ?꾩옣紐? 洹쇰줈??踰덊샇 (嫄댁꽕???덉쟾 愿由?紐⑹쟻)</li>
+                        <li>이메일, 비밀번호, 성명, 업체명, 직책</li>
+                        <li>소속 현장명, 근로자 번호 (건설업 안전 관리 목적)</li>
                     </ul>
-                    <h4>?섏쭛 紐⑹쟻</h4>
+                    <h4>수집 목적</h4>
                     <ul>
-                        <li>?뚯썝 媛?? 蹂몄씤 ?뺤씤, ?쒕퉬???쒓났 諛??덉쟾 愿由?/li>
-                        <li>蹂댁쑀 湲곌컙: ?뚯썝 ?덊눜 ?쒓퉴吏 (?? 踰뺣졊???곕씪 ?쇱젙 湲곌컙 蹂닿??????덉쓬)</li>
+                        <li>회원 가입, 본인 확인, 서비스 제공 및 안전 관리</li>
+                        <li>보유 기간: 회원 탈퇴 시까지 (단, 법령에 따라 일정 기간 보관할 수 있음)</li>
                     </ul>
-                    <p>?숈쓽瑜?嫄곕???沅뚮━媛 ?덉쑝?? 嫄곕? ???쒕퉬???댁슜???쒗븳?????덉뒿?덈떎.</p>
+                    <p>동의를 거부할 권리가 있으나, 거부 시 서비스 이용이 제한될 수 있습니다.</p>
                 </div>
                 <div class="check-row">
                     <label class="check-label" onclick="toggleCheck('check-2')">
                         <div class="custom-checkbox" id="check-2"></div>
-                        媛쒖씤?뺣낫 ?섏쭛 諛??댁슜???숈쓽?⑸땲??
+                        개인정보 수집 및 이용에 동의합니다.
                     </label>
                 </div>
             </div>
 
-            <!-- 3. ?대찓???몄쬆 -->
+            <!-- 3. 이메일 인증 -->
             <div class="term-section">
-                <div class="term-title">3. ?대찓???몄쬆 ?숈쓽 <span class="badge badge-required">?꾩닔</span></div>
+                <div class="term-title">3. 이메일 인증 동의 <span class="badge badge-required">필수</span></div>
                 <div class="term-box">
-                    <p>?뚯썝 媛??諛?鍮꾨?踰덊샇 李얘린 怨쇱젙?먯꽌 蹂몄씤 ?뺤씤???꾪빐 ?대찓???몄쬆??吏꾪뻾?⑸땲??</p>
+                    <p>회원 가입 및 비밀번호 찾기 과정에서 본인 확인을 위해 이메일 인증을 진행합니다.</p>
                     <ul>
-                        <li>?몄쬆踰덊샇??6?먮━ ?レ옄濡?諛쒓툒?⑸땲??</li>
-                        <li>?몄쬆踰덊샇???좏슚?쒓컙? 10遺꾩엯?덈떎.</li>
-                        <li>?몄쬆踰덊샇 ?щ컻?≪? ?섎（ 理쒕? 5?뚭퉴吏 媛?ν빀?덈떎.</li>
-                        <li>?몄쬆 ?대찓?쇱? ?쒕퉬??諛쒖넚 紐⑹쟻 ?몄뿉 ?ъ슜?섏? ?딆뒿?덈떎.</li>
+                        <li>인증번호는 6자리 숫자로 발급됩니다.</li>
+                        <li>인증번호의 유효시간은 10분입니다.</li>
+                        <li>인증번호 재발송은 하루 최대 5회까지 가능합니다.</li>
+                        <li>인증 이메일은 서비스 발송 목적 외에 사용되지 않습니다.</li>
                     </ul>
                 </div>
                 <div class="check-row">
                     <label class="check-label" onclick="toggleCheck('check-3')">
                         <div class="custom-checkbox" id="check-3"></div>
-                        ?대찓???몄쬆???숈쓽?⑸땲??
+                        이메일 인증에 동의합니다.
                     </label>
                 </div>
             </div>
 
-            <!-- 4. ?덉쟾 ?뺣낫 ?쒖슜 -->
+            <!-- 4. 안전 정보 활용 -->
             <div class="term-section">
-                <div class="term-title">4. ?덉쟾 ?뺣낫 ?쒖슜 ?숈쓽 <span class="badge badge-optional">?좏깮</span></div>
+                <div class="term-title">4. 안전 정보 활용 동의 <span class="badge badge-optional">선택</span></div>
                 <div class="term-box">
-                    <p>TBM Helmet ?쒕퉬?ㅻ? ?듯빐 ?묒꽦???덉쟾 湲곕줉? ?꾨옒 紐⑹쟻?쇰줈 ?쒖슜?????덉뒿?덈떎.</p>
+                    <p>TBM Helmet 서비스를 통해 작성된 안전 기록은 아래 목적으로 활용될 수 있습니다.</p>
                     <ul>
-                        <li>?꾩옣 ?덉쟾 愿由?諛??꾪뿕 ?덈갑 紐⑹쟻???대? ?쒖슜</li>
-                        <li>?곗뾽?ы빐 諛쒖깮 ??愿怨?湲곌?(怨좎슜?몃룞遺 ?? ?쒖텧 ?먮즺濡??ъ슜?????덉뒿?덈떎.</li>
-                        <li>媛쒖씤 ?앸퀎??遺덇??ν븯寃?媛怨듬맂 ?뺥깭???듦퀎 ?곗씠?곕줈 ?쒖슜?????덉뒿?덈떎.</li>
+                        <li>현장 안전 관리 및 위험 예방 목적의 데이터 활용</li>
+                        <li>산업재해 발생 시 관계 기관(고용노동부 등) 제출 자료로 활용될 수 있습니다.</li>
+                        <li>개인 식별이 불가능하게 가공된 형태의 통계 데이터로 활용될 수 있습니다.</li>
                     </ul>
                 </div>
                 <div class="check-row">
                     <label class="check-label" onclick="toggleCheck('check-4')">
                         <div class="custom-checkbox" id="check-4"></div>
-                        ?덉쟾 ?뺣낫 ?쒖슜???숈쓽?⑸땲??
+                        안전 정보 활용에 동의합니다.
                     </label>
                 </div>
             </div>
 
-            <!-- 5. 怨꾩젙 諛??곗씠??愿由?-->
+            <!-- 5. 계정 및 데이터 관리 -->
             <div class="term-section">
-                <div class="term-title">5. 怨꾩젙 諛??곗씠??愿由??숈쓽 <span class="badge badge-required">?꾩닔</span></div>
+                <div class="term-title">5. 계정 및 데이터 관리 동의 <span class="badge badge-required">필수</span></div>
                 <div class="term-box">
-                    <p>?뚯썝? 留덉씠?섏씠吏?먯꽌 ?뚯썝 ?뺣낫瑜??몄젣?좎? ?섏젙?????덉뒿?덈떎.</p>
-                    <h4>?뚯썝 ?덊눜 ??/h4>
+                    <p>회원은 마이페이지에서 회원 정보를 언제든지 수정할 수 있습니다.</p>
+                    <h4>회원 탈퇴 시</h4>
                     <ul>
-                        <li>怨꾩젙 ?뺣낫? ?묒꽦??TBM 湲곕줉? ?곴뎄 ??젣?섎ŉ 蹂듦뎄媛 遺덇??ν빀?덈떎.</li>
-                        <li>?덊눜 ???숈씪 ?대찓?쇰줈 ?ш??낆? 媛?ν븯?? ?댁쟾 ?곗씠?곕뒗 蹂듭썝?섏? ?딆뒿?덈떎.</li>
+                        <li>계정 정보와 작성된 TBM 기록은 영구 삭제되며 복구가 불가능합니다.</li>
+                        <li>탈퇴 후 동일 이메일로 재가입은 가능하나, 이전 데이터는 복원되지 않습니다.</li>
                     </ul>
-                    <h4>TBM 湲곕줉 ?뚯쑀沅?/h4>
+                    <h4>TBM 기록 소유권</h4>
                     <ul>
-                        <li>?쒕퉬?????묒꽦??TBM 湲곕줉???뚯쑀沅뚯? ?묒꽦??蹂몄씤?먭쾶 ?덉뒿?덈떎.</li>
+                        <li>서비스에 작성된 TBM 기록의 소유권은 작성자 본인에게 있습니다.</li>
                     </ul>
                 </div>
                 <div class="check-row">
                     <label class="check-label" onclick="toggleCheck('check-5')">
                         <div class="custom-checkbox" id="check-5"></div>
-                        怨꾩젙 諛??곗씠??愿由ъ뿉 ?숈쓽?⑸땲??
+                        계정 및 데이터 관리에 동의합니다.
                     </label>
                 </div>
             </div>
 
             <hr class="divider">
 
-            <!-- ?꾩껜 ?숈쓽 -->
+            <!-- 전체 동의 -->
             <div class="all-agree-row" onclick="toggleAll()">
                 <div class="custom-checkbox" id="check-all"></div>
-                <div class="all-agree-text">helpmet ?댁슜?쎄?, 媛쒖씤?뺣낫 ?섏쭛 諛??댁슜, 怨꾩젙 諛??곗씠??愿由ъ뿉 紐⑤몢 ?숈쓽?⑸땲??</div>
+                <div class="all-agree-text">helpmet 이용약관, 개인정보 수집 및 이용, 계정 및 데이터 관리에 모두 동의합니다.</div>
             </div>
 
         </div>
 
         <div class="footer">
-            <a href="{% url 'login' %}" class="btn btn-secondary">泥섏쓬?쇰줈</a>
-            <button type="button" class="btn btn-primary" id="btn-step1" onclick="goStep(2)" disabled>?ㅼ쓬?④퀎濡?/button>
+            <a href="{% url 'login' %}" class="btn btn-secondary">처음으로</a>
+            <button type="button" class="btn btn-primary" id="btn-step1" onclick="goStep(2)" disabled>다음단계로</button>
         </div>
     </div>
 
-    <!-- ?? 2?④퀎: 怨꾩젙 ?뺣낫 ?? -->
+    <!-- 단계 2: 계정 정보 입력 -->
     <div class="step-content" id="step-2">
         <div class="scroll-area">
-            <p class="step-desc">濡쒓렇?몄뿉 ?ъ슜??怨꾩젙 ?뺣낫瑜??낅젰?댁＜?몄슂.</p>
+            <p class="step-desc">로그인에 사용할 계정 정보를 입력해주세요.</p>
 
-            <!-- ?대찓??-->
+            <!-- 이메일 -->
             <div class="form-group">
-                <label class="form-label">?대찓??(?꾩씠??</label>
+                <label class="form-label">이메일(아이디)</label>
                 <div class="email-row">
-                    <input type="email" name="email" class="form-input" id="email-input" placeholder="?대찓?쇱쓣 ?낅젰?섏꽭?? maxlength="29" oninput="checkEmailForm()">
-                    <button type="button" class="btn-verify" onclick="sendVerifyCode()">?몄쬆肄붾뱶 諛쒖넚</button>
+                    <input type="email" name="email" class="form-input" id="email-input" placeholder="이메일을 입력하세요" maxlength="29" oninput="checkEmailForm()">
+                    <button type="button" class="btn-verify" onclick="sendVerifyCode()">인증코드 발송</button>
                 </div>
                 <div class="input-hint" id="email-hint"></div>
             </div>
 
-            <!-- ?몄쬆肄붾뱶 -->
+            <!-- 인증코드 -->
             <div class="form-group">
-                <label class="form-label">?몄쬆肄붾뱶</label>
+                <label class="form-label">인증코드</label>
                 <div class="email-row">
-                    <input type="text" name="verify_code" class="form-input" id="verify-input" placeholder="?몄쬆肄붾뱶 6?먮━ ?낅젰" maxlength="6">
-                    <button type="button" class="btn-verify" onclick="checkVerifyCode()">?뺤씤</button>
+                    <input type="text" name="verify_code" class="form-input" id="verify-input" placeholder="인증코드 6자리 입력" maxlength="6">
+                    <button type="button" class="btn-verify" onclick="checkVerifyCode()">확인</button>
                 </div>
                 <div class="input-hint" id="verify-hint"></div>
             </div>
 
-            <!-- 鍮꾨?踰덊샇 -->
+            <!-- 비밀번호 -->
             <div class="form-group">
-                <label class="form-label">鍮꾨?踰덊샇</label>
-                <input type="password" name="password" class="form-input" id="pw-input" placeholder="鍮꾨?踰덊샇瑜??낅젰?섏꽭?? maxlength="16" oninput="checkPassword()">
+                <label class="form-label">비밀번호</label>
+                <input type="password" name="password" class="form-input" id="pw-input" placeholder="비밀번호를 입력하세요" maxlength="16" oninput="checkPassword()">
                 <div class="pw-conditions">
-                    <span class="pw-condition" id="pw-len">8~16??/span>
-                    <span class="pw-condition" id="pw-upper">?臾몄옄</span>
-                    <span class="pw-condition" id="pw-lower">?뚮Ц??/span>
-                    <span class="pw-condition" id="pw-num">?レ옄</span>
-                    <span class="pw-condition" id="pw-special">?뱀닔臾몄옄</span>
+                    <span class="pw-condition" id="pw-len">8~16자</span>
+                    <span class="pw-condition" id="pw-upper">대문자</span>
+                    <span class="pw-condition" id="pw-lower">소문자</span>
+                    <span class="pw-condition" id="pw-num">숫자</span>
+                    <span class="pw-condition" id="pw-special">특수문자</span>
                 </div>
             </div>
 
-            <!-- 鍮꾨?踰덊샇 ?뺤씤 -->
+            <!-- 비밀번호 확인 -->
             <div class="form-group">
-                <label class="form-label">鍮꾨?踰덊샇 ?뺤씤</label>
-                <input type="password" name="password_confirm" class="form-input" id="pw-confirm-input" placeholder="鍮꾨?踰덊샇瑜??ㅼ떆 ?낅젰?섏꽭?? maxlength="16" oninput="checkPasswordConfirm()">
+                <label class="form-label">비밀번호 확인</label>
+                <input type="password" name="password_confirm" class="form-input" id="pw-confirm-input" placeholder="비밀번호를 다시 입력하세요" maxlength="16" oninput="checkPasswordConfirm()">
                 <div class="input-hint" id="pw-confirm-hint"></div>
             </div>
 
         </div>
 
         <div class="footer">
-            <button type="button" class="btn btn-secondary" onclick="goStep(1)">?댁쟾?쇰줈</button>
-            <button type="button" class="btn btn-primary" id="btn-step2" onclick="goStep(3)" disabled>?ㅼ쓬?④퀎濡?/button>
+            <button type="button" class="btn btn-secondary" onclick="goStep(1)">이전으로</button>
+            <button type="button" class="btn btn-primary" id="btn-step2" onclick="goStep(3)" disabled>다음단계로</button>
         </div>
     </div>
 
-    <!-- ?? 3?④퀎: ?ъ슜???뺣낫 ?? -->
+    <!-- 단계 3: 사용자 정보 입력 -->
     <div class="step-content" id="step-3">
         <div class="scroll-area">
-            <p class="step-desc">?쒕퉬???댁슜???꾪븳 ?ъ슜???뺣낫瑜??낅젰?댁＜?몄슂.</p>
+            <p class="step-desc">서비스 이용을 위한 사용자 정보를 입력해주세요.</p>
 
             <div class="form-group">
-                <label class="form-label">?깅챸</label>
-                <input type="text" name="name" class="form-input" placeholder="理쒕? 20?? maxlength="20" pattern="[媛-?즑-zA-Z0-9]+" title="?쒓?, ?곸뼱, ?レ옄留??낅젰 媛?ν빀?덈떎">
+                <label class="form-label">성명</label>
+                <input type="text" name="name" class="form-input" placeholder="최대 20자" maxlength="20" pattern="[가-힣a-zA-Z0-9]+" title="한글, 영어, 숫자만 입력 가능합니다">
             </div>
 
             <div class="form-group">
-                <label class="form-label">?낆껜紐?/label>
-                <input type="text" name="company" class="form-input" placeholder="理쒕? 50?? maxlength="50" pattern="[媛-?즑-zA-Z0-9]+" title="?쒓?, ?곸뼱, ?レ옄留??낅젰 媛?ν빀?덈떎">
+                <label class="form-label">업체명</label>
+                <input type="text" name="company" class="form-input" placeholder="최대 50자" maxlength="50" pattern="[가-힣a-zA-Z0-9]+" title="한글, 영어, 숫자만 입력 가능합니다">
             </div>
 
             <div class="form-group">
-                <label class="form-label">吏곸콉</label>
-                <input type="text" name="position" class="form-input" placeholder="理쒕? 50?? maxlength="50" pattern="[媛-?즑-zA-Z0-9]+" title="?쒓?, ?곸뼱, ?レ옄留??낅젰 媛?ν빀?덈떎">
+                <label class="form-label">직책</label>
+                <input type="text" name="position" class="form-input" placeholder="최대 50자" maxlength="50" pattern="[가-힣a-zA-Z0-9]+" title="한글, 영어, 숫자만 입력 가능합니다">
             </div>
 
         </div>
 
         <div class="footer">
-            <button type="button" class="btn btn-secondary" onclick="goStep(2)">?댁쟾?쇰줈</button>
-            <button type="button" class="btn btn-primary" onclick="submitSignup()">媛???꾨즺</button>
+            <button type="button" class="btn btn-secondary" onclick="goStep(2)">이전으로</button>
+            <button type="button" class="btn btn-primary" onclick="submitSignup()">가입 완료</button>
         </div>
     </div>
 
-    <!-- ?? 4?④퀎: 媛???꾨즺 ?? -->
+    <!-- 단계 4: 가입 완료 -->
     <div class="step-content" id="step-4">
         <div class="complete-area">
             <div class="complete-icon">
@@ -629,17 +627,19 @@
                     <div class="check-mark"></div>
                 </div>
             </div>
-            <div class="complete-title">?뚯썝媛?낆씠 ?꾨즺?섏뿀?듬땲??/div>
-            <div class="complete-subtitle">?댁젣 ?ㅼ뼇???쒕퉬?ㅻ? ?댁슜?대낫?몄슂</div>
-            <a href="{% url 'login' %}" class="btn btn-primary complete-btn">濡쒓렇??/a>
+            <div class="complete-title">회원가입이 완료되었습니다</div>
+            <div class="complete-subtitle">이제 다양한 서비스를 이용해보세요</div>
+            <a href="{% url 'login' %}" class="btn btn-primary complete-btn">로그인</a>
         </div>
     </div>
 
 </form>
+{% endblock %}
 
+{% block extra_script %}
 <script>
-// ?? ?④퀎 ?대룞 ??
-const titles = ['?뚯썝媛???쎄? ?숈쓽', '怨꾩젙 ?뺣낫 ?낅젰', '?ъ슜???뺣낫 ?낅젰', '?덉쟾???섎（???쒖옉, HelpMet怨??④퍡'];
+// 단계 이동
+const titles = ['회원가입 약관 동의', '계정 정보 입력', '사용자 정보 입력', '안전한 하루의 시작, HelpMet과 함께'];
 let currentStep = 1;
 
 function goStep(step) {
@@ -649,13 +649,13 @@ function goStep(step) {
     document.getElementById(`step-${currentStep}`).classList.add('active');
     if (currentStep <= 3) document.getElementById(`dot-${currentStep}`).classList.add('active');
     document.getElementById('topbar-title').textContent = titles[step - 1];
-    // 4?④퀎?먯꽌 ?ㅻ줈媛湲??④린湲?
+    // 4단계에서 뒤로가기 숨기기
     document.getElementById('back-btn').style.display = step === 4 ? 'none' : 'flex';
     window.scrollTo(0, 0);
 }
 
 function submitSignup() {
-    // ?섏쨷???ㅼ젣 ?쒕쾭 ?꾩넚?쇰줈 援먯껜
+    // 실제 서버 전송 로직 필요
     goStep(4);
 }
 
@@ -667,7 +667,7 @@ function prevStep() {
     }
 }
 
-// ?? ?쎄? 泥댄겕 ??
+// 약관 체크
 const REQUIRED = ['check-1', 'check-2', 'check-3', 'check-5'];
 const ALL = ['check-1', 'check-2', 'check-3', 'check-4', 'check-5'];
 
@@ -697,13 +697,13 @@ function updateAllCheck() {
     document.getElementById('btn-step1').disabled = !REQUIRED.every(id => isChecked(id));
 }
 
-// ?? ?대찓???좏슚????
+// 이메일 유효성 검사
 function checkEmailForm() {
     const email = document.getElementById('email-input').value;
     const hint = document.getElementById('email-hint');
     const re = /^[a-z0-9_.]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (email && !re.test(email)) {
-        hint.textContent = '?좏슚???대찓???뺤떇???꾨떃?덈떎.';
+        hint.textContent = '유효한 이메일 형식이 아닙니다.';
         hint.className = 'input-hint error';
     } else {
         hint.textContent = '';
@@ -711,30 +711,30 @@ function checkEmailForm() {
     checkStep2();
 }
 
-// ?? ?몄쬆肄붾뱶 諛쒖넚 (?꾩떆) ??
+// 인증코드 발송
 function sendVerifyCode() {
     const email = document.getElementById('email-input').value;
-    if (!email) return alert('?대찓?쇱쓣 癒쇱? ?낅젰?댁＜?몄슂.');
+    if (!email) return alert('이메일을 먼저 입력해주세요.');
     const hint = document.getElementById('email-hint');
-    hint.textContent = '?몄쬆肄붾뱶媛 諛쒖넚?섏뿀?듬땲?? (?꾩떆: 123456)';
+    hint.textContent = '인증코드가 발송되었습니다. (임시: 123456)';
     hint.className = 'input-hint success';
 }
 
-// ?? ?몄쬆肄붾뱶 ?뺤씤 (?꾩떆) ??
+// 인증코드 확인
 function checkVerifyCode() {
     const code = document.getElementById('verify-input').value;
     const hint = document.getElementById('verify-hint');
     if (code === '123456') {
-        hint.textContent = '???몄쬆???꾨즺?섏뿀?듬땲??';
+        hint.textContent = '인증이 완료되었습니다.';
         hint.className = 'input-hint success';
     } else {
-        hint.textContent = '?몄쬆肄붾뱶媛 ?щ컮瑜댁? ?딆뒿?덈떎.';
+        hint.textContent = '인증코드가 올바르지 않습니다.';
         hint.className = 'input-hint error';
     }
     checkStep2();
 }
 
-// ?? 鍮꾨?踰덊샇 ?좏슚????
+// 비밀번호 유효성 검사
 function checkPassword() {
     const pw = document.getElementById('pw-input').value;
     const set = (id, met) => {
@@ -754,10 +754,10 @@ function checkPasswordConfirm() {
     const confirm = document.getElementById('pw-confirm-input').value;
     const hint = document.getElementById('pw-confirm-hint');
     if (confirm && pw !== confirm) {
-        hint.textContent = '鍮꾨?踰덊샇媛 ?쇱튂?섏? ?딆뒿?덈떎.';
+        hint.textContent = '비밀번호가 일치하지 않습니다.';
         hint.className = 'input-hint error';
     } else if (confirm && pw === confirm) {
-        hint.textContent = '??鍮꾨?踰덊샇媛 ?쇱튂?⑸땲??';
+        hint.textContent = '비밀번호가 일치합니다.';
         hint.className = 'input-hint success';
     } else {
         hint.textContent = '';
@@ -778,13 +778,11 @@ function checkStep2() {
     const pwConfirmHint = document.getElementById('pw-confirm-hint').textContent;
 
     const emailOk = email.length > 0;
-    const verifyOk = verifyHint.includes('?꾨즺');
+    const verifyOk = verifyHint.includes('완료');
     const pwOk = isPasswordValid();
-    const pwConfirmOk = pwConfirmHint.includes('?쇱튂?⑸땲??);
+    const pwConfirmOk = pwConfirmHint.includes('일치합니다');
 
     document.getElementById('btn-step2').disabled = !(emailOk && verifyOk && pwOk && pwConfirmOk);
 }
 </script>
-
-</body>
-</html>
+{% endblock %}

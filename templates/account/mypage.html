@@ -1,23 +1,16 @@
-﻿{% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TBM 현장관리 - 마이페이지</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}TBM 현장관리 - 마이페이지{% endblock %}
+
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
     <div class="container">
         <!-- 헤더 -->
-        <div class="header">
-            <button class="back-btn" onclick="confirmBackMypage()">←</button>
-            <span class="title">마이페이지</span>
-        </div>
+        {% include "../common/header.html" with page_name="마이페이지" %}
 
         <!-- 콘텐츠 -->
         <div class="content mypage-content">
@@ -147,8 +140,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <script src="{% static 'js/common.js' %}"></script>
+{% block extra_script %}
     <script src="{% static 'js/mypage.js' %}"></script>
-</body>
-</html>
+{% endblock %}
