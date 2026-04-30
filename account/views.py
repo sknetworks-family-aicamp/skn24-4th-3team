@@ -503,3 +503,14 @@ def mypage_view(request):
     }, status=400)
 
 
+
+def api_sample_page(request):
+    return render(request, "account/apisample.html")
+
+def api_sample_response(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_name = data.get('username')
+        return JsonResponse({'status': 'success', 'message': f'{user_name} 님 환영합니다!'}, status=200)
+    else :
+        return JsonResponse({'status': 'fail', 'message':"POST 로 요청주세요"}, status=400)
