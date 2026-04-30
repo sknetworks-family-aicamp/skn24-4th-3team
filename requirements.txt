@@ -1,0 +1,30 @@
+django
+fastapi
+uvicorn[standard]
+python-multipart
+python-dotenv
+requests
+
+# STT
+faster-whisper
+
+# LLM / LangChain
+langchain
+langchain-core
+langchain-openai
+langgraph
+openai
+
+# RAG
+chromadb
+cohere
+rank-bm25
+sentence-transformers
+kiwipiepy
+
+# Jargon (HuggingFace)
+transformers
+torch
+accelerate
+safetensors
+huggingface-hub

@@ -1,0 +1,85 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBM 현장관리 - 회원가입 약관 동의</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">←</button>
+            <span class="title">회원가입 약관 동의</span>
+        </div>
+
+        <!-- 콘텐츠 -->
+        <div class="content">
+            <div class="terms-container">
+                <!-- 전체 동의 체크박스 -->
+                <div class="terms-header-check">
+                    <input type="checkbox" id="agree-all" onchange="toggleAllTerms()">
+                    <label for="agree-all">helpmet 이용약관, 개인정보 수집 및 이용, 제3자 및 데이터 관리에 모두 동의합니다.</label>
+                </div>
+
+                <!-- 1. 서비스 이용약관 동의 -->
+                <div class="terms-section">
+                    <h3>1. 서비스 이용약관 동의</h3>
+                    <div class="terms-box">
+                        <p><strong>건설안전 TBM Helmet 서비스(이하 "서비스")를 이용하기 위해 아래 이용약관에 동의해주세요.</strong></p>
+                        <p><strong>서비스 목적</strong></p>
+                        <ul>
+                            <li>건설 현장의 TBM(Tool Box Meeting) 기록 작성 및 안전 관리 지원</li>
+                            <li>안전 정보 제공 및 현장 위험 예방 활동 지원</li>
+                        </ul>
+                        <p><strong>이용자 의무</strong></p>
+                        <ul>
+                            <li>타인의 계정을 도용하거나 위장 정보를 등록해서는 안 됩니다.</li>
+                            <li>현장 안전과 무관한 용도로 서비스를 사용할 수 없습니다.</li>
+                            <li>서비스 내 작성된 TBM 기록은 현장 안전 목적으로만 활용해야 합니다.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 2. 개인정보 수집 및 이용 동의 -->
+                <div class="terms-section">
+                    <h3>2. 개인정보 수집 및 이용 동의</h3>
+                    <div class="terms-box">
+                        <p><strong>서비스 이용을 위해 아래 개인정보를 수집·이용합니다.</strong></p>
+                        <p><strong>수집 항목</strong></p>
+                        <ul>
+                            <li>이메일, 비밀번호, 성명, 업체명, 직책</li>
+                            <li>소속 현장명, 근로자 번호 (건설업 안전 관리 목적)</li>
+                        </ul>
+                        <p><strong>수집 목적 | 회원 가입, 본인 확인, 서비스 제공 및 안전 관리</strong></p>
+                        <p><strong>보유 기간 | 회원 탈퇴 시까지 (단, 법령에 따라 일정 기간 보관할 수 있음)</strong></p>
+                        <p><strong>제3자 제공목적으로 제3자에게 제공하지 않습니다. 단, 법령에 의한 경우 예외</strong></p>
+                        <p>동의를 거부할 권리가 있으나, 거부 시 서비스 이용에 제한될 수 있습니다.</p>
+                    </div>
+                </div>
+
+                <!-- 하단 체크박스 -->
+                <div class="terms-footer-check">
+                    <input type="checkbox" id="agree-privacy" onchange="checkAllAgreed()">
+                    <label for="agree-privacy">개인정보 수집 및 이용에 동의합니다.</label>
+                </div>
+
+                <!-- 버튼 -->
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="navigateTo('login.html')">처음으로</button>
+                    <button class="btn btn-primary" id="next-btn" onclick="navigateTo('register-form.html')" disabled>다음단계로</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/common.js' %}"></script>
+    <script src="{% static 'js/auth.js' %}"></script>
+</body>
+</html>

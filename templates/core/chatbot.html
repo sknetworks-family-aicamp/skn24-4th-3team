@@ -1,0 +1,98 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBM 현장관리 - 챗봇</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <!-- 뒤로가기 누르면 메인으로! -->
+            <button class="back-btn" onclick="navigateTo('main.html')">←</button>
+            <span class="title">HelpMet 챗봇</span>
+        </div>
+
+        <!-- 챗봇 콘텐츠 영역 -->
+        <div class="content chatbot-content">
+            
+            <!-- 스크롤되는 채팅 영역 -->
+            <div class="chat-messages-area" id="chat-messages-area">
+                
+                <!-- 상단 인사말 -->
+                <div class="chat-intro">
+                    <div class="intro-logo">
+                        <img src="{% static 'images/helpmet.png' %}" alt="HelpMet 봇" style="width: 120px; height: 120px; object-fit: contain;">
+                        <div class="logo-text">HelpMet</div>
+                    </div>
+                    <h2>건설 안전 규정집에 대해서 물어보세요</h2>
+                    <p>헬프멧이 여러분의 건설 안전을 책임집니다.</p>
+                </div>
+
+                <!-- 채팅 내용이 추가될 공간 -->
+                <div class="chat-list" id="chat-list">
+                    <!-- 초기 예시: 사용자 질문 -->
+                    <div class="message-row user-row">
+                        <div class="message-content">
+                            <div class="bubble user-bubble">
+                                안전대는 어떤 기준으로 차야하는거지?<br>오늘 작업에 추락위험이 있는 인원이 있어서
+                            </div>
+                            <div class="time">7:19</div>
+                        </div>
+                        <div class="avatar user-avatar">👤</div>
+                    </div>
+
+                    <!-- 초기 예시: 챗봇 답변 -->
+                    <div class="message-row bot-row">
+                        <div class="avatar bot-avatar">
+                            <img src="{% static 'images/helpmet.png' %}" alt="Bot" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        </div>
+                        <div class="message-content">
+                            <div class="bubble bot-bubble">
+                                안전대는 추락위험이 있는 작업에는 반드시 착용하여야 하며, 추락의 위험이 있는 장소는 다음과 같습니다.<br><br>
+                                (1) 작업발판(폭 40cm)이 없는 장소의 작업.<br>
+                                (2) 작업발판이 있어도 난간대가 없는 장소의 작업<br>
+                                (3) 난간대로부터 상체를 내밀어 작업하는 경우<br>
+                                (4) 작업발판과 구조체 사이의 거리가 30cm 이상으로 수평방호시설이 없는 장소의 작업<br><br>
+                                출처 : C-49-2012 안전대 사용 지침
+                            </div>
+                            <div class="time">7:20</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 하단 입력창 영역 -->
+            <div class="chat-input-wrapper">
+                <div class="chat-input-box">
+                    <input type="text" id="chat-input" placeholder="KOSHA 안전가이드를 물어보세요 ex) 교량공사할 때 주의할 점이 뭐야?" onkeypress="handleEnter(event)">
+                    <div class="chat-action-btns">
+                        <!-- 파형 아이콘 -->
+                        <button class="action-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2B83FF" stroke-width="2"><path d="M12 4v16m-4-8v8M8 8v8m8-4v8m4-8v8"/></svg>
+                        </button>
+                        <!-- 마이크 아이콘 -->
+                        <button class="action-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2B83FF" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+                        </button>
+                        <!-- 전송 버튼 -->
+                        <button class="action-btn send-btn" onclick="sendMessage()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/common.js' %}"></script>
+    <script src="{% static 'js/chatbot.js' %}"></script>
+</body>
+</html>

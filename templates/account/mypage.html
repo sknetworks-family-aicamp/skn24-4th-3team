@@ -1,0 +1,154 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBM 현장관리 - 마이페이지</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <button class="back-btn" onclick="confirmBackMypage()">←</button>
+            <span class="title">마이페이지</span>
+        </div>
+
+        <!-- 콘텐츠 -->
+        <div class="content mypage-content">
+            <div class="mypage-container">
+                <!-- 탭 메뉴 (고정) -->
+                <div class="tab-menu">
+                    <button class="tab-btn active" onclick="switchMypageTab('info')">
+                        정보 수정
+                    </button>
+                    <button class="tab-btn" onclick="switchMypageTab('password')">
+                        비밀번호 변경
+                    </button>
+                    <button class="tab-btn" onclick="switchMypageTab('withdrawal')">
+                        회원 탈퇴
+                    </button>
+                </div>
+
+                <!-- 스크롤 가능한 탭 내용 영역 -->
+                <div class="tab-content-wrapper">
+                    <!-- 탭 1: 정보 수정 -->
+                    <div class="tab-content active" id="tab-info">
+                        <div class="mypage-form">
+                            <div class="form-group">
+                                <label>성명</label>
+                                <input type="text" id="info-name" placeholder="남다람" maxlength="20">
+                                <div class="error-message" id="info-name-error"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>업체명</label>
+                                <input type="text" id="info-company" placeholder="뉴런건설" maxlength="50">
+                                <div class="error-message" id="info-company-error"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>직책</label>
+                                <input type="text" id="info-position" placeholder="현장소장" maxlength="50">
+                                <div class="error-message" id="info-position-error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 탭 2: 비밀번호 변경 -->
+                    <div class="tab-content" id="tab-password">
+                        <div class="mypage-form">
+                            <div class="form-group">
+                                <label>현재 비밀번호</label>
+                                <input type="password" id="current-password" placeholder="••••••••••">
+                                <div class="error-message" id="current-password-error"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>새 비밀번호</label>
+                                <input type="password" id="new-password" placeholder="영문 대소문자, 숫자, 특수문자를 각각 최소 1개 이상 포함하여 8~16자이상 만들어주세요.">
+                                <div class="error-message" id="new-password-error"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>새 비밀번호 확인</label>
+                                <input type="password" id="new-password-confirm" placeholder="••••••••••••">
+                                <div class="error-message" id="new-password-confirm-error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 탭 3: 회원 탈퇴 -->
+                    <div class="tab-content" id="tab-withdrawal">
+                        <div class="mypage-form">
+                            <!-- 주의사항 박스 -->
+                            <div class="withdrawal-notice">
+                                <h4>⚠️ 회원 탈퇴 시 주의사항</h4>
+                                <ul>
+                                    <li>계정 정보가 영구적으로 삭제 됩니다.</li>
+                                    <li>TBM 기록이 모두 삭제됩니다.</li>
+                                    <li>삭제된 데이터는 복구할 수 없습니다.</li>
+                                </ul>
+                            </div>
+
+                            <div class="form-group">
+                                <p class="withdrawal-instruction">회원 탈퇴를 진행하시려면 아래에 <strong style="color: #FF3B3B;">"회원탈퇴"</strong>를 입력해주세요.</p>
+                                <input type="text" id="withdrawal-confirm" placeholder="회원 탈퇴">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 저장 버튼 (고정) -->
+                <div class="mypage-buttons">
+                    <button class="btn btn-primary" id="save-btn" onclick="saveMypageChanges()">저장</button>
+                </div>
+
+                <!-- 회원 탈퇴 버튼 (탈퇴 탭에서만 표시) -->
+                <div class="withdrawal-buttons" id="withdrawal-btn-area" style="display: none;">
+                    <button class="btn btn-delete" id="withdrawal-btn" onclick="confirmWithdrawal()" disabled>회원 탈퇴</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 팝업: 뒤로가기 확인 -->
+    <div class="popup-overlay" id="popup-mypage-back">
+        <div class="popup-box">
+            <h3>수정 중인 내용이 저장되지 않습니다.<br>나가시겠습니까?</h3>
+            <div class="popup-buttons">
+                <button class="btn btn-primary" onclick="confirmLeaveMypage()">확인</button>
+                <button class="btn btn-secondary" onclick="closePopup('popup-mypage-back')">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 팝업: 정보 수정 완료 -->
+    <div class="popup-overlay" id="popup-info-saved">
+        <div class="popup-box">
+            <h3>개인정보가 성공적으로 변경되었습니다.</h3>
+            <div class="popup-buttons">
+                <button class="btn btn-primary" onclick="closePopup('popup-info-saved')">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 팝업: 회원 탈퇴 확인 -->
+    <div class="popup-overlay" id="popup-withdrawal-confirm">
+        <div class="popup-box">
+            <h3>그동안 이용해주셔서 감사합니다</h3>
+            <div class="popup-buttons">
+                <button class="btn btn-primary" onclick="proceedWithdrawal()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/common.js' %}"></script>
+    <script src="{% static 'js/mypage.js' %}"></script>
+</body>
+</html>

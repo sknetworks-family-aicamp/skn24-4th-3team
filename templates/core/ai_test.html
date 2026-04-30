@@ -1,0 +1,119 @@
+﻿{% load static %}
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI FastAPI Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 760px;
+            margin: 40px auto;
+            padding: 0 16px;
+            line-height: 1.5;
+        }
+
+        section {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 8px;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        pre {
+            min-height: 80px;
+            overflow: auto;
+            padding: 12px;
+            background: #f6f6f6;
+            border-radius: 6px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI FastAPI Test</h1>
+
+    <section>
+        <h2>Chatbot</h2>
+        <textarea id="chat-message" rows="4" placeholder="吏덈Ц???낅젰?섏꽭??">鍮꾧퀎 ?묒뾽 ??二쇱슂 ?덉쟾議곗튂??</textarea>
+        <button type="button" id="chat-button">梨쀫큸 ?뚯뒪??/button>
+        <pre id="chat-result"></pre>
+    </section>
+
+    <section>
+        <h2>TBM Draft</h2>
+        <input type="file" id="audio-file" accept="audio/*">
+        <input type="text" id="lat" placeholder="lat ?? 37.5665">
+        <input type="text" id="lon" placeholder="lon ?? 126.9780">
+        <button type="button" id="tbm-button">TBM ?뚯뒪??/button>
+        <pre id="tbm-result"></pre>
+    </section>
+
+    <script>
+        const csrfToken = "{{ csrf_token }}";
+
+        document.getElementById("chat-button").addEventListener("click", async () => {
+            const result = document.getElementById("chat-result");
+            const message = document.getElementById("chat-message").value;
+            const formData = new FormData();
+            formData.append("message", message);
+            formData.append("csrfmiddlewaretoken", csrfToken);
+
+            result.textContent = "?붿껌 以?..";
+
+            try {
+                const response = await fetch("{% url 'chatbot-ask' %}", {
+                    method: "POST",
+                    body: formData,
+                });
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                result.textContent = String(error);
+            }
+        });
+
+        document.getElementById("tbm-button").addEventListener("click", async () => {
+            const result = document.getElementById("tbm-result");
+            const audioFile = document.getElementById("audio-file").files[0];
+
+            if (!audioFile) {
+                result.textContent = "?뚯꽦 ?뚯씪???좏깮?섏꽭??";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("audio_file", audioFile);
+            formData.append("lat", document.getElementById("lat").value);
+            formData.append("lon", document.getElementById("lon").value);
+            formData.append("csrfmiddlewaretoken", csrfToken);
+
+            result.textContent = "?붿껌 以?..";
+
+            try {
+                const response = await fetch("{% url 'tbm-create' %}", {
+                    method: "POST",
+                    body: formData,
+                });
+                const html = await response.text();
+                result.textContent = html.slice(0, 3000);
+            } catch (error) {
+                result.textContent = String(error);
+            }
+        });
+    </script>
+</body>
+</html>

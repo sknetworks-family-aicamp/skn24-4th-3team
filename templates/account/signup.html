@@ -1,0 +1,790 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelpMet - ?뚯썝媛??/title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #eef0f5;
+            min-height: 100vh;
+        }
+
+        /* ?곷떒 ?ㅻ뜑 */
+        .topbar {
+            background: #DCE8FF;
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 24px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #818692;
+            text-decoration: none;
+            padding: 8px;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        .topbar-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #818692;
+        }
+
+        /* ?④퀎 ?쒖떆 */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 0;
+            background: #eef0f5;
+        }
+
+        .step-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #d0d5e0;
+            transition: all 0.3s;
+        }
+
+        .step-dot.active {
+            background: #4a90e2;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* ?ㅽ겕濡??곸뿭 */
+        .scroll-area {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 24px 20px 0;
+        }
+
+        /* ?④퀎 而⑦뀗痢?*/
+        .step-content { display: none; }
+        .step-content.active { display: block; }
+
+        /* ?? 1?④퀎: ?쎄? ?? */
+        .term-section { margin-bottom: 24px; }
+
+        .term-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #2c3350;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .badge-required { background: #fff0f0; color: #e53935; }
+        .badge-optional { background: #f0f4ff; color: #4a90e2; }
+
+        .term-box {
+            background: #fff;
+            border: 1px solid #e0e4ec;
+            border-radius: 10px;
+            padding: 16px 18px;
+            font-size: 13px;
+            color: #5a6070;
+            line-height: 1.8;
+            max-height: 160px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+
+        .term-box h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #2c3350;
+            margin: 10px 0 4px;
+        }
+
+        .term-box ul { padding-left: 18px; margin: 4px 0; }
+        .term-box ul li { margin-bottom: 3px; }
+
+        .check-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .check-label {
+            font-size: 13px;
+            color: #5a6070;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .custom-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #d0d5e0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .custom-checkbox.checked {
+            background: #4a90e2;
+            border-color: #4a90e2;
+        }
+
+        .custom-checkbox.checked::after {
+            content: '??;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e0e4ec;
+            margin: 8px 0 20px;
+        }
+
+        .all-agree-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 0;
+            cursor: pointer;
+        }
+
+        .all-agree-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3350;
+            flex: 1;
+        }
+
+        /* ?? 2?④퀎: 怨꾩젙 ?뺣낫 ?? */
+        .step-desc {
+            font-size: 13px;
+            color: #9a9fb0;
+            margin-bottom: 24px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3350;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #e8eaf0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #2c3350;
+            background: #f8f9fc;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-input::placeholder { color: #b0b5c4; }
+
+        .form-input:focus {
+            border-color: #4a90e2;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(74,144,226,0.08);
+        }
+
+        .form-input:disabled {
+            background: #f0f2f5;
+            color: #9a9fb0;
+        }
+
+        /* ?대찓????*/
+        .email-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .email-row .form-input { flex: 1; }
+
+        .btn-verify {
+            padding: 14px 16px;
+            background: #4a90e2;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .btn-verify:hover { background: #357abd; }
+
+        .input-hint {
+            font-size: 12px;
+            color: #9a9fb0;
+            margin-top: 6px;
+        }
+
+        .input-hint.error { color: #e53935; }
+        .input-hint.success { color: #27ae60; }
+
+        /* 鍮꾨?踰덊샇 議곌굔 */
+        .pw-conditions {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .pw-condition {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: #f0f2f5;
+            color: #9a9fb0;
+            transition: all 0.2s;
+        }
+
+        .pw-condition.met {
+            background: #e8f5e9;
+            color: #27ae60;
+        }
+
+        /* ?? ?섎떒 踰꾪듉 ?? */
+        .footer {
+            max-width: 480px;
+            margin: 20px auto 0;
+            padding: 0 20px 40px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: #e0e4ec;
+            color: #7a8099;
+        }
+
+        .btn-secondary:hover { background: #d0d5e0; }
+
+        .btn-primary {
+            background: #4a90e2;
+            color: #fff;
+        }
+
+        .btn-primary:hover { background: #357abd; }
+        .btn-primary:disabled { background: #b0bdd0; cursor: not-allowed; }
+
+        .hidden { display: none !important; }
+
+        /* 4?④퀎: 媛???꾨즺 */
+        .complete-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .check-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 6px solid #27ae60;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+            animation: scaleIn 0.4s ease;
+        }
+
+        .check-mark {
+            width: 36px;
+            height: 20px;
+            border-left: 6px solid #27ae60;
+            border-bottom: 6px solid #27ae60;
+            transform: rotate(-45deg) translateY(-4px);
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .complete-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3350;
+            margin-bottom: 10px;
+        }
+
+        .complete-subtitle {
+            font-size: 14px;
+            color: #9a9fb0;
+            margin-bottom: 36px;
+        }
+
+        .complete-btn {
+            width: 200px;
+            text-decoration: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ?곷떒 ?ㅻ뜑 -->
+<div class="topbar">
+    <button class="back-btn" id="back-btn" onclick="prevStep()">??/button>
+    <div class="topbar-title" id="topbar-title">?뚯썝媛???쎄? ?숈쓽</div>
+</div>
+
+<!-- ?④퀎 ?쒖떆 -->
+<div class="step-indicator">
+    <div class="step-dot active" id="dot-1"></div>
+    <div class="step-dot" id="dot-2"></div>
+    <div class="step-dot" id="dot-3"></div>
+</div>
+
+<form method="POST" id="signup-form">
+    {% csrf_token %}
+
+    <!-- ?? 1?④퀎: ?쎄? ?숈쓽 ?? -->
+    <div class="step-content active" id="step-1">
+        <div class="scroll-area">
+
+            <!-- 1. ?쒕퉬???댁슜?쎄? -->
+            <div class="term-section">
+                <div class="term-title">1. ?쒕퉬???댁슜?쎄? ?숈쓽 <span class="badge badge-required">?꾩닔</span></div>
+                <div class="term-box">
+                    <p>嫄댁꽕?덉쟾 TBM Helmet ?쒕퉬???댄븯 "?쒕퉬??)瑜??댁슜?섍린 ?꾪빐 ?댁슜?쎄????숈쓽?댁＜?몄슂.</p>
+                    <h4>?쒕퉬??紐⑹쟻</h4>
+                    <ul>
+                        <li>嫄댁꽕 ?꾩옣??TBM(Tool Box Meeting) 湲곕줉 ?묒꽦 諛??덉쟾 愿由?吏??/li>
+                        <li>?덉쟾 ?뺣낫 ?쒓났 諛??꾩옣 ?꾪뿕 ?덈갑 ?쒕룞 吏??/li>
+                    </ul>
+                    <h4>?댁슜???섎Т</h4>
+                    <ul>
+                        <li>??몄쓽 怨꾩젙???꾩슜?섍굅???덉쐞 ?뺣낫瑜??깅줉?댁꽌?????⑸땲??</li>
+                        <li>?꾩옣 ?덉쟾怨?臾닿????⑸룄濡??쒕퉬?ㅻ? ?ъ슜?????놁뒿?덈떎.</li>
+                        <li>?쒕퉬?????묒꽦??TBM 湲곕줉? ?꾩옣 ?덉쟾 紐⑹쟻?쇰줈留??쒖슜?댁빞 ?⑸땲??</li>
+                    </ul>
+                    <h4>湲덉? ?됱쐞</h4>
+                    <ul>
+                        <li>?덉쐞 TBM 湲곕줉 ?묒꽦 諛??덉쟾 ?뺣낫 ?쒓끝</li>
+                        <li>?ㅻⅨ ?댁슜?먯쓽 ?뺣낫 臾대떒 ?섏쭛 諛??좏룷</li>
+                        <li>?쒕퉬???쒖뒪?쒖뿉 ???臾대떒 ?묎렐 諛??댄궧 ?쒕룄</li>
+                    </ul>
+                </div>
+                <div class="check-row">
+                    <label class="check-label" onclick="toggleCheck('check-1')">
+                        <div class="custom-checkbox" id="check-1"></div>
+                        ?쒕퉬???댁슜?쎄????숈쓽?⑸땲??
+                    </label>
+                </div>
+            </div>
+
+            <!-- 2. 媛쒖씤?뺣낫 ?섏쭛 諛??댁슜 -->
+            <div class="term-section">
+                <div class="term-title">2. 媛쒖씤?뺣낫 ?섏쭛 諛??댁슜 ?숈쓽 <span class="badge badge-required">?꾩닔</span></div>
+                <div class="term-box">
+                    <p>?쒕퉬???댁슜???꾪빐 ?꾨옒 媛쒖씤?뺣낫瑜??섏쭛쨌?댁슜?⑸땲??</p>
+                    <h4>?섏쭛 ??ぉ</h4>
+                    <ul>
+                        <li>?대찓?? 鍮꾨?踰덊샇, ?깅챸, ?낆껜紐? 吏곸콉</li>
+                        <li>?뚯냽 ?꾩옣紐? 洹쇰줈??踰덊샇 (嫄댁꽕???덉쟾 愿由?紐⑹쟻)</li>
+                    </ul>
+                    <h4>?섏쭛 紐⑹쟻</h4>
+                    <ul>
+                        <li>?뚯썝 媛?? 蹂몄씤 ?뺤씤, ?쒕퉬???쒓났 諛??덉쟾 愿由?/li>
+                        <li>蹂댁쑀 湲곌컙: ?뚯썝 ?덊눜 ?쒓퉴吏 (?? 踰뺣졊???곕씪 ?쇱젙 湲곌컙 蹂닿??????덉쓬)</li>
+                    </ul>
+                    <p>?숈쓽瑜?嫄곕???沅뚮━媛 ?덉쑝?? 嫄곕? ???쒕퉬???댁슜???쒗븳?????덉뒿?덈떎.</p>
+                </div>
+                <div class="check-row">
+                    <label class="check-label" onclick="toggleCheck('check-2')">
+                        <div class="custom-checkbox" id="check-2"></div>
+                        媛쒖씤?뺣낫 ?섏쭛 諛??댁슜???숈쓽?⑸땲??
+                    </label>
+                </div>
+            </div>
+
+            <!-- 3. ?대찓???몄쬆 -->
+            <div class="term-section">
+                <div class="term-title">3. ?대찓???몄쬆 ?숈쓽 <span class="badge badge-required">?꾩닔</span></div>
+                <div class="term-box">
+                    <p>?뚯썝 媛??諛?鍮꾨?踰덊샇 李얘린 怨쇱젙?먯꽌 蹂몄씤 ?뺤씤???꾪빐 ?대찓???몄쬆??吏꾪뻾?⑸땲??</p>
+                    <ul>
+                        <li>?몄쬆踰덊샇??6?먮━ ?レ옄濡?諛쒓툒?⑸땲??</li>
+                        <li>?몄쬆踰덊샇???좏슚?쒓컙? 10遺꾩엯?덈떎.</li>
+                        <li>?몄쬆踰덊샇 ?щ컻?≪? ?섎（ 理쒕? 5?뚭퉴吏 媛?ν빀?덈떎.</li>
+                        <li>?몄쬆 ?대찓?쇱? ?쒕퉬??諛쒖넚 紐⑹쟻 ?몄뿉 ?ъ슜?섏? ?딆뒿?덈떎.</li>
+                    </ul>
+                </div>
+                <div class="check-row">
+                    <label class="check-label" onclick="toggleCheck('check-3')">
+                        <div class="custom-checkbox" id="check-3"></div>
+                        ?대찓???몄쬆???숈쓽?⑸땲??
+                    </label>
+                </div>
+            </div>
+
+            <!-- 4. ?덉쟾 ?뺣낫 ?쒖슜 -->
+            <div class="term-section">
+                <div class="term-title">4. ?덉쟾 ?뺣낫 ?쒖슜 ?숈쓽 <span class="badge badge-optional">?좏깮</span></div>
+                <div class="term-box">
+                    <p>TBM Helmet ?쒕퉬?ㅻ? ?듯빐 ?묒꽦???덉쟾 湲곕줉? ?꾨옒 紐⑹쟻?쇰줈 ?쒖슜?????덉뒿?덈떎.</p>
+                    <ul>
+                        <li>?꾩옣 ?덉쟾 愿由?諛??꾪뿕 ?덈갑 紐⑹쟻???대? ?쒖슜</li>
+                        <li>?곗뾽?ы빐 諛쒖깮 ??愿怨?湲곌?(怨좎슜?몃룞遺 ?? ?쒖텧 ?먮즺濡??ъ슜?????덉뒿?덈떎.</li>
+                        <li>媛쒖씤 ?앸퀎??遺덇??ν븯寃?媛怨듬맂 ?뺥깭???듦퀎 ?곗씠?곕줈 ?쒖슜?????덉뒿?덈떎.</li>
+                    </ul>
+                </div>
+                <div class="check-row">
+                    <label class="check-label" onclick="toggleCheck('check-4')">
+                        <div class="custom-checkbox" id="check-4"></div>
+                        ?덉쟾 ?뺣낫 ?쒖슜???숈쓽?⑸땲??
+                    </label>
+                </div>
+            </div>
+
+            <!-- 5. 怨꾩젙 諛??곗씠??愿由?-->
+            <div class="term-section">
+                <div class="term-title">5. 怨꾩젙 諛??곗씠??愿由??숈쓽 <span class="badge badge-required">?꾩닔</span></div>
+                <div class="term-box">
+                    <p>?뚯썝? 留덉씠?섏씠吏?먯꽌 ?뚯썝 ?뺣낫瑜??몄젣?좎? ?섏젙?????덉뒿?덈떎.</p>
+                    <h4>?뚯썝 ?덊눜 ??/h4>
+                    <ul>
+                        <li>怨꾩젙 ?뺣낫? ?묒꽦??TBM 湲곕줉? ?곴뎄 ??젣?섎ŉ 蹂듦뎄媛 遺덇??ν빀?덈떎.</li>
+                        <li>?덊눜 ???숈씪 ?대찓?쇰줈 ?ш??낆? 媛?ν븯?? ?댁쟾 ?곗씠?곕뒗 蹂듭썝?섏? ?딆뒿?덈떎.</li>
+                    </ul>
+                    <h4>TBM 湲곕줉 ?뚯쑀沅?/h4>
+                    <ul>
+                        <li>?쒕퉬?????묒꽦??TBM 湲곕줉???뚯쑀沅뚯? ?묒꽦??蹂몄씤?먭쾶 ?덉뒿?덈떎.</li>
+                    </ul>
+                </div>
+                <div class="check-row">
+                    <label class="check-label" onclick="toggleCheck('check-5')">
+                        <div class="custom-checkbox" id="check-5"></div>
+                        怨꾩젙 諛??곗씠??愿由ъ뿉 ?숈쓽?⑸땲??
+                    </label>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- ?꾩껜 ?숈쓽 -->
+            <div class="all-agree-row" onclick="toggleAll()">
+                <div class="custom-checkbox" id="check-all"></div>
+                <div class="all-agree-text">helpmet ?댁슜?쎄?, 媛쒖씤?뺣낫 ?섏쭛 諛??댁슜, 怨꾩젙 諛??곗씠??愿由ъ뿉 紐⑤몢 ?숈쓽?⑸땲??</div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <a href="{% url 'login' %}" class="btn btn-secondary">泥섏쓬?쇰줈</a>
+            <button type="button" class="btn btn-primary" id="btn-step1" onclick="goStep(2)" disabled>?ㅼ쓬?④퀎濡?/button>
+        </div>
+    </div>
+
+    <!-- ?? 2?④퀎: 怨꾩젙 ?뺣낫 ?? -->
+    <div class="step-content" id="step-2">
+        <div class="scroll-area">
+            <p class="step-desc">濡쒓렇?몄뿉 ?ъ슜??怨꾩젙 ?뺣낫瑜??낅젰?댁＜?몄슂.</p>
+
+            <!-- ?대찓??-->
+            <div class="form-group">
+                <label class="form-label">?대찓??(?꾩씠??</label>
+                <div class="email-row">
+                    <input type="email" name="email" class="form-input" id="email-input" placeholder="?대찓?쇱쓣 ?낅젰?섏꽭?? maxlength="29" oninput="checkEmailForm()">
+                    <button type="button" class="btn-verify" onclick="sendVerifyCode()">?몄쬆肄붾뱶 諛쒖넚</button>
+                </div>
+                <div class="input-hint" id="email-hint"></div>
+            </div>
+
+            <!-- ?몄쬆肄붾뱶 -->
+            <div class="form-group">
+                <label class="form-label">?몄쬆肄붾뱶</label>
+                <div class="email-row">
+                    <input type="text" name="verify_code" class="form-input" id="verify-input" placeholder="?몄쬆肄붾뱶 6?먮━ ?낅젰" maxlength="6">
+                    <button type="button" class="btn-verify" onclick="checkVerifyCode()">?뺤씤</button>
+                </div>
+                <div class="input-hint" id="verify-hint"></div>
+            </div>
+
+            <!-- 鍮꾨?踰덊샇 -->
+            <div class="form-group">
+                <label class="form-label">鍮꾨?踰덊샇</label>
+                <input type="password" name="password" class="form-input" id="pw-input" placeholder="鍮꾨?踰덊샇瑜??낅젰?섏꽭?? maxlength="16" oninput="checkPassword()">
+                <div class="pw-conditions">
+                    <span class="pw-condition" id="pw-len">8~16??/span>
+                    <span class="pw-condition" id="pw-upper">?臾몄옄</span>
+                    <span class="pw-condition" id="pw-lower">?뚮Ц??/span>
+                    <span class="pw-condition" id="pw-num">?レ옄</span>
+                    <span class="pw-condition" id="pw-special">?뱀닔臾몄옄</span>
+                </div>
+            </div>
+
+            <!-- 鍮꾨?踰덊샇 ?뺤씤 -->
+            <div class="form-group">
+                <label class="form-label">鍮꾨?踰덊샇 ?뺤씤</label>
+                <input type="password" name="password_confirm" class="form-input" id="pw-confirm-input" placeholder="鍮꾨?踰덊샇瑜??ㅼ떆 ?낅젰?섏꽭?? maxlength="16" oninput="checkPasswordConfirm()">
+                <div class="input-hint" id="pw-confirm-hint"></div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <button type="button" class="btn btn-secondary" onclick="goStep(1)">?댁쟾?쇰줈</button>
+            <button type="button" class="btn btn-primary" id="btn-step2" onclick="goStep(3)" disabled>?ㅼ쓬?④퀎濡?/button>
+        </div>
+    </div>
+
+    <!-- ?? 3?④퀎: ?ъ슜???뺣낫 ?? -->
+    <div class="step-content" id="step-3">
+        <div class="scroll-area">
+            <p class="step-desc">?쒕퉬???댁슜???꾪븳 ?ъ슜???뺣낫瑜??낅젰?댁＜?몄슂.</p>
+
+            <div class="form-group">
+                <label class="form-label">?깅챸</label>
+                <input type="text" name="name" class="form-input" placeholder="理쒕? 20?? maxlength="20" pattern="[媛-?즑-zA-Z0-9]+" title="?쒓?, ?곸뼱, ?レ옄留??낅젰 媛?ν빀?덈떎">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">?낆껜紐?/label>
+                <input type="text" name="company" class="form-input" placeholder="理쒕? 50?? maxlength="50" pattern="[媛-?즑-zA-Z0-9]+" title="?쒓?, ?곸뼱, ?レ옄留??낅젰 媛?ν빀?덈떎">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">吏곸콉</label>
+                <input type="text" name="position" class="form-input" placeholder="理쒕? 50?? maxlength="50" pattern="[媛-?즑-zA-Z0-9]+" title="?쒓?, ?곸뼱, ?レ옄留??낅젰 媛?ν빀?덈떎">
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <button type="button" class="btn btn-secondary" onclick="goStep(2)">?댁쟾?쇰줈</button>
+            <button type="button" class="btn btn-primary" onclick="submitSignup()">媛???꾨즺</button>
+        </div>
+    </div>
+
+    <!-- ?? 4?④퀎: 媛???꾨즺 ?? -->
+    <div class="step-content" id="step-4">
+        <div class="complete-area">
+            <div class="complete-icon">
+                <div class="check-circle">
+                    <div class="check-mark"></div>
+                </div>
+            </div>
+            <div class="complete-title">?뚯썝媛?낆씠 ?꾨즺?섏뿀?듬땲??/div>
+            <div class="complete-subtitle">?댁젣 ?ㅼ뼇???쒕퉬?ㅻ? ?댁슜?대낫?몄슂</div>
+            <a href="{% url 'login' %}" class="btn btn-primary complete-btn">濡쒓렇??/a>
+        </div>
+    </div>
+
+</form>
+
+<script>
+// ?? ?④퀎 ?대룞 ??
+const titles = ['?뚯썝媛???쎄? ?숈쓽', '怨꾩젙 ?뺣낫 ?낅젰', '?ъ슜???뺣낫 ?낅젰', '?덉쟾???섎（???쒖옉, HelpMet怨??④퍡'];
+let currentStep = 1;
+
+function goStep(step) {
+    document.getElementById(`step-${currentStep}`).classList.remove('active');
+    if (currentStep <= 3) document.getElementById(`dot-${currentStep}`).classList.remove('active');
+    currentStep = step;
+    document.getElementById(`step-${currentStep}`).classList.add('active');
+    if (currentStep <= 3) document.getElementById(`dot-${currentStep}`).classList.add('active');
+    document.getElementById('topbar-title').textContent = titles[step - 1];
+    // 4?④퀎?먯꽌 ?ㅻ줈媛湲??④린湲?
+    document.getElementById('back-btn').style.display = step === 4 ? 'none' : 'flex';
+    window.scrollTo(0, 0);
+}
+
+function submitSignup() {
+    // ?섏쨷???ㅼ젣 ?쒕쾭 ?꾩넚?쇰줈 援먯껜
+    goStep(4);
+}
+
+function prevStep() {
+    if (currentStep === 1) {
+        location.href = "{% url 'login' %}";
+    } else {
+        goStep(currentStep - 1);
+    }
+}
+
+// ?? ?쎄? 泥댄겕 ??
+const REQUIRED = ['check-1', 'check-2', 'check-3', 'check-5'];
+const ALL = ['check-1', 'check-2', 'check-3', 'check-4', 'check-5'];
+
+function isChecked(id) {
+    return document.getElementById(id).classList.contains('checked');
+}
+
+function setChecked(id, val) {
+    const el = document.getElementById(id);
+    if (val) el.classList.add('checked');
+    else el.classList.remove('checked');
+}
+
+function toggleCheck(id) {
+    setChecked(id, !isChecked(id));
+    updateAllCheck();
+}
+
+function toggleAll() {
+    const allChecked = ALL.every(id => isChecked(id));
+    ALL.forEach(id => setChecked(id, !allChecked));
+    updateAllCheck();
+}
+
+function updateAllCheck() {
+    setChecked('check-all', ALL.every(id => isChecked(id)));
+    document.getElementById('btn-step1').disabled = !REQUIRED.every(id => isChecked(id));
+}
+
+// ?? ?대찓???좏슚????
+function checkEmailForm() {
+    const email = document.getElementById('email-input').value;
+    const hint = document.getElementById('email-hint');
+    const re = /^[a-z0-9_.]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (email && !re.test(email)) {
+        hint.textContent = '?좏슚???대찓???뺤떇???꾨떃?덈떎.';
+        hint.className = 'input-hint error';
+    } else {
+        hint.textContent = '';
+    }
+    checkStep2();
+}
+
+// ?? ?몄쬆肄붾뱶 諛쒖넚 (?꾩떆) ??
+function sendVerifyCode() {
+    const email = document.getElementById('email-input').value;
+    if (!email) return alert('?대찓?쇱쓣 癒쇱? ?낅젰?댁＜?몄슂.');
+    const hint = document.getElementById('email-hint');
+    hint.textContent = '?몄쬆肄붾뱶媛 諛쒖넚?섏뿀?듬땲?? (?꾩떆: 123456)';
+    hint.className = 'input-hint success';
+}
+
+// ?? ?몄쬆肄붾뱶 ?뺤씤 (?꾩떆) ??
+function checkVerifyCode() {
+    const code = document.getElementById('verify-input').value;
+    const hint = document.getElementById('verify-hint');
+    if (code === '123456') {
+        hint.textContent = '???몄쬆???꾨즺?섏뿀?듬땲??';
+        hint.className = 'input-hint success';
+    } else {
+        hint.textContent = '?몄쬆肄붾뱶媛 ?щ컮瑜댁? ?딆뒿?덈떎.';
+        hint.className = 'input-hint error';
+    }
+    checkStep2();
+}
+
+// ?? 鍮꾨?踰덊샇 ?좏슚????
+function checkPassword() {
+    const pw = document.getElementById('pw-input').value;
+    const set = (id, met) => {
+        document.getElementById(id).className = 'pw-condition' + (met ? ' met' : '');
+    };
+    set('pw-len', pw.length >= 8 && pw.length <= 16);
+    set('pw-upper', /[A-Z]/.test(pw));
+    set('pw-lower', /[a-z]/.test(pw));
+    set('pw-num', /[0-9]/.test(pw));
+    set('pw-special', /[!@#$%^&*(),.?":{}|<>]/.test(pw));
+    checkPasswordConfirm();
+    checkStep2();
+}
+
+function checkPasswordConfirm() {
+    const pw = document.getElementById('pw-input').value;
+    const confirm = document.getElementById('pw-confirm-input').value;
+    const hint = document.getElementById('pw-confirm-hint');
+    if (confirm && pw !== confirm) {
+        hint.textContent = '鍮꾨?踰덊샇媛 ?쇱튂?섏? ?딆뒿?덈떎.';
+        hint.className = 'input-hint error';
+    } else if (confirm && pw === confirm) {
+        hint.textContent = '??鍮꾨?踰덊샇媛 ?쇱튂?⑸땲??';
+        hint.className = 'input-hint success';
+    } else {
+        hint.textContent = '';
+    }
+    checkStep2();
+}
+
+function isPasswordValid() {
+    const pw = document.getElementById('pw-input').value;
+    return pw.length >= 8 && pw.length <= 16 &&
+        /[A-Z]/.test(pw) && /[a-z]/.test(pw) &&
+        /[0-9]/.test(pw) && /[!@#$%^&*(),.?":{}|<>]/.test(pw);
+}
+
+function checkStep2() {
+    const email = document.getElementById('email-input').value;
+    const verifyHint = document.getElementById('verify-hint').textContent;
+    const pwConfirmHint = document.getElementById('pw-confirm-hint').textContent;
+
+    const emailOk = email.length > 0;
+    const verifyOk = verifyHint.includes('?꾨즺');
+    const pwOk = isPasswordValid();
+    const pwConfirmOk = pwConfirmHint.includes('?쇱튂?⑸땲??);
+
+    document.getElementById('btn-step2').disabled = !(emailOk && verifyOk && pwOk && pwConfirmOk);
+}
+</script>
+
+</body>
+</html>

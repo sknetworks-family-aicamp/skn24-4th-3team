@@ -1,0 +1,137 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBM 현장관리 - TBM 수정</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tbm.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <button class="back-btn" onclick="confirmCancelEdit()">←</button>
+            <span class="title">TBM 수정</span>
+        </div>
+
+        <!-- 제목 및 녹음 시간 (고정) -->
+        <div class="draft-header">
+            <h2>📋 TBM 초안</h2>
+        </div>
+
+        <!-- 콘텐츠 (스크롤 가능) -->
+        <div class="content">
+            <div class="draft-container">
+                <!-- 기본 정보 -->
+                <div class="edit-info">
+                    <div class="info-row-horizontal">
+                        <div class="info-col">
+                            <label class="info-icon">📅 2026.11.11</label>
+                        </div>
+                        <div class="info-col">
+                            <label class="info-icon">📍 서울시 - 금천구</label>
+                        </div>
+                        <div class="info-col">
+                            <label class="info-icon">🕐 07:04</label>
+                        </div>
+                    </div>
+
+                    <!-- 날씨 정보 (작은 박스) -->
+                    <div class="weather-mini-box">
+                        <table class="weather-mini-table">
+                            <tr>
+                                <th>상태</th>
+                                <td>구름 조금</td>
+                            </tr>
+                            <tr>
+                                <th>기온</th>
+                                <td>23℃</td>
+                            </tr>
+                            <tr>
+                                <th>습도</th>
+                                <td>65%</td>
+                            </tr>
+                            <tr>
+                                <th>강수확률</th>
+                                <td>20%</td>
+                            </tr>
+                            <tr>
+                                <th>풍속</th>
+                                <td>2.5m/s</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 업체명 -->
+                    <div class="info-group">
+                        <label>업체명</label>
+                        <input type="text" id="edit-company-name" value="주식회사 한강 철제소">
+                    </div>
+                </div>
+
+                <!-- TBM 초안 (편집 가능) -->
+                <div class="draft-content-section">
+                    <label>TBM 초안</label>
+                    <textarea class="draft-edit-box" id="edit-draft-content">(1) 작업자의 건강 이상 여부
+- 김반장 발열
+
+(2) 예상 위험 요인과 대책
+- A구역 상부 배관 연결 및 용접 작업 중 손가락 끼임 사고 위험 → 작업 시 반팔 주의 및 손가락 사고 주의
+- 고소 작업 시 안전 고리 미착인 위험 → 김 씨와 이 씨는 안전대 착용 필수
+- 용접 작업 중 불꽃에 의한 화재 위험 → 방지포 설치 및 불꽃 감시자 운용
+- 안전고리의 두 번 확인 및 자재 운반 시 명확한 신호 사용</textarea>
+                </div>
+
+                <!-- 버튼 -->
+                <div class="edit-buttons">
+                    <button class="btn btn-delete" onclick="confirmDeleteTBM()">삭제</button>
+                    <button class="btn btn-primary" onclick="saveEditedTBM()">완료</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 팝업: 수정 취소 확인 -->
+    <div class="popup-overlay" id="popup-cancel-edit">
+        <div class="popup-box">
+            <h3>TBM 수정을 취소하시겠습니까?</h3>
+            <p>수정하신 모든 내용이 삭제됩니다.</p>
+            <div class="popup-buttons">
+                <button class="btn btn-primary" onclick="cancelEdit()">예</button>
+                <button class="btn btn-secondary" onclick="closePopup('popup-cancel-edit')">아니오</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 팝업: 삭제 확인 -->
+    <div class="popup-overlay" id="popup-delete-tbm">
+        <div class="popup-box">
+            <h3>TBM 내역을 삭제하시겠습니까?</h3>
+            <p>해당 날짜에 녹음하신 모든 내용이 삭제됩니다.</p>
+            <div class="popup-buttons">
+                <button class="btn btn-delete" onclick="deleteTBM()">예</button>
+                <button class="btn btn-secondary" onclick="closePopup('popup-delete-tbm')">아니오</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 팝업: 저장 완료 (여기에 추가!) -->
+    <div class="popup-overlay" id="popup-save-complete">
+        <div class="popup-box">
+            <h3>저장 완료</h3>
+            <p>TBM 내용이 성공적으로 저장되었습니다.</p>
+            <div class="popup-buttons">
+                <button class="btn btn-primary" onclick="confirmSaveComplete()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/common.js' %}"></script>
+    <script src="{% static 'js/tbm.js' %}"></script>
+</body>
+</html>

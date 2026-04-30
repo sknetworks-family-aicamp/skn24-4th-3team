@@ -1,0 +1,144 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBM 현장관리 - TBM 상세</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tbm.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">←</button>
+            <span class="title">TBM 상세</span>
+        </div>
+
+        <!-- 콘텐츠 -->
+        <div class="content detail-content">
+            <div class="detail-container">
+                <!-- 탭 메뉴 (고정) -->
+                <div class="tab-menu">
+                    <button class="tab-btn active" onclick="switchTab('draft')">
+                        📋 TBM 초안
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('transcript')">
+                        💬 녹음 원문
+                    </button>
+                </div>
+
+                <!-- 스크롤 가능한 탭 내용 영역 -->
+                <div class="tab-content-wrapper">
+                    <!-- 탭 내용: TBM 초안 -->
+                    <div class="tab-content active" id="tab-draft">
+                    <div class="detail-info-box">
+                        <h3>콘크리트 작업</h3>
+                        <div class="detail-meta">
+                            <div class="meta-item">
+                                <span class="icon">📅</span>
+                                <span>2026.11.11</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="icon">📍</span>
+                                <span>서울시 - 금천구</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="icon">🕐</span>
+                                <span>07:04</span>
+                            </div>
+                        </div>
+
+                        <!-- 날씨 정보 -->
+                        <div class="weather-mini-box">
+                            <h4>날씨</h4>
+                            <table class="weather-mini-table">
+                                <tr>
+                                    <th>상태</th>
+                                    <td>구름 조금</td>
+                                </tr>
+                                <tr>
+                                    <th>기온</th>
+                                    <td>23℃</td>
+                                </tr>
+                                <tr>
+                                    <th>습도</th>
+                                    <td>65%</td>
+                                </tr>
+                                <tr>
+                                    <th>강수확률</th>
+                                    <td>20%</td>
+                                </tr>
+                                <tr>
+                                    <th>풍속</th>
+                                    <td>2.5m/s</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- 업체명 -->
+                        <div class="detail-field">
+                            <h4>업체명</h4>
+                            <p>주식회사 한도 철강</p>
+                        </div>
+
+                        <!-- TBM 초안 -->
+                        <div class="detail-field">
+                            <h4>TBM 초안</h4>
+                            <div class="detail-text-box">
+(1) 작업자의 건강 이상 여부
+- 김반장 발열
+
+(2) 예상 위험 요인과 대책
+- A구역 상부 배관 연결 및 용접 작업 중 손가락 끼임 사고 위험 → 작업 시 반팔 주의 및 손가락 사고 주의
+- 고소 작업 시 안전 고리 미착인 위험 → 김 씨와 이 씨는 안전대 착용 필수
+- 용접 작업 중 불꽃에 의한 화재 위험 → 방지포 설치 및 불꽃 감시자 운용
+- 안전고리의 두 번 확인 및 자재 운반 시 명확한 신호 사용
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 탭 내용: 녹음 원문 -->
+                <div class="tab-content" id="tab-transcript">
+                    <div class="detail-info-box">
+                        <h4>녹음 원문 - 콘크리트 작업</h4>
+                        <div class="detail-text-box">
+오늘 작업은 콘크리트 작업입니다. 작업 장소는 서울특별시 금천구구 101동 앞이고요.
+
+작업자를 건강 상태 체크하겠습니다. 모두 양호한 것으로 확인됩니다.
+
+현장에서 주의해야 할 위험 요소들을 점검했고, 안전대책을 수립했습니다. 모두 안전하게 작업하시기 바랍니다.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 버튼 (고정) -->
+                <div class="detail-buttons">
+                    <button class="btn btn-delete" onclick="confirmDeleteTBMDetail()">삭제</button>
+                    <button class="btn btn-primary" onclick="editTBMDetail()">수정</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 팝업: 삭제 확인 -->
+    <div class="popup-overlay" id="popup-delete-detail">
+        <div class="popup-box">
+            <h3>TBM 내역을 삭제하시겠습니까?</h3>
+            <p>해당 날짜에 녹음하신 모든 내용이 삭제됩니다.</p>
+            <div class="popup-buttons">
+                <button class="btn btn-delete" onclick="deleteTBMDetail()">예</button>
+                <button class="btn btn-secondary" onclick="closePopup('popup-delete-detail')">아니오</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/common.js' %}"></script>
+    <script src="{% static 'js/tbm.js' %}"></script>
+</body>
+</html>

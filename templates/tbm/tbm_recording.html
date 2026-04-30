@@ -1,0 +1,166 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBM 현장관리 - TBM 녹음</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tbm.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <button class="back-btn" onclick="confirmStop()">←</button>
+            <span class="title">TBM 작성</span>
+        </div>
+
+        <!-- 콘텐츠 -->
+        <div class="content">
+            <div class="recording-container">
+                <div class="recording-header">
+                    <h2>TBM 녹음</h2>
+                    <button class="help-btn" onclick="showHelpPopup()">?</button>
+                </div>
+
+                <!-- 녹음 상태 표시 -->
+                <div class="recording-display">
+                    <div class="mic-circle" id="mic-circle">
+                        <svg width="80" height="80" viewBox="0 0 80 80" id="mic-icon">
+                            <!-- 마이크 아이콘 -->
+                            <path d="M40 10C35 10 31 14 31 19V35C31 40 35 44 40 44C45 44 49 40 49 35V19C49 14 45 10 40 10Z" fill="#2B83FF"/>
+                            <path d="M52 35C52 42 46 48 40 48C34 48 28 42 28 35" stroke="#2B83FF" stroke-width="3" fill="none"/>
+                            <line x1="40" y1="48" x2="40" y2="60" stroke="#2B83FF" stroke-width="3"/>
+                            <line x1="32" y1="60" x2="48" y2="60" stroke="#2B83FF" stroke-width="3"/>
+                        </svg>
+                    </div>
+                    
+                    <!-- 타이머 -->
+                    <div class="timer" id="timer" style="display: none;">00:00</div>
+                </div>
+
+                <!-- 버튼 영역 -->
+                <div class="recording-controls">
+                    <!-- 녹음 시작 전 -->
+                    <div id="state-ready" class="recording-state">
+                        <button class="btn-record" onclick="startRecording()">
+                            🎤 녹음시작
+                        </button>
+                        <p class="recording-message">녹음 버튼을 눌러 TBM 회의를 시작하세요</p>
+                    </div>
+
+                    <!-- 녹음 중 -->
+                    <div id="state-recording" class="recording-state" style="display: none;">
+                        <div class="button-group-recording">
+                            <button class="btn btn-pause" onclick="pauseRecording()">
+                                ⏸ 일시정지
+                            </button>
+                            <button class="btn btn-stop" onclick="showStopPopup()">
+                                ⏹ 정지
+                            </button>
+                        </div>
+                        <p class="recording-message">녹음 중입니다. 회의를 진행하세요.</p>
+                    </div>
+
+                    <!-- 일시정지 -->
+                    <div id="state-paused" class="recording-state" style="display: none;">
+                        <div class="button-group-recording">
+                            <button class="btn btn-primary" onclick="resumeRecording()">
+                                ⏯ 재개
+                            </button>
+                            <button class="btn btn-stop" onclick="showStopPopup()">
+                                ⏹ 정지
+                            </button>
+                        </div>
+                        <p class="recording-message">재개 버튼을 눌러 회의를 재개하세요.</p>
+                    </div>
+
+                    <!-- 녹음 완료 -->
+                    <div id="state-completed" class="recording-state" style="display: none;">
+                        <div class="button-group-recording">
+                            <button class="btn btn-secondary" onclick="showDeletePopup()">
+                                삭제 후 재녹음
+                            </button>
+                            <button class="btn btn-primary" onclick="createDraft()">
+                                💾 초안 생성
+                            </button>
+                        </div>
+                        <p class="recording-message">녹음이 완료되었습니다. 초안을 생성하세요.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 팝업: 녹음 중단 확인 -->
+    <div class="popup-overlay" id="popup-cancel">
+        <div class="popup-box">
+            <h3>녹음을 중단하시겠습니까?</h3>
+            <p>지금까지 녹음하신 모든 내용이 삭제됩니다.</p>
+            <div class="popup-buttons">
+                <button class="btn btn-primary" onclick="cancelRecording()">예</button>
+                <button class="btn btn-secondary" onclick="closePopup('popup-cancel')">아니오</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 팝업: 녹음 정지 확인 -->
+    <div class="popup-overlay" id="popup-stop">
+        <div class="popup-box">
+            <h3>녹음을 정지하시겠습니까?</h3>
+            <p>녹음 정지 이후에는 다시 녹음할 수 없습니다.</p>
+            <div class="popup-buttons">
+                <button class="btn btn-primary" onclick="stopRecording()">예</button>
+                <button class="btn btn-secondary" onclick="closePopup('popup-stop')">아니오</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 팝업: 녹음 삭제 확인 -->
+    <div class="popup-overlay" id="popup-delete">
+        <div class="popup-box">
+            <h3>녹음을 삭제하시겠습니까?</h3>
+            <p>지금까지 녹음하신 모든 내용이 삭제됩니다.</p>
+            <div class="popup-buttons">
+                <button class="btn btn-primary" onclick="deleteRecording()">예</button>
+                <button class="btn btn-secondary" onclick="closePopup('popup-delete')">아니오</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 팝업: 도움말 -->
+    <div class="popup-overlay" id="popup-help">
+        <div class="popup-box help-popup">
+            <h3>녹음 도움말</h3>
+            
+            <div class="help-section">
+                <h4>포함할 내용</h4>
+                <ul>
+                    <li>작업 내용 및 공종</li>
+                    <li>작업자 건강 상태 (혈압, 체온, 컨디션)</li>
+                    <li>현장 위험 요인</li>
+                    <li>안전 대책 및 주의사항</li>
+                </ul>
+            </div>
+
+            <div class="help-section">
+                <h4>녹음 Tip</h4>
+                <ul>
+                    <li>명확하게 발음하세요.</li>
+                    <li>권장 녹음 시간 : 3 ~ 5분</li>
+                    <li>중요한 내용은 천천히 말하세요.</li>
+                </ul>
+            </div>
+
+            <button class="btn btn-primary" onclick="closePopup('popup-help')" style="margin-top: 20px;">확인</button>
+        </div>
+    </div>
+
+    <script src="{% static 'js/common.js' %}"></script>
+    <script src="{% static 'js/tbm.js' %}"></script>
+</body>
+</html>
