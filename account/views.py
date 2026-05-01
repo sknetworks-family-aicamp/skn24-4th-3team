@@ -141,7 +141,7 @@ def login_view(request):
         cache.set(fail_key, fail_count, timeout=LOCK_MINUTES * 60)
 
         if fail_count >= MAX_FAIL_COUNT:
-            cache.set(lock_key, True, timeout=LOCK_MINUTES * 60)
+            cache.set(get_lock_cache_key(email), True, timeout=LOCK_MINUTES * 60)
             cache.delete(fail_key)
 
             payload = {
@@ -203,10 +203,10 @@ def register_form_view(request):
         password = data.get("password", "")
         password_confirm = data.get("password_confirm", "")
         name = data.get("name", "").strip()
-        company = data.get("company", data.get("company_name", "")).strip()
+        company_name = data.get("company_name", data.get("company", "")).strip()
         position = data.get("position", "").strip()
 
-        if not email or not password or not password_confirm or not name or not company or not position:
+        if not email or not password or not password_confirm or not name or not company_name or not position:
             return JsonResponse({
                 "success": False,
                 "message": "필수 항목을 입력해주세요.",
@@ -243,7 +243,7 @@ def register_form_view(request):
         user = User(
             email=email,
             name=name,
-            company=company,
+            company_name=company_name,
             position=position,
             is_active=True,
         )
@@ -414,7 +414,7 @@ def mypage_view(request):
 
     if action == "update_info":
         name = data.get("name", "").strip()
-        company = data.get("company", data.get("company_name", "")).strip()
+        company_name = data.get("company_name", data.get("company", "")).strip()
         position = data.get("position", "").strip()
 
         pattern = re.compile(r"^[가-힣a-zA-Z0-9\s]+$")
@@ -425,7 +425,7 @@ def mypage_view(request):
                 "message": "성명은 한글, 영어, 숫자만 입력 가능합니다.",
             }, status=400)
 
-        if company and not pattern.match(company):
+        if company_name and not pattern.match(company_name):
             return JsonResponse({
                 "success": False,
                 "message": "업체명은 한글, 영어, 숫자만 입력 가능합니다.",
@@ -442,8 +442,8 @@ def mypage_view(request):
         if name:
             user.name = name
 
-        if company:
-            user.company = company
+        if company_name:
+            user.company_name = company_name
 
         if position:
             user.position = position
@@ -455,7 +455,8 @@ def mypage_view(request):
             "message": "개인정보가 성공적으로 변경되었습니다.",
             "data": {
                 "name": user.name,
-                "company": user.company,
+                "company": user.company_name,
+                "company_name": user.company_name,
                 "position": user.position,
             },
         })
@@ -517,24 +518,4 @@ def mypage_view(request):
     return JsonResponse({
         "success": False,
         "message": "알 수 없는 요청입니다.",
-    }, status=400)
-
-
-def api_sample_page(request):
-    return render(request, "account/apisample.html")
-
-
-def api_sample_response(request):
-    if request.method == "POST":
-        data = json.loads(request.body or "{}")
-        user_name = data.get("username")
-
-        return JsonResponse({
-            "status": "success",
-            "message": f"{user_name} 환영합니다.",
-        }, status=200)
-
-    return JsonResponse({
-        "status": "fail",
-        "message": "POST로 요청해주세요.",
     }, status=400)
