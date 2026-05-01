@@ -1,4 +1,4 @@
-﻿{% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -13,85 +13,60 @@
 </head>
 <body>
     <div class="container">
-        <!-- 헤더 -->
         <div class="header">
             <button class="back-btn" onclick="confirmCancelEdit()">←</button>
             <span class="title">TBM 수정</span>
         </div>
 
-        <!-- 제목 및 녹음 시간 (고정) -->
         <div class="draft-header">
             <h2>📋 TBM 초안</h2>
         </div>
 
-        <!-- 콘텐츠 (스크롤 가능) -->
         <div class="content">
             <div class="draft-container">
-                <!-- 기본 정보 -->
                 <div class="edit-info">
                     <div class="info-row-horizontal">
                         <div class="info-col">
-                            <label class="info-icon">📅 2026.11.11</label>
+                            <label class="info-icon">📅 {{ draft.work_date|date:'Y.m.d' }}</label>
                         </div>
                         <div class="info-col">
-                            <label class="info-icon">📍 서울시 - 금천구</label>
+                            <label class="info-icon">📍 {{ draft.region_large|default:"-" }} - {{ draft.region_middle|default:"-" }}</label>
                         </div>
                         <div class="info-col">
-                            <label class="info-icon">🕐 07:04</label>
+                            <label class="info-icon">🕐 {{ draft.duration_display }}</label>
                         </div>
                     </div>
 
-                    <!-- 날씨 정보 (작은 박스) -->
+                    {% if weather %}
                     <div class="weather-mini-box">
                         <table class="weather-mini-table">
-                            <tr>
-                                <th>상태</th>
-                                <td>구름 조금</td>
-                            </tr>
-                            <tr>
-                                <th>기온</th>
-                                <td>23℃</td>
-                            </tr>
-                            <tr>
-                                <th>습도</th>
-                                <td>65%</td>
-                            </tr>
-                            <tr>
-                                <th>강수확률</th>
-                                <td>20%</td>
-                            </tr>
-                            <tr>
-                                <th>풍속</th>
-                                <td>2.5m/s</td>
-                            </tr>
+                            <tr><th>상태</th><td>{{ weather.weather_status|default:"-" }}</td></tr>
+                            <tr><th>기온</th><td>{{ weather.temperature|default:"-" }}℃</td></tr>
+                            <tr><th>습도</th><td>{{ weather.humidity|default:"-" }}%</td></tr>
+                            <tr><th>강수량</th><td>{{ weather.precipitation|default_if_none:"-" }}mm</td></tr>
+                            <tr><th>풍속</th><td>{{ weather.wind_speed|default:"-" }}m/s</td></tr>
                         </table>
                     </div>
+                    {% endif %}
 
-                    <!-- 업체명 -->
                     <div class="info-group">
                         <label>업체명</label>
-                        <input type="text" id="edit-company-name" value="주식회사 한강 철제소">
+                        <input type="text" value="{{ request.user.company }}" readonly>
                     </div>
                 </div>
 
-                <!-- TBM 초안 (편집 가능) -->
-                <div class="draft-content-section">
-                    <label>TBM 초안</label>
-                    <textarea class="draft-edit-box" id="edit-draft-content">(1) 작업자의 건강 이상 여부
-- 김반장 발열
-
-(2) 예상 위험 요인과 대책
-- A구역 상부 배관 연결 및 용접 작업 중 손가락 끼임 사고 위험 → 작업 시 반팔 주의 및 손가락 사고 주의
-- 고소 작업 시 안전 고리 미착인 위험 → 김 씨와 이 씨는 안전대 착용 필수
-- 용접 작업 중 불꽃에 의한 화재 위험 → 방지포 설치 및 불꽃 감시자 운용
-- 안전고리의 두 번 확인 및 자재 운반 시 명확한 신호 사용</textarea>
-                </div>
-
-                <!-- 버튼 -->
-                <div class="edit-buttons">
-                    <button class="btn btn-delete" onclick="confirmDeleteTBM()">삭제</button>
-                    <button class="btn btn-primary" onclick="saveEditedTBM()">완료</button>
-                </div>
+                <!-- draft_text만 편집 가능, form POST로 저장 -->
+                <form method="POST" action="{% url 'tbm-edit' draft.draft_id %}">
+                    {% csrf_token %}
+                    <div class="draft-content-section">
+                        <label>TBM 초안</label>
+                        <textarea class="draft-edit-box" name="draft_text" id="edit-draft-content">{{ draft.draft_text }}</textarea>
+                    </div>
+                    <div class="edit-buttons">
+                        <button type="button" class="btn btn-delete" onclick="confirmDeleteTBM()">삭제</button>
+                        <button type="submit" class="btn btn-primary">완료</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -112,7 +87,7 @@
     <div class="popup-overlay" id="popup-delete-tbm">
         <div class="popup-box">
             <h3>TBM 내역을 삭제하시겠습니까?</h3>
-            <p>해당 날짜에 녹음하신 모든 내용이 삭제됩니다.</p>
+            <p>삭제된 내용은 복구할 수 없습니다.</p>
             <div class="popup-buttons">
                 <button class="btn btn-delete" onclick="deleteTBM()">예</button>
                 <button class="btn btn-secondary" onclick="closePopup('popup-delete-tbm')">아니오</button>
@@ -120,17 +95,7 @@
         </div>
     </div>
 
-    <!-- 팝업: 저장 완료 (여기에 추가!) -->
-    <div class="popup-overlay" id="popup-save-complete">
-        <div class="popup-box">
-            <h3>저장 완료</h3>
-            <p>TBM 내용이 성공적으로 저장되었습니다.</p>
-            <div class="popup-buttons">
-                <button class="btn btn-primary" onclick="confirmSaveComplete()">확인</button>
-            </div>
-        </div>
-    </div>
-
+    <script>const DRAFT_ID = {{ draft.draft_id }};</script>
     <script src="{% static 'js/common.js' %}"></script>
     <script src="{% static 'js/tbm.js' %}"></script>
 </body>

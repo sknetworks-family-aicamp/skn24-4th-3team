@@ -30,43 +30,13 @@
                 <div class="chat-intro">
                     <div class="intro-logo">
                         <img src="{% static 'images/helpmet.png' %}" alt="HelpMet 봇" style="width: 120px; height: 120px; object-fit: contain;">
-                        <div class="logo-text">HelpMet</div>
                     </div>
                     <h2>건설 안전 규정집에 대해서 물어보세요</h2>
                     <p>헬프멧이 여러분의 건설 안전을 책임집니다.</p>
                 </div>
 
                 <!-- 채팅 내용이 추가될 공간 -->
-                <div class="chat-list" id="chat-list">
-                    <!-- 초기 예시: 사용자 질문 -->
-                    <div class="message-row user-row">
-                        <div class="message-content">
-                            <div class="bubble user-bubble">
-                                안전대는 어떤 기준으로 차야하는거지?<br>오늘 작업에 추락위험이 있는 인원이 있어서
-                            </div>
-                            <div class="time">7:19</div>
-                        </div>
-                        <div class="avatar user-avatar">👤</div>
-                    </div>
-
-                    <!-- 초기 예시: 챗봇 답변 -->
-                    <div class="message-row bot-row">
-                        <div class="avatar bot-avatar">
-                            <img src="{% static 'images/helpmet.png' %}" alt="Bot" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                        </div>
-                        <div class="message-content">
-                            <div class="bubble bot-bubble">
-                                안전대는 추락위험이 있는 작업에는 반드시 착용하여야 하며, 추락의 위험이 있는 장소는 다음과 같습니다.<br><br>
-                                (1) 작업발판(폭 40cm)이 없는 장소의 작업.<br>
-                                (2) 작업발판이 있어도 난간대가 없는 장소의 작업<br>
-                                (3) 난간대로부터 상체를 내밀어 작업하는 경우<br>
-                                (4) 작업발판과 구조체 사이의 거리가 30cm 이상으로 수평방호시설이 없는 장소의 작업<br><br>
-                                출처 : C-49-2012 안전대 사용 지침
-                            </div>
-                            <div class="time">7:20</div>
-                        </div>
-                    </div>
-                </div>
+                <div class="chat-list" id="chat-list"></div>
             </div>
 
             <!-- 하단 입력창 영역 -->

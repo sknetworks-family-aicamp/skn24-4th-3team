@@ -29,8 +29,45 @@ let currentStream = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('work-name')) restoreTBMWorkData();
-    populateDraftPage();
 });
+
+// ── 공통 헬퍼 ─────────────────────────────────────────────────────────────────
+
+function getCsrfToken() {
+    const name = 'csrftoken';
+    for (let cookie of document.cookie.split(';')) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) return decodeURIComponent(cookie.substring(name.length + 1));
+    }
+    return '';
+}
+
+function showLoading() {
+    let overlay = document.getElementById('tbm-loading-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'tbm-loading-overlay';
+        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;';
+        overlay.innerHTML = '<div style="color:#fff;font-size:20px;font-weight:600;margin-bottom:12px;">초안 생성 중...</div><div style="color:#ccc;font-size:14px;">잠시만 기다려주세요.</div>';
+        document.body.appendChild(overlay);
+    }
+    overlay.style.display = 'flex';
+}
+
+function hideLoading() {
+    const overlay = document.getElementById('tbm-loading-overlay');
+    if (overlay) overlay.style.display = 'none';
+}
+
+async function postJson(url) {
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': getCsrfToken() },
+    });
+    return response;
+}
+
+// ── TBM 폼 ────────────────────────────────────────────────────────────────────
 
 function updateDistricts() {
     const citySelect = document.getElementById('work-location-city');
@@ -73,35 +110,50 @@ function goToNextStep() {
         locationCity: city.value,
         locationDistrict: district.value,
     }));
-    navigateTo('tbm-recording.html');
+    window.location.href = '/tbm/recording/';
 }
 
-function restoreTBMWorkData() {
+function applyWorkLocation(cityKey, districtName) {
+    const city     = document.getElementById('work-location-city');
+    const district = document.getElementById('work-location-district');
+    if (!city || !cityKey) return;
+    city.value = cityKey;
+    updateDistricts();
+    setTimeout(() => {
+        if (district && districtName) district.value = districtName;
+    }, 100);
+}
+
+async function restoreTBMWorkData() {
     const savedData = localStorage.getItem('tbmWorkData');
-    if (!savedData) return;
-
+    if (savedData) {
+        // 현재 세션 데이터 복원 (녹음 페이지에서 돌아온 경우)
+        try {
+            const data = JSON.parse(savedData);
+            const workName = document.getElementById('work-name');
+            if (workName && data.workName) workName.value = data.workName;
+            applyWorkLocation(data.locationCity, data.locationDistrict);
+        } catch (_) {}
+        return;
+    }
+    // localStorage 없으면 DB에서 가장 최근 작업 장소 불러오기
     try {
-        const data = JSON.parse(savedData);
-        const workName = document.getElementById('work-name');
-        const city = document.getElementById('work-location-city');
-        const district = document.getElementById('work-location-district');
-
-        if (workName && data.workName) workName.value = data.workName;
-        if (city && data.locationCity) {
-            city.value = data.locationCity;
-            updateDistricts();
-            setTimeout(() => {
-                if (district && data.locationDistrict) district.value = data.locationDistrict;
-            }, 100);
+        const res  = await fetch('/tbm/last-location/');
+        const data = await res.json();
+        if (data.success) {
+            const workName = document.getElementById('work-name');
+            if (workName && data.task_name) workName.value = data.task_name;
+            applyWorkLocation(data.region_large, data.region_middle);
         }
-    } catch (error) {}
+    } catch (_) {}
 }
+
+// ── 녹음 ──────────────────────────────────────────────────────────────────────
 
 function changeRecordingState(state) {
     document.querySelectorAll('.recording-state').forEach(el => {
         el.style.display = 'none';
     });
-
     const activeState = document.getElementById(`state-${state}`);
     if (activeState) activeState.style.display = 'flex';
 
@@ -116,7 +168,6 @@ function updateTimer() {
     recordingSeconds++;
     const timer = document.getElementById('timer');
     if (!timer) return;
-
     const mins = Math.floor(recordingSeconds / 60);
     const secs = recordingSeconds % 60;
     timer.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
@@ -142,10 +193,7 @@ async function startRecording() {
 
         recordingSeconds = 0;
         const timer = document.getElementById('timer');
-        if (timer) {
-            timer.style.display = 'block';
-            timer.textContent = '00:00';
-        }
+        if (timer) { timer.style.display = 'block'; timer.textContent = '00:00'; }
 
         if (recordingTimer) clearInterval(recordingTimer);
         recordingTimer = setInterval(updateTimer, 1000);
@@ -185,7 +233,6 @@ function deleteRecording() {
     recordedChunks = [];
     recordedBlob = null;
     if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
-
     const timer = document.getElementById('timer');
     if (timer) timer.style.display = 'none';
     closePopup('popup-delete');
@@ -207,21 +254,16 @@ function cancelRecording() {
 
 function getCurrentPositionSafe() {
     return new Promise(resolve => {
-        if (!navigator.geolocation) {
-            resolve(null);
-            return;
-        }
-
+        if (!navigator.geolocation) { resolve(null); return; }
         navigator.geolocation.getCurrentPosition(
-            position => resolve({
-                lat: position.coords.latitude,
-                lon: position.coords.longitude,
-            }),
+            pos => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
             () => resolve(null),
             { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
         );
     });
 }
+
+// ── 초안 생성 ─────────────────────────────────────────────────────────────────
 
 async function createDraft() {
     if (!recordedBlob) {
@@ -229,8 +271,11 @@ async function createDraft() {
         return;
     }
 
+    showLoading();
+
     const formData = new FormData();
     formData.append('audio_file', recordedBlob, 'tbm-recording.webm');
+    formData.append('recording_duration_sec', recordingSeconds);
 
     const position = await getCurrentPositionSafe();
     if (position) {
@@ -238,80 +283,71 @@ async function createDraft() {
         formData.append('lon', position.lon);
     }
 
-    const workData = localStorage.getItem('tbmWorkData');
-    if (workData) {
-        try {
-            const data = JSON.parse(workData);
-            if (data.locationCity) formData.append('sido', data.locationCity);
-            if (data.locationDistrict) formData.append('sigungu', data.locationDistrict);
-        } catch (error) {}
-    }
+    try {
+        const workData = JSON.parse(localStorage.getItem('tbmWorkData') || '{}');
+        if (workData.workName)        formData.append('task_name',    workData.workName);
+        if (workData.locationCity)    formData.append('region_large', workData.locationCity);
+        if (workData.locationDistrict) formData.append('region_middle', workData.locationDistrict);
+    } catch (_) {}
 
     try {
         const response = await fetch('/tbm/create/', {
             method: 'POST',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': getCsrfToken(),
+            },
             body: formData,
         });
         const result = await response.json();
 
-        if (!response.ok || !result.success) {
-            throw new Error(result.error || 'TBM 초안 생성에 실패했습니다.');
-        }
+        if (!response.ok || !result.success) throw new Error(result.error || 'TBM 초안 생성에 실패했습니다.');
 
-        sessionStorage.setItem('tbmDraftResult', JSON.stringify(result.data));
-        sessionStorage.setItem('tbmRecordingDuration', document.getElementById('timer')?.textContent || '');
-        navigateTo('tbm-draft.html');
+        localStorage.removeItem('tbmWorkData');
+        window.location.href = `/tbm/draft/${result.draft_id}/`;
     } catch (error) {
+        hideLoading();
         alert(error.message);
     }
 }
 
-function populateDraftPage() {
-    const raw = sessionStorage.getItem('tbmDraftResult');
-    if (!raw) return;
+// ── 초안 확인 (tbm_draft) ─────────────────────────────────────────────────────
 
-    try {
-        const data = JSON.parse(raw);
-        const draftContent = document.getElementById('draft-content');
-        const referencesContent = document.getElementById('draft-references');
-        const duration = document.getElementById('recording-duration');
-
-        if (draftContent && data.draft) draftContent.textContent = data.draft;
-        if (referencesContent) {
-            const references = Array.isArray(data.references) ? data.references : [];
-            referencesContent.innerHTML = '';
-
-            if (!references.length) {
-                referencesContent.textContent = '참조 출처가 없습니다.';
-            } else {
-                const list = document.createElement('ul');
-                list.className = 'draft-reference-list';
-                references.forEach((item) => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = item;
-                    list.appendChild(listItem);
-                });
-                referencesContent.appendChild(list);
-            }
-        }
-        if (duration) duration.textContent = sessionStorage.getItem('tbmRecordingDuration') || duration.textContent;
-    } catch (error) {}
+function editDraft() {
+    window.location.href = `/tbm/edit/${DRAFT_ID}/`;
 }
 
-function editDraft() { navigateTo('tbm-edit.html'); }
-function completeDraft() { showPopup('popup-save-complete'); }
+function completeDraft() {
+    window.location.href = '/core/dashboard/';
+}
+
+// ── 편집 (tbm_edit) ───────────────────────────────────────────────────────────
+
 function confirmCancelEdit() { showPopup('popup-cancel-edit'); }
 function cancelEdit() { closePopup('popup-cancel-edit'); goBack(); }
 function confirmDeleteTBM() { showPopup('popup-delete-tbm'); }
-function deleteTBM() { closePopup('popup-delete-tbm'); alert('TBM이 삭제되었습니다.'); navigateTo('main.html'); }
-function saveEditedTBM() { showPopup('popup-save-complete'); }
-function confirmSaveComplete() { closePopup('popup-save-complete'); navigateTo('main.html'); }
-function viewTBMDetail(date) { navigateTo('tbm-detail.html'); }
-function changePage(direction) {}
+
+async function deleteTBM() {
+    closePopup('popup-delete-tbm');
+    const response = await postJson(`/tbm/delete/${DRAFT_ID}/`);
+    if (response.ok) window.location.href = '/core/dashboard/';
+    else alert('삭제에 실패했습니다.');
+}
+
+// ── 상세 (tbm_detail) ─────────────────────────────────────────────────────────
+
 function confirmDeleteTBMDetail() { showPopup('popup-delete-detail'); }
-function deleteTBMDetail() { closePopup('popup-delete-detail'); navigateTo('main.html'); }
-function editTBMDetail() { navigateTo('tbm-edit.html'); }
+
+async function deleteTBMDetail() {
+    closePopup('popup-delete-detail');
+    const response = await postJson(`/tbm/delete/${DRAFT_ID}/`);
+    if (response.ok) window.location.href = '/core/dashboard/';
+    else alert('삭제에 실패했습니다.');
+}
+
+function editTBMDetail() {
+    window.location.href = `/tbm/edit/${DRAFT_ID}/`;
+}
 
 function switchTab(tabName) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));

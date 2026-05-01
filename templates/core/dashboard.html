@@ -1,4 +1,4 @@
-﻿{% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -13,7 +13,10 @@
 </head>
 <body>
     <div class="container">
-        <!-- 사이드바 (컨테이너 내부) -->
+        <!-- 사이드바 오버레이 -->
+        <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <!-- 사이드바 -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
@@ -22,26 +25,20 @@
                 </div>
                 <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
             </div>
-
             <div class="sidebar-menu">
-                <button class="sidebar-menu-item" onclick="navigateTo('mypage.html')">
-                    <span class="menu-icon">👤</span>
-                    <span>마이페이지</span>
+                <button class="sidebar-menu-item" onclick="window.location.href='/account/mypage/'">
+                    <span class="menu-icon">👤</span><span>마이페이지</span>
                 </button>
-                <button class="sidebar-menu-item" onclick="navigateTo('tbm-list.html')">
-                    <span class="menu-icon">📋</span>
-                    <span>TBM 목록</span>
+                <button class="sidebar-menu-item" onclick="window.location.href='/tbm/list/'">
+                    <span class="menu-icon">📋</span><span>TBM 목록</span>
                 </button>
-                <button class="sidebar-menu-item" onclick="navigateTo('chatbot.html')">
-                    <span class="menu-icon">💬</span>
-                    <span>챗봇</span>
+                <button class="sidebar-menu-item" onclick="window.location.href='/core/chatbot/'">
+                    <span class="menu-icon">💬</span><span>챗봇</span>
                 </button>
             </div>
-
             <div class="sidebar-footer">
                 <button class="sidebar-logout" onclick="logout()">
-                    <span>→</span>
-                    <span>로그아웃</span>
+                    <span>→</span><span>로그아웃</span>
                 </button>
             </div>
         </div>
@@ -50,73 +47,60 @@
         <div class="header main-header">
             <button class="menu-btn" onclick="toggleSidebar()">☰</button>
             <div class="header-content">
-                <h1>남다람 님, 안녕하세요 !</h1>
+                <h1>{{ request.user.name }} 님, 안녕하세요 !</h1>
                 <p>안전한 하루의 시작, HelpMet과 함께</p>
             </div>
         </div>
 
         <!-- 메인 콘텐츠 -->
         <div class="main-content">
-            <!-- 달력 영역 (60%) -->
+            <!-- 달력 영역 -->
             <div class="calendar-section">
                 <div class="calendar-controls">
-                    <select id="month-select" onchange="changeMonth()">
-                        <option value="1">1월</option>
-                        <option value="2">2월</option>
-                        <option value="3">3월</option>
-                        <option value="4">4월</option>
-                        <option value="5">5월</option>
-                        <option value="6">6월</option>
-                        <option value="7">7월</option>
-                        <option value="8">8월</option>
-                        <option value="9">9월</option>
-                        <option value="10">10월</option>
-                        <option value="11" selected>11월</option>
-                        <option value="12">12월</option>
+                    <select id="month-select" onchange="onMonthYearChange()">
+                        {% for m in months %}
+                        <option value="{{ m }}" {% if m == current_month %}selected{% endif %}>{{ m }}월</option>
+                        {% endfor %}
                     </select>
-                    <select id="year-select" onchange="changeYear()">
-                        <option value="2024">2024</option>
-                        <option value="2025">2025</option>
-                        <option value="2026" selected>2026</option>
+                    <select id="year-select" onchange="onMonthYearChange()">
+                        {% for y in years %}
+                        <option value="{{ y }}" {% if y == current_year %}selected{% endif %}>{{ y }}</option>
+                        {% endfor %}
                     </select>
                 </div>
-
+            
                 <div class="calendar">
                     <div class="calendar-header">
-                        <div>월</div>
-                        <div>화</div>
-                        <div>수</div>
-                        <div>목</div>
-                        <div>금</div>
-                        <div>토</div>
-                        <div>일</div>
+                        <div>월</div><div>화</div><div>수</div><div>목</div>
+                        <div>금</div><div>토</div><div>일</div>
                     </div>
-                    <div class="calendar-body" id="calendar-body">
-                        <!-- JavaScript로 생성 -->
-                    </div>
+                    <div class="calendar-body" id="calendar-body"></div>
                 </div>
             </div>
 
-            <!-- TBM 목록 영역 (40%) -->
+            <!-- TBM 목록 영역 -->
             <div class="tbm-section">
                 <div class="tbm-header">
                     <span class="tbm-icon">🕐</span>
-                    <span id="selected-date">11월 11일 기록</span>
+                    <span id="selected-date-label">날짜를 선택하세요</span>
                 </div>
-
                 <div class="tbm-list" id="tbm-list">
-                    <!-- 기록이 없을 때 -->
                     <div class="tbm-empty">
                         <div class="empty-icon">📋+</div>
                         <p>기록이 없습니다.</p>
                     </div>
                 </div>
-
-                <button class="btn btn-primary tbm-start-btn" onclick="startTBM()">TBM 시작하기</button>
+                <button class="btn btn-primary tbm-start-btn" onclick="startTBM()">+ TBM 시작하기</button>
             </div>
         </div>
     </div>
 
+    <script>
+        const TODAY          = '{{ today }}';
+        const CURRENT_MONTH  = {{ current_month }};
+        const CURRENT_YEAR   = {{ current_year }};
+        let   calendarTbmDates = {{ tbm_dates|safe }};
+    </script>
     <script src="{% static 'js/common.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
 </body>
