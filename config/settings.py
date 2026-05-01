@@ -173,9 +173,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'email-smtp.ap-northeast-2.amazonaws.com'  # 본인의 SES 리전 확인
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'username'  # IAM에서 발급받은 SMTP 사용자 아이디
-EMAIL_HOST_PASSWORD = 'password' # IAM에서 발급받은 SMTP 비밀번호
-DEFAULT_FROM_EMAIL = 'noreply@helpmet.com' # SES에 인증된 이메일 주소
+# 05_01 수정 .env에서 바꾸기
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@helpmet.com')
 
 # django cache 사용 설정
 CACHES = {
