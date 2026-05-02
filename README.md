@@ -15,7 +15,7 @@
  
 | 김규호 | 박수영 | 박세현 | 이동민 | 최하진 |
 | :---: | :---: | :---: | :---: | :---: |
-| <img width="228" height="291" alt="image" src="./assets/images/안전보이즈1.png" /> | <img width="228" height="291" alt="image" src="./assets/images/안전보이즈2.png" /> | <img width="228" height="291" alt="image" src="./assets/images/안전보이즈3.png" /> | <img width="228" height="291" alt="image" src="./assets/images/안전보이즈4.png" /> | <img width="228" height="291" alt="image" src="./assets/images/안전보이즈5.png" /> |
+| <img width="228" height="291" alt="image" src="./docs/images/안전보이즈1.png" /> | <img width="228" height="291" alt="image" src="./docs/images/안전보이즈2.png" /> | <img width="228" height="291" alt="image" src="./docs/images/안전보이즈3.png" /> | <img width="228" height="291" alt="image" src="./docs/images/안전보이즈4.png" /> | <img width="228" height="291" alt="image" src="./docs/images/안전보이즈5.png" /> |
 | [![GitHub](https://img.shields.io/badge/GitHub-kyu5KIm-181717?style=flat&logo=github&logoColor=white)](https://github.com/kyu5KIm) | [![GitHub](https://img.shields.io/badge/GitHub-suyoung6279-181717?style=flat&logo=github&logoColor=white)](https://github.com/suyoung6279) | [![GitHub](https://img.shields.io/badge/GitHub-parksay-181717?style=flat&logo=github&logoColor=white)](https://github.com/parksay) | [![GitHub](https://img.shields.io/badge/GitHub-LeeDongMin0115-181717?style=flat&logo=github&logoColor=white)](https://github.com/LeeDongMin0115) | [![GitHub](https://img.shields.io/badge/GitHub-hun6684-181717?style=flat&logo=github&logoColor=white)](https://github.com/hun6684) |
 > AI로 생성된 이미지입니다.
 
