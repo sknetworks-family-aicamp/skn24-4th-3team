@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         registerEmail.addEventListener('click', function() {
             if (isCodeSent) {
                 this.blur();
-                openPopup('email-reset-modal');
+                openConfirm('인증 중 이메일 주소를 수정하면 현재 발송된 인증번호는 더이상 유효하지 않습니다. 수정하시겠습니까?', confirmEmailReset, '확인', '취소');
             }
         });
     }
@@ -106,7 +106,7 @@ async function handleLogin() {
         window.location.href = result.redirect_url || '/core/dashboard/';
     } catch (error) {
         if (error.locked) {
-            openPopup('error-popup');
+            openAlert('비밀번호를 5회 잘못 입력하였습니다.\n10분 후 다시 시도해 주세요.');
         }
         showError('login-password', 'password-error', error.message || '로그인에 실패했습니다.');
     }
@@ -143,12 +143,11 @@ function startTimerForElement(elementId, duration) {
 function handleFindEmailClick() {
     if (isFindCodeSent && !isFindCodeVerified) {
         document.getElementById('find-email').blur();
-        openPopup('find-email-reset-modal');
+        openConfirm('인증 중 이메일 주소를 수정하면 현재 발송된 인증번호는 더이상 유효하지 않습니다. 수정하시겠습니까?', confirmFindEmailReset, '확인', '취소');
     }
 }
 
 function confirmFindEmailReset() {
-    closePopup('find-email-reset-modal');
     isFindCodeSent     = false;
     isFindCodeVerified = false;
     clearInterval(verificationTimer);
@@ -252,7 +251,7 @@ async function completePasswordReset() {
             new_password: newPassword,
             new_password_confirm: confirmPassword,
         });
-        openPopup('success-popup');
+        openAlert('비밀번호가 성공적으로 재설정되었습니다.\n로그인 페이지로 이동합니다.');
         setTimeout(() => {
             window.location.href = result.redirect_url || '/account/login/';
         }, 1200);
@@ -300,7 +299,7 @@ async function checkEmailDuplicate() {
             ? `[개발] 인증번호: ${result.debug_code}`
             : '인증번호가 발송되었습니다.';
         showSuccess('register-email-success', msg);
-        openPopup('verification-modal-popup');
+        openAlert('인증번호 발송이 완료되었습니다.\n5분 이내에 인증번호를 입력해주세요');
     } catch (error) {
         showError('register-email', 'register-email-error', error.message || '인증번호 발송에 실패했습니다.');
     }
@@ -349,7 +348,6 @@ async function verifyRegisterCode() {
 
 // 05_01 회원가입 수정 - 이메일 수정 확인 모달에서 확인 클릭 시 상태 초기화
 function confirmEmailReset() {
-    closePopup('email-reset-modal');
     isCodeSent = false;
     clearInterval(registerVerificationTimer);
 

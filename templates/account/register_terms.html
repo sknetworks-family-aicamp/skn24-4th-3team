@@ -1,28 +1,18 @@
-﻿{% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TBM 현장관리 - 회원가입 약관 동의</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/common.css' %}">
-    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
-</head>
-<body>
-    <div class="container">
-        <!-- 헤더 -->
-        <div class="header">
-            <button class="back-btn" onclick="goBack()">←</button>
-            <span class="title">회원가입 약관 동의</span>
-        </div>
+{% extends "base.html" %}
+{% load static %}
 
-        <!-- 05_01 회원가입 수정 - content 정렬 수정 (내용 많을 때 상단 잘림 방지) -->
+{% block title %}TBM 현장관리 - 회원가입 약관 동의{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% include "common/header.html" with title="회원가입 약관 동의" only %}
+
         <div class="content" style="justify-content: flex-start; align-items: center;">
             <div class="terms-container">
-                <!-- 1. 서비스 이용약관 동의 -->
                 <div class="terms-section">
                     <h3>1. 서비스 이용약관 동의</h3>
                     <div class="terms-box">
@@ -39,14 +29,12 @@
                             <li>서비스 내 작성된 TBM 기록은 현장 안전 목적으로만 활용해야 합니다.</li>
                         </ul>
                     </div>
-                    <!-- 05_01 회원가입 수정 - 섹션별 개별 체크박스 -->
                     <div class="terms-section-check">
                         <input type="checkbox" id="agree-terms1" onchange="checkAllAgreed()">
                         <label for="agree-terms1">서비스 이용약관에 동의합니다.</label>
                     </div>
                 </div>
 
-                <!-- 2. 개인정보 수집 및 이용 동의 -->
                 <div class="terms-section">
                     <h3>2. 개인정보 수집 및 이용 동의</h3>
                     <div class="terms-box">
@@ -61,14 +49,12 @@
                         <p><strong>제3자 제공목적으로 제3자에게 제공하지 않습니다. 단, 법령에 의한 경우 예외</strong></p>
                         <p>동의를 거부할 권리가 있으나, 거부 시 서비스 이용에 제한될 수 있습니다.</p>
                     </div>
-                    <!-- 05_01 회원가입 수정 - 섹션별 개별 체크박스 -->
                     <div class="terms-section-check">
                         <input type="checkbox" id="agree-terms2" onchange="checkAllAgreed()">
                         <label for="agree-terms2">개인정보 수집 및 이용에 동의합니다.</label>
                     </div>
                 </div>
 
-                <!-- 05_01 회원가입 수정 - 3. 이메일 인증 동의 -->
                 <div class="terms-section">
                     <h3>3. 이메일 인증 동의</h3>
                     <div class="terms-box">
@@ -80,14 +66,12 @@
                             <li>인증 이메일은 서비스 발송 목적 외에 사용되지 않습니다.</li>
                         </ul>
                     </div>
-                    <!-- 05_01 회원가입 수정 - 섹션별 개별 체크박스 -->
                     <div class="terms-section-check">
                         <input type="checkbox" id="agree-terms3" onchange="checkAllAgreed()">
                         <label for="agree-terms3">이메일 인증에 동의합니다.</label>
                     </div>
                 </div>
 
-                <!-- 05_01 회원가입 수정 - 4. 안전 정보 활용 동의 -->
                 <div class="terms-section">
                     <h3>4. 안전 정보 활용 동의</h3>
                     <div class="terms-box">
@@ -100,14 +84,12 @@
                         </ul>
                         <p>※ 법령에 의한 제출 외에는 이용자 동의 없이 제3자에게 원본 기록을 제공하지 않습니다.</p>
                     </div>
-                    <!-- 05_01 회원가입 수정 - 섹션별 개별 체크박스 -->
                     <div class="terms-section-check">
                         <input type="checkbox" id="agree-terms4" onchange="checkAllAgreed()">
                         <label for="agree-terms4">안전 정보 활용에 동의합니다.</label>
                     </div>
                 </div>
 
-                <!-- 05_01 회원가입 수정 - 5. 계정 및 데이터 관리 동의 -->
                 <div class="terms-section">
                     <h3>5. 계정 및 데이터 관리 동의</h3>
                     <div class="terms-box">
@@ -124,20 +106,17 @@
                             <li>회사는 운영·통계 목적 외 이용자 기록을 무단으로 사용하지 않습니다.</li>
                         </ul>
                     </div>
-                    <!-- 05_01 회원가입 수정 - 섹션별 개별 체크박스 -->
                     <div class="terms-section-check">
                         <input type="checkbox" id="agree-terms5" onchange="checkAllAgreed()">
                         <label for="agree-terms5">계정 및 데이터 관리에 동의합니다.</label>
                     </div>
                 </div>
 
-                <!-- 05_01 회원가입 수정 - 모두 동의 체크박스 맨 아래 -->
                 <div class="terms-footer-check">
                     <input type="checkbox" id="agree-all" onchange="toggleAllTerms()">
                     <label for="agree-all">helpmet 이용약관, 개인정보 수집 및 이용, 제3자 및 데이터 관리에 모두 동의합니다.</label>
                 </div>
 
-                <!-- 버튼 -->
                 <div class="button-group">
                     <button class="btn btn-secondary" onclick="location.href='/account/login/'">처음으로</button>
                     <button class="btn btn-primary" id="next-btn" onclick="location.href='/account/register/form/'" disabled>다음단계로</button>
@@ -145,8 +124,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <script src="{% static 'js/common.js' %}"></script>
+{% block extra_script %}
     <script src="{% static 'js/auth.js' %}"></script>
-</body>
-</html>
+{% endblock %}

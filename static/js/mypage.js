@@ -63,14 +63,13 @@ function switchMypageTab(tabName) {
 
 function confirmBackMypage() {
     if (mypageModified && currentMypageTab !== 'withdrawal') {
-        showPopup('popup-mypage-back');
+        openConfirm('수정 중인 내용이 저장되지 않습니다.\n나가시겠습니까?', confirmLeaveMypage, '확인', '취소');
     } else {
         window.location.href = '/core/dashboard/';
     }
 }
 
 function confirmLeaveMypage() {
-    closePopup('popup-mypage-back');
     mypageModified = false;
     window.location.href = '/core/dashboard/';
 }
@@ -131,7 +130,7 @@ async function saveInfoChanges() {
         }
 
         mypageModified = false;
-        showPopup('popup-info-saved');
+        openAlert('개인정보가 성공적으로 변경되었습니다.');
     } catch (error) {
         alert('개인정보 수정 중 오류가 발생했습니다.');
     }
@@ -191,14 +190,14 @@ async function savePasswordChanges() {
         document.getElementById('current-password').value = '';
         document.getElementById('new-password').value = '';
         document.getElementById('new-password-confirm').value = '';
-        showPopup('popup-info-saved');
+        openAlert('개인정보가 성공적으로 변경되었습니다.');
     } catch (error) {
         alert('비밀번호 변경 중 오류가 발생했습니다.');
     }
 }
 
 function confirmWithdrawal() {
-    showPopup('popup-withdrawal-confirm');
+    openAlert('그동안 이용해주셔서 감사합니다', proceedWithdrawal);
 }
 
 async function proceedWithdrawal() {
@@ -224,7 +223,6 @@ async function proceedWithdrawal() {
             return;
         }
 
-        closePopup('popup-withdrawal-confirm');
         window.location.href = result.redirect_url || '/account/login/';
     } catch (error) {
         alert('회원 탈퇴 중 오류가 발생했습니다.');

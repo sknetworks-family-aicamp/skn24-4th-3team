@@ -1,30 +1,20 @@
-﻿{% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TBM 현장관리 - 회원가입</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/common.css' %}">
-    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
-</head>
-<body>
-    <div class="container">
-        <!-- 헤더 -->
-        <div class="header">
-            <button class="back-btn" onclick="goBack()">←</button>
-            <span class="title">안전한 하루의 시작, HelpMet과 함께</span>
-        </div>
+{% extends "base.html" %}
+{% load static %}
 
-        <!-- 콘텐츠 -->
+{% block title %}TBM 현장관리 - 회원가입{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% include "common/header.html" with title="안전한 하루의 시작, HelpMet과 함께" only %}
+
         <div class="content">
             <div class="form-section">
                 <h2 class="form-title">사용자 정보</h2>
 
-                <!-- 이름 -->
                 <div class="input-group">
                     <label>이름<span class="required">*</span> <span style="font-size: 13px; color: #999;">ex) 염준식</span></label>
                     <div class="input-wrapper single">
@@ -33,7 +23,6 @@
                     <div class="error-message" id="user-name-error"></div>
                 </div>
 
-                <!-- 소속 업체명 -->
                 <div class="input-group">
                     <label>소속 업체명<span class="required">*</span></label>
                     <div class="input-wrapper single">
@@ -42,7 +31,6 @@
                     <div class="error-message" id="company-name-error"></div>
                 </div>
 
-                <!-- 직책 -->
                 <div class="input-group">
                     <label>직책<span class="required">*</span></label>
                     <div class="input-wrapper single">
@@ -57,8 +45,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <script src="{% static 'js/common.js' %}"></script>
+{% block extra_script %}
     <script src="{% static 'js/auth.js' %}"></script>
-</body>
-</html>
+{% endblock %}

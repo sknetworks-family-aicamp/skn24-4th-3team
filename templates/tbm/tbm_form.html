@@ -1,30 +1,20 @@
-﻿{% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TBM 현장관리 - TBM 작성</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/common.css' %}">
-    <link rel="stylesheet" href="{% static 'css/tbm.css' %}">
-</head>
-<body>
-    <div class="container">
-        <!-- 헤더 -->
-        <div class="header">
-            <button class="back-btn" onclick="goBack()">←</button>
-            <span class="title">TBM 작성</span>
-        </div>
+{% extends "base.html" %}
+{% load static %}
 
-        <!-- 콘텐츠 -->
+{% block title %}TBM 현장관리 - TBM 작성{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/tbm.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% include "common/header.html" with title="TBM 작성" only %}
+
         <div class="content">
             <div class="form-section">
                 <h2 class="form-title">작업 정보 입력</h2>
 
-                <!-- 작업명 -->
                 <div class="input-group">
                     <label>작업명<span class="required">*</span></label>
                     <div class="input-wrapper single">
@@ -33,7 +23,6 @@
                     <div class="error-message" id="work-name-error"></div>
                 </div>
 
-                <!-- 작업 장소 -->
                 <div class="input-group">
                     <label>작업 장소<span class="required">*</span></label>
                     <div class="input-wrapper" style="gap: 10px;">
@@ -64,7 +53,6 @@
                     <div class="error-message" id="work-location-error"></div>
                 </div>
 
-                <!-- 상세 장소 -->
                 <div class="input-group">
                     <label>상세 장소</label>
                     <div class="input-wrapper single">
@@ -78,8 +66,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <script src="{% static 'js/common.js' %}"></script>
+{% block extra_script %}
     <script src="{% static 'js/tbm.js' %}"></script>
-</body>
-</html>
+{% endblock %}

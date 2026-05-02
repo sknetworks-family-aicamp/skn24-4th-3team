@@ -1,28 +1,18 @@
-﻿{% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TBM 현장관리 - 회원가입 완료</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/common.css' %}">
-    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
-</head>
-<body>
-    <div class="container">
-        <!-- 헤더 -->
-        <div class="header">
-            <button class="back-btn" onclick="goBack()">←</button>
-            <span class="title">안전한 하루의 시작, HelpMet과 함께</span>
-        </div>
+{% extends "base.html" %}
+{% load static %}
 
-        <!-- 콘텐츠 -->
+{% block title %}TBM 현장관리 - 회원가입 완료{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% include "common/header.html" with title="안전한 하루의 시작, HelpMet과 함께" only %}
+
         <div class="content">
             <div class="success-complete">
-                <!-- 체크 아이콘 -->
                 <div class="success-icon">
                     <svg width="120" height="120" viewBox="0 0 120 120">
                         <circle cx="60" cy="60" r="55" fill="none" stroke="#00C853" stroke-width="6"/>
@@ -30,18 +20,16 @@
                     </svg>
                 </div>
 
-                <!-- 메시지 -->
                 <div class="success-message-text">
                     <p>회원가입이 완료되었습니다<br>이제 다양한 서비스를 이용해보세요</p>
                 </div>
 
-                <!-- 로그인 버튼 -->
                 <button class="btn btn-primary" onclick="location.href='/account/login/'" style="width: auto; min-width: 150px;">로그인</button>
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <script src="{% static 'js/common.js' %}"></script>
+{% block extra_script %}
     <script src="{% static 'js/auth.js' %}"></script>
-</body>
-</html>
+{% endblock %}
