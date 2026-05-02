@@ -120,7 +120,8 @@ USE_I18N = True
 USE_TZ = True
 
 
-STATIC_URL = '/static/'
+STATIC_URL  = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles' # collectstatic 실행 시 정적 파일이 모이는 디렉토리
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
