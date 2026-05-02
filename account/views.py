@@ -15,6 +15,7 @@ from django.core.cache import cache
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 
 
@@ -70,6 +71,7 @@ def validate_password(password):
     return None
 
 
+@ensure_csrf_cookie
 def login_view(request):
     if request.user.is_authenticated:
         return redirect("dashboard")
@@ -195,6 +197,7 @@ def register_terms_view(request):
     return render(request, "account/register_terms.html")
 
 
+@ensure_csrf_cookie
 def register_form_view(request):
     if request.method == "POST":
         data = get_request_data(request)
@@ -350,6 +353,7 @@ def verify_certification_code(request):
     })
 
 
+@ensure_csrf_cookie
 def password_find_view(request):
     if request.method == "GET":
         return render(request, "account/password_find.html")
