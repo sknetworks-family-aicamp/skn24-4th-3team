@@ -140,6 +140,43 @@ function startTimerForElement(elementId, duration) {
     }, 1000);
 }
 
+function handleFindEmailClick() {
+    if (isFindCodeSent && !isFindCodeVerified) {
+        document.getElementById('find-email').blur();
+        openPopup('find-email-reset-modal');
+    }
+}
+
+function confirmFindEmailReset() {
+    closePopup('find-email-reset-modal');
+    isFindCodeSent     = false;
+    isFindCodeVerified = false;
+    clearInterval(verificationTimer);
+
+    const emailInput = document.getElementById('find-email');
+    if (emailInput) { emailInput.readOnly = false; emailInput.focus(); }
+
+    const codeInput = document.getElementById('verification-code');
+    if (codeInput) { codeInput.value = ''; codeInput.disabled = false; }
+
+    const sendBtn = document.getElementById('send-code-btn');
+    if (sendBtn) { sendBtn.textContent = '인증번호 발송'; sendBtn.disabled = false; }
+
+    const confirmBtn = document.getElementById('verify-code-btn');
+    if (confirmBtn) confirmBtn.disabled = true;
+
+    const timer = document.getElementById('verification-timer');
+    if (timer) { timer.style.display = 'none'; timer.textContent = '05:00'; }
+
+    const emailSuccess = document.getElementById('find-email-success');
+    if (emailSuccess) { emailSuccess.textContent = ''; emailSuccess.classList.remove('show'); }
+
+    const codeSuccess = document.getElementById('code-success');
+    if (codeSuccess) { codeSuccess.textContent = ''; codeSuccess.classList.remove('show'); }
+
+    checkFindFormComplete();
+}
+
 async function sendVerificationCode() {
     const email = document.getElementById('find-email')?.value.trim();
     if (!email) {
@@ -148,11 +185,18 @@ async function sendVerificationCode() {
     }
 
     try {
-        await postJson('/account/send-verification-code/', { email });
+        const result = await postJson('/account/send-verification-code/', { email, for_find: true });
         hideError('find-email', 'find-email-error');
-        showSuccess('find-email-success', '인증번호가 발송되었습니다.');
+        const msg = result.debug_code
+            ? `[개발] 인증번호: ${result.debug_code}`
+            : '인증번호가 발송되었습니다.';
+        showSuccess('find-email-success', msg);
         clearInterval(verificationTimer);
         verificationTimer = startTimerForElement('verification-timer', 300);
+        const sendBtn = document.getElementById('send-code-btn');
+        if (sendBtn) sendBtn.textContent = '재전송';
+        isFindCodeSent = true;
+        document.getElementById('find-email').readOnly = true;
     } catch (error) {
         showError('find-email', 'find-email-error', error.message || '인증번호 발송에 실패했습니다.');
     }
@@ -176,6 +220,15 @@ async function verifyCode() {
         hideError('verification-code', 'code-error');
         showSuccess('code-success', '인증번호가 확인되었습니다.');
         clearInterval(verificationTimer);
+        // 인증 완료 후 입력창/버튼 비활성화, 타이머 숨기기
+        isFindCodeVerified = true;
+        document.getElementById('find-email').disabled = true;
+        document.getElementById('verification-code').disabled = true;
+        document.getElementById('send-code-btn').disabled = true;
+        document.getElementById('verify-code-btn').disabled = true;
+        const timer = document.getElementById('verification-timer');
+        if (timer) timer.style.display = 'none';
+        checkFindFormComplete();
     } catch (error) {
         showError('verification-code', 'code-error', error.message || '인증번호 확인에 실패했습니다.');
     }
@@ -241,20 +294,24 @@ async function checkEmailDuplicate() {
     }
 
     try {
-        await postJson('/account/send-verification-code/', { email });
+        const result = await postJson('/account/send-verification-code/', { email });
         hideError('register-email', 'register-email-error');
-        showSuccess('register-email-success', '인증번호가 발송되었습니다.');
-        clearInterval(registerVerificationTimer);
-        registerVerificationTimer = startTimerForElement('register-verification-timer', 300);
+        const msg = result.debug_code
+            ? `[개발] 인증번호: ${result.debug_code}`
+            : '인증번호가 발송되었습니다.';
+        showSuccess('register-email-success', msg);
         openPopup('verification-modal-popup');
-        // 05_01 회원가입 수정 - 발송 후 버튼 텍스트 재전송으로 변경, 이메일 readonly 처리
-        const sendBtn = document.getElementById('check-email-btn');
-        if (sendBtn) sendBtn.textContent = '재전송';
-        isCodeSent = true;
-        document.getElementById('register-email').readOnly = true;
     } catch (error) {
         showError('register-email', 'register-email-error', error.message || '인증번호 발송에 실패했습니다.');
     }
+
+    // 05_01 회원가입 수정 - 발송 후 버튼 텍스트 재전송, 이메일 readonly
+    clearInterval(registerVerificationTimer);
+    registerVerificationTimer = startTimerForElement('register-verification-timer', 300);
+    const sendBtn = document.getElementById('check-email-btn');
+    if (sendBtn) sendBtn.textContent = '재전송';
+    isCodeSent = true;
+    document.getElementById('register-email').readOnly = true;
 }
 
 async function verifyRegisterCode() {
@@ -319,6 +376,62 @@ function confirmEmailReset() {
 
     sessionStorage.removeItem('registerEmailVerified');
     checkRegisterFormComplete();
+}
+
+// 비밀번호 찾기 - 플래그
+let isFindCodeSent     = false;
+let isFindCodeVerified = false;
+
+// 비밀번호 찾기 - 비밀번호 유효성 검사
+function validateFindPassword() {
+    const password = document.getElementById('new-password')?.value || '';
+    const errorEl = document.getElementById('new-password-error');
+    if (!password) {
+        if (errorEl) { errorEl.textContent = ''; errorEl.classList.remove('show'); }
+        return false;
+    }
+    const errors = [];
+    if (password.length < 8 || password.length > 16) errors.push('8~16자');
+    if (!/[A-Z]/.test(password)) errors.push('영문 대문자');
+    if (!/[a-z]/.test(password)) errors.push('영문 소문자');
+    if (!/[0-9]/.test(password)) errors.push('숫자');
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) errors.push('특수문자');
+    if (errors.length > 0) {
+        if (errorEl) { errorEl.textContent = `${errors.join(', ')}를 포함해야 합니다.`; errorEl.classList.add('show'); }
+        return false;
+    }
+    if (errorEl) { errorEl.textContent = ''; errorEl.classList.remove('show'); }
+    return true;
+}
+
+// 비밀번호 찾기 - 비밀번호 확인 검사
+function validateFindPasswordConfirm() {
+    const password  = document.getElementById('new-password')?.value || '';
+    const confirm   = document.getElementById('confirm-password')?.value || '';
+    const errorEl   = document.getElementById('confirm-password-error');
+    const successEl = document.getElementById('confirm-password-success');
+    if (!confirm) {
+        if (errorEl)   { errorEl.textContent = '';   errorEl.classList.remove('show'); }
+        if (successEl) { successEl.textContent = ''; successEl.classList.remove('show'); }
+        return false;
+    }
+    if (password !== confirm) {
+        if (errorEl)   { errorEl.textContent = '비밀번호가 일치하지 않습니다.'; errorEl.classList.add('show'); }
+        if (successEl) { successEl.textContent = ''; successEl.classList.remove('show'); }
+        return false;
+    }
+    if (errorEl)   { errorEl.textContent = '';              errorEl.classList.remove('show'); }
+    if (successEl) { successEl.textContent = '비밀번호가 일치합니다.'; successEl.classList.add('show'); }
+    return true;
+}
+
+// 비밀번호 찾기 - 다음 버튼 활성화 조건 체크 (인증 완료 + 비밀번호 유효 + 확인 일치)
+function checkFindFormComplete() {
+    const nextBtn = document.getElementById('find-next-btn');
+    if (!nextBtn) return;
+    const pwValid      = validateFindPassword();
+    const confirmValid = validateFindPasswordConfirm();
+    nextBtn.disabled   = !(isFindCodeVerified && pwValid && confirmValid);
 }
 
 // 05_01 회원가입 수정 - 비밀번호 실시간 유효성 검사 (대소문자, 숫자, 특수문자, 8~16자)

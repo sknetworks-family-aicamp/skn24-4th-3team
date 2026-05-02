@@ -18,7 +18,7 @@
 .terms-section-check input[type="checkbox"] { width: 30px; height: 30px; cursor: pointer; }
 .terms-section-check label { font-size: 14px; color: #333; cursor: pointer; }
 .terms-footer-check { display: flex; align-items: center; gap: 12px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; margin-bottom: 30px; }
-.terms-footer-check input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+.terms-footer-check input[type="checkbox"] { width: 30px; height: 30px; cursor: pointer; }
 .terms-footer-check label { font-size: 15px; font-weight: 500; color: #333; cursor: pointer; }
 .button-group { display: flex; gap: 16px; }
 .button-group .btn { flex: 1; }

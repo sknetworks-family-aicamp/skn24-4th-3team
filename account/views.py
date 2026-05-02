@@ -275,10 +275,12 @@ def send_verification_code(request):
     email = data.get("email", "").strip()
 
     if not email:
-        return JsonResponse({
-            "success": False,
-            "message": "이메일을 입력해주세요.",
-        }, status=400)
+        return JsonResponse({"success": False, "message": "이메일을 입력해주세요."}, status=400)
+
+    # 비밀번호 찾기용 요청 시 가입된 이메일인지 확인
+    if data.get("for_find"):
+        if not User.objects.filter(email=email).exists():
+            return JsonResponse({"success": False, "message": "가입된 사용자를 찾을 수 없습니다."}, status=400)
 
     code = str(random.randint(100000, 999999))
     cache.set(f"auth_code_{email}", code, timeout=300)
