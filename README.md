@@ -1,4 +1,7 @@
 # SKN24-4th-3Team
+---
+> **AI를 활용한 건설 현장 TBM 자동화 및 안전 관리 플랫폼 개발**
+> **프로젝트 기간**: 2026.04.30 ~ 2026.05.01 (2일)
 
 # 1. 팀 소개
 
@@ -14,7 +17,6 @@
 | [![GitHub](https://img.shields.io/badge/GitHub-kyu5KIm-181717?style=flat&logo=github&logoColor=white)](https://github.com/kyu5KIm) | [![GitHub](https://img.shields.io/badge/GitHub-suyoung6279-181717?style=flat&logo=github&logoColor=white)](https://github.com/suyoung6279) | [![GitHub](https://img.shields.io/badge/GitHub-parksay-181717?style=flat&logo=github&logoColor=white)](https://github.com/parksay) | [![GitHub](https://img.shields.io/badge/GitHub-LeeDongMin0115-181717?style=flat&logo=github&logoColor=white)](https://github.com/LeeDongMin0115) | [![GitHub](https://img.shields.io/badge/GitHub-hun6684-181717?style=flat&logo=github&logoColor=white)](https://github.com/hun6684) |
 > AI로 생성된 이미지입니다.
 
-**프로젝트 기간**: 2026.04.30 ~ 2026.05.01 (2일)
 
 ## 2. 프로젝트 개요 📑
 
