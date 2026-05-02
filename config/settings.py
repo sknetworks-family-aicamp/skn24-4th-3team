@@ -143,8 +143,8 @@ SESSION_COOKIE_AGE = 3600
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'cache_table',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'otp-verification-cache',
     }
 }
 
