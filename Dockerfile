@@ -5,6 +5,13 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /code
 
+# mysqlclient 빌드에 필요한 시스템 의존성
+RUN apt-get update && apt-get install -y \
+    default-libmysqlclient-dev \
+    gcc \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY requirements-web.txt .
 RUN pip install --no-cache-dir -r requirements-web.txt
 
