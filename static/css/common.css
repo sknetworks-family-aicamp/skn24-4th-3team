@@ -1,4 +1,4 @@
-﻿/* 怨듯넻 CSS - TBM ?꾩옣愿由??쒖뒪??*/
+/* Common CSS - TBM field management system */
 
 * {
     margin: 0;
@@ -17,7 +17,7 @@ body {
     overflow: hidden;
 }
 
-/* 硫붿씤 而⑦뀒?대꼫 - 1000x950 */
+/* Main container - 1000x950 */
 .container {
     width: 1000px;
     height: 950px;
@@ -30,7 +30,7 @@ body {
     position: relative;
 }
 
-/* ?ㅻ뜑 */
+/* Header */
 .header {
     background-color: #DCE8FF;
     padding: 30px 40px;
@@ -56,7 +56,7 @@ body {
     font-weight: 400;
 }
 
-/* 肄섑뀗痢??곸뿭 */
+/* Content area */
 .content {
     flex: 1;
     display: flex;
@@ -64,10 +64,10 @@ body {
     align-items: center;
     justify-content: center;
     padding: 60px;
-    overflow-y: auto;  /* ?ㅽ겕濡?異붽? */
+    overflow-y: auto;  /* Add scrolling */
 }
 
-/* 濡쒓퀬/?쒕ぉ ?곸뿭 */
+/* Logo/title area */
 .logo-section {
     text-align: center;
     margin-bottom: 60px;
@@ -86,7 +86,7 @@ body {
     font-weight: 400;
 }
 
-/* ???뱀뀡 */
+/* Form section */
 .form-section {
     width: 100%;
     max-width: 650px;
@@ -99,7 +99,7 @@ body {
     margin-bottom: 40px;
 }
 
-/* ?낅젰 洹몃９ */
+/* Input group */
 .input-group {
     margin-bottom: 20px;
 }
@@ -122,7 +122,7 @@ body {
     gap: 10px;
 }
 
-/* ?⑥씪 ?낅젰李?(?꾩씠肄??ы븿) */
+/* Single input field with icon */
 .input-wrapper.single {
     position: relative;
     display: flex;
@@ -138,7 +138,7 @@ body {
     z-index: 1;
 }
 
-/* ?꾩씠肄섏씠 ?덈뒗 ?낅젰李쎈쭔 ?쇱そ ?⑤뵫 異붽? */
+/* Add left padding only for icon input fields */
 .input-wrapper.single:has(.input-icon) input {
     padding-left: 55px;
 }
@@ -147,7 +147,7 @@ body {
     width: 100%;
 }
 
-/* ========== ?낅젰 ?꾨뱶 ?ㅽ???========== */
+/* ========== Input field styles ========== */
 .input-group input {
     flex: 1;
     padding: 16px 20px;
@@ -155,26 +155,26 @@ body {
     border-radius: 8px;
     font-size: 15px;
     color: #333;
-    background-color: #ffffff;  /* 湲곕낯: ?곗깋 */
+    background-color: #ffffff;  /* Default: white */
     outline: none;
     transition: border-color 0.3s, background-color 0.3s;
 }
 
 .input-group input:focus {
     border-color: #2B83FF;
-    background-color: #EBF3FF;  /* ?ъ빱???? ?고븳 ?뚮???*/
+    background-color: #EBF3FF;  /* Focus: light blue */
 }
 
 .input-group input::placeholder {
-    color: #999;  /* placeholder ?뚯깋 */
+    color: #999;  /* Placeholder gray */
 }
 
 .input-group input.error {
-    border-color: #FF0000;  /* ?먮윭 ?? 鍮④컙 ?뚮몢由?*/
+    border-color: #FF0000;  /* Error: red border */
 }
 
-/* ========== ?먮윭/?깃났 硫붿떆吏 ?ㅽ???========== */
-/* ?먮윭 硫붿떆吏 - 鍮④컙??(#FF0000) */
+/* ========== Error/success message styles ========== */
+/* Error message - red (#FF0000) */
 .error-message {
     font-size: 13px;
     color: #FF0000 !important;
@@ -186,14 +186,14 @@ body {
     display: block;
 }
 
-/* ??대㉧ - 鍮④컙??(#FF0000) */
+/* Timer - red (#FF0000) */
 .timer {
     font-size: 13px;
     color: #FF0000 !important;
     margin-top: 6px;
 }
 
-/* ?깃났 硫붿떆吏 - ?뚮???(#2B83FF) - ?낅젰李??꾨옒???쒖떆 */
+/* Success message - blue (#2B83FF), shown below input */
 .success-message {
     font-size: 13px;
     color: #2B83FF !important;
@@ -205,7 +205,7 @@ body {
     display: block;
 }
 
-/* 鍮꾨?踰덊샇 李얘린 留곹겕 */
+/* Forgot password link */
 .forgot-password {
     text-align: right;
     margin-bottom: 30px;
@@ -221,7 +221,7 @@ body {
     text-decoration: underline;
 }
 
-/* 踰꾪듉 怨듯넻 ?ㅽ???*/
+/* Common button styles */
 .btn {
     padding: 18px 24px;
     border: none;
@@ -233,7 +233,7 @@ body {
     width: 100%;
 }
 
-/* ?쒖꽦??踰꾪듉 */
+/* Enabled button */
 .btn-primary {
     background-color: #2B83FF;
     color: #ffffff;
@@ -248,7 +248,7 @@ body {
     cursor: not-allowed;
 }
 
-/* 鍮꾪솢?깊솕 ?ㅽ???踰꾪듉 */
+/* Disabled-style button */
 .btn-secondary {
     background-color: rgba(178, 178, 178, 0.3);
     color: #666;
@@ -258,7 +258,7 @@ body {
     background-color: rgba(178, 178, 178, 0.4);
 }
 
-/* ?묒? 踰꾪듉 (?몄쬆踰덊샇 諛쒖넚, ?뺤씤 ?? */
+/* Small button (send verification code, confirm, etc.) */
 .btn-small {
     padding: 16px 24px;
     font-size: 15px;
@@ -266,7 +266,7 @@ body {
     min-width: 140px;
 }
 
-/* 援щ텇??*/
+/* Divider */
 .divider {
     text-align: center;
     margin: 24px 0;
@@ -293,7 +293,7 @@ body {
     right: 0;
 }
 
-/* ?앹뾽 ?ㅻ쾭?덉씠 */
+/* Popup overlay */
 .popup-overlay {
     position: fixed;
     top: 0;
@@ -311,7 +311,7 @@ body {
     display: flex;
 }
 
-/* ?앹뾽 */
+/* Popup */
 .popup {
     background-color: #ffffff;
     padding: 40px;
@@ -353,7 +353,7 @@ body {
     padding: 10px 24px;
 }
 
-/* ?앹뾽 踰꾪듉 ?ㅽ???*/
+/* Popup button styles */
 .popup-buttons {
     display: flex;
     gap: 12px;

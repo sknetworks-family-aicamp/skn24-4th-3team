@@ -1,4 +1,4 @@
-﻿/* chatbot.css - 챗봇 페이지 전용 스타일 */
+﻿/* chatbot.css - chatbot page styles */
 
 .chatbot-content {
     padding: 0;
@@ -6,60 +6,39 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    height: 100%; 
 }
 
-/* 스크롤 가능한 채팅 메시지 영역 */
+/* Scrollable chat history area */
 .chat-messages-area {
     flex: 1;
     overflow-y: auto;
     padding: 40px;
-    /* 입력창에 가려지지 않도록 하단 여백 확보 */
-    padding-bottom: 120px; 
+    padding-bottom: 120px; /* Keep bottom spacing so the input does not cover messages */
 }
 
-/* 스크롤바 디자인 (Chrome, Safari) */
-.chat-messages-area::-webkit-scrollbar { 
-    width: 8px; 
-}
-.chat-messages-area::-webkit-scrollbar-track { 
-    background: transparent; 
-}
-.chat-messages-area::-webkit-scrollbar-thumb { 
-    background: #ddd; 
-    border-radius: 4px; 
-}
+/* Scrollbar design */
+.chat-messages-area::-webkit-scrollbar { width: 8px; }
+.chat-messages-area::-webkit-scrollbar-track { background: transparent; }
+.chat-messages-area::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
 
-/* 채팅 도입부 (로고 및 설명) */
+/* Chatbot title (entry area) */
 .chat-intro {
     text-align: center;
     margin-bottom: 60px;
 }
-.intro-logo { 
-    margin-bottom: 20px; 
-}
-.logo-text { 
-    font-size: 24px; 
-    font-weight: 800; 
-    color: #1a2b4c; 
-    background-color: #f1f5f9; 
-    display: inline-block; 
-    padding: 4px 16px; 
-    border-radius: 12px; 
-    margin-top: -10px; 
-}
-.chat-intro h2 { 
-    font-size: 24px; 
-    font-weight: 700; 
-    color: #333; 
-    margin-bottom: 12px; 
-}
-.chat-intro p { 
-    font-size: 15px; 
-    color: #666; 
-}
+.intro-logo { margin-bottom: 20px; }
+.logo-text { font-size: 24px; font-weight: 800; color: #1a2b4c; background-color: #f1f5f9; display: inline-block; padding: 4px 16px; border-radius: 12px; margin-top: -10px; }
+.chat-intro h2 { font-size: 24px; font-weight: 700; color: #333; margin-bottom: 12px; }
+.chat-intro p { font-size: 15px; color: #666; }
 
-/* 채팅 리스트 래퍼 */
+/* Chat list wrapper */
+/* .chat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+} */
 .chat-list {
     display: flex;
     flex-direction: column;
@@ -67,10 +46,11 @@
     max-width: 800px;
     width: 100%;
     margin: 0 auto;
-    align-items: stretch;
 }
-
-/* 개별 메시지 줄 (아바타 + 내용) */
+/* Individual message row */
+/* .message-row { display: flex; gap: 12px; }
+.user-row { justify-content: flex-end; align-items: flex-start; }
+.bot-row { justify-content: flex-start; align-items: flex-start; } */
 .message-row { 
     display: flex; 
     gap: 12px;
@@ -86,8 +66,7 @@
     justify-content: flex-start; 
     align-items: flex-start; 
 }
-
-/* 아바타 아이콘 */
+/* User profile icon */
 .avatar {
     width: 48px;
     height: 48px;
@@ -100,28 +79,15 @@
     overflow: hidden; 
 }
 
-.user-avatar { 
-    background-color: #E2E8F0; 
-}
-.bot-avatar { 
-    background-color: #ffffff; 
-    border: 2px solid #2B83FF; 
-}
+.user-avatar { background-color: #E2E8F0; }
+.bot-avatar { background-color: #ffffff; border: 2px solid #2B83FF; }
 
-/* 메시지 컨텐츠 (말풍선 + 시간) */
-.message-content { 
-    display: flex; 
-    flex-direction: column; 
-    max-width: 70%; 
-}
-.user-row .message-content { 
-    align-items: flex-end; 
-}
-.bot-row .message-content { 
-    align-items: flex-start; 
-}
+/* Message content (bubble + time) */
+.message-content { display: flex; flex-direction: column; max-width: 70%; }
+.user-row .message-content { align-items: flex-end; }
+.bot-row .message-content { align-items: flex-start; }
 
-/* 말풍선 공통 디자인 */
+/* Common bubble styles */
 .bubble {
     padding: 16px 24px;
     font-size: 16px;
@@ -130,21 +96,21 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-/* 사용자 말풍선 (우측 꼬리) */
+/* User bubble (right tail) */
 .user-bubble {
     background-color: #E2E8F0;
     color: #333;
-    border-radius: 20px 20px 0 20px;
+    border-radius: 20px 20px 0 20px; /* Only the bottom-right corner is square */
 }
 
-/* 봇 말풍선 (좌측 꼬리) */
+/* Chatbot bubble (left tail) */
 .bot-bubble {
     background-color: #2B83FF;
     color: #ffffff;
-    border-radius: 0 20px 20px 20px;
+    border-radius: 0 20px 20px 20px; /* Only the top-left corner is square, similar to the image */
 }
 
-/* 메시지 전송 시간 */
+/* Time */
 .time {
     font-size: 12px;
     color: #999;
@@ -152,7 +118,7 @@
     padding: 0 4px;
 }
 
-/* 봇 답변 로딩 애니메이션 */
+/* Loading animation (generating response) */
 .loading-bubble {
     display: flex;
     align-items: center;
@@ -172,18 +138,17 @@
     100% { transform: rotate(360deg); }
 }
 
-/* 하단 입력창 고정 영역 */
+/* Fixed bottom input area */
 .chat-input-wrapper {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     padding: 24px 40px;
-    /* 상단으로 자연스럽게 사라지는 그라데이션 배경 */
-    background: linear-gradient(to top, #ffffff 80%, transparent); 
+    background: linear-gradient(to top, #ffffff 80%, transparent); /* Smooth display with gradient */
 }
 
-/* 입력 박스 디자인 */
+/* Input box design */
 .chat-input-box {
     display: flex;
     align-items: center;
@@ -204,17 +169,14 @@
     color: #333;
     padding: 8px 0;
 }
-.chat-input-box input::placeholder { 
-    color: #94a3b8; 
-}
+.chat-input-box input::placeholder { color: #94a3b8; }
 
-/* 우측 액션 버튼 영역 (음성 인식, 전송 등) */
+/* Right-side icon buttons */
 .chat-action-btns {
     display: flex;
     gap: 12px;
     margin-left: 16px;
 }
-
 .action-btn {
     width: 44px;
     height: 44px;
@@ -227,6 +189,4 @@
     cursor: pointer;
     transition: all 0.2s;
 }
-.action-btn:hover { 
-    background-color: #f1f5f9; 
-}
+.action-btn:hover { background-color: #f1f5f9; }

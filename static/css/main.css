@@ -1,4 +1,4 @@
-﻿/* main.css - 硫붿씤 ??쒕낫???꾩슜 */
+﻿/* main.css - main dashboard page */
 .main-header { display: flex; align-items: center; justify-content: space-between; padding: 30px 40px; gap: 20px; }
 .menu-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: #333; flex-shrink: 0; }
 .header-content { flex: 1; text-align: center; }
@@ -6,7 +6,7 @@
 .header-content p { font-size: 14px; color: #999; }
 .main-content { display: flex; gap: 30px; padding: 20px 40px 40px; align-items: stretch; flex: 1; overflow: hidden; }
 
-/* ?щ젰 */
+/* Calendar */
 .calendar-section { flex: 0 0 60%; display: flex; flex-direction: column; overflow: hidden; }
 .calendar-controls { display: flex; gap: 10px; margin-bottom: 20px; }
 .calendar-controls select { padding: 10px 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; }
@@ -21,7 +21,7 @@
 .calendar-day.today.has-record::before { background-color: #ffffff; }
 .calendar-day.disabled { color: #ddd; cursor: not-allowed; }
 
-/* TBM ?ъ씠??紐⑸줉 */
+/* TBM side list */
 .tbm-section { flex: 0 0 40%; display: flex; flex-direction: column; }
 .tbm-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-size: 18px; font-weight: 600; color: #333; }
 .tbm-icon { font-size: 20px; }
@@ -39,7 +39,7 @@
 .sidebar-overlay { opacity: 0; pointer-events: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 1999; transition: opacity 0.3s; }
 .sidebar-overlay.active { opacity: 1; pointer-events: all; }
 
-/* ?ъ씠?쒕컮 */
+/* Sidebar */
 .sidebar { position: absolute; left: -320px; top: 0; width: 320px; height: 100%; background-color: #ffffff; box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); z-index: 2000; transition: left 0.3s; display: flex; flex-direction: column; }
 .sidebar.active { left: 0; }
 .sidebar-header { padding: 30px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
