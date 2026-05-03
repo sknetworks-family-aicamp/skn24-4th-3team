@@ -42,7 +42,7 @@
 
 /* 媛쒕퀎 硫붿떆吏 ??*/
 .message-row { display: flex; gap: 12px; }
-.user-row { justify-content: flex-end; flex-direction: row-reverse; align-items: flex-start; }
+.user-row { justify-content: flex-end; align-items: flex-start; }
 .bot-row { justify-content: flex-start; align-items: flex-start; }
 
 /* ?닿굅 ?꾨쭏 ?꾩씠肄?*/

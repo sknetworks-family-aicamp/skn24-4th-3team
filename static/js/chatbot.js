@@ -33,11 +33,11 @@ function appendMessage(role, message) {
     row.className = `message-row ${isUser ? 'user-row' : 'bot-row'}`;
     row.innerHTML = isUser
         ? `
-            <div class="avatar user-avatar">사용자</div>
             <div class="message-content">
                 <div class="bubble user-bubble">${safeMessage}</div>
                 <div class="time">${getCurrentTime()}</div>
             </div>
+            <div class="avatar user-avatar">사용자</div>
         `
         : `
             <div class="avatar bot-avatar">

@@ -145,17 +145,12 @@ function renderTbmCards(drafts) {
     }
 
     tbmList.innerHTML = drafts.map(d => {
-        const badge = d.editable
-            ? '<span class="badge badge-editable">편집가능</span>'
-            : '<span class="badge badge-readonly">편집불가</span>';
-
         const duration = formatDuration(d.recording_duration_sec);
 
         return `
         <div class="tbm-card" onclick="window.location.href='/tbm/detail/${d.draft_id}/'">
             <div class="card-header">
-                <span class="card-date">${d.task_name || '(작업명 없음)'}</span>
-                ${badge}
+                <span class="card-date">🔨 ${d.task_name || '(작업명 없음)'}</span>
             </div>
             <div class="card-body">
                 <div class="card-info">

@@ -10,18 +10,20 @@ def parse_weather_text(weather_text: str) -> dict:
     """weather_text 문자열 → WeatherInfo 필드 딕셔너리로 파싱"""
     if not weather_text:
         return {}
+    
     patterns = {
-        'temperature':   r'기온\s*([\d.]+)도',
-        'humidity':      r'습도\s*([\d]+)%',
-        'weather_status': r'날씨\s*[:\s]\s*([^,]+)',
-        'wind_speed':    r'풍속\s*([\d.]+)m/s',
-        'precipitation': r'강수량\s*([\d.]+)mm',
+        'weather_status': r'날씨:\s*([^,]+)',
+        'temperature':    r'기온:\s*([\d.]+)도',
+        'humidity':       r'습도:\s*([\d]+)%',
+        'precipitation':  r'강수량:\s*([\d.]+)mm',
+        'wind_speed':     r'풍속:\s*([\d.]+)m/s',
     }
-    return {
-        key: m.group(1).strip()
-        for key, pattern in patterns.items()
-        if (m := re.search(pattern, weather_text))
-    }
+    
+    result = {}
+    for key, pattern in patterns.items():
+        if (m := re.search(pattern, weather_text)):
+            result[key] = m.group(1).strip()
+    return result
 
 
 def build_draft_text(draft: str, references: list[str]) -> str:
