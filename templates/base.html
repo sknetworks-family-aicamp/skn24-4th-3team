@@ -13,6 +13,8 @@
 </head>
 <body>
 
+{% csrf_token %}
+
 {% block content %}{% endblock %}
 
 <script src="{% static 'js/common.js' %}"></script>
