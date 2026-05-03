@@ -26,6 +26,7 @@ let mediaRecorder = null;
 let recordedChunks = [];
 let recordedBlob = null;
 let currentStream = null;
+const MIN_RECORDING_SECONDS = 60;
 
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('work-name')) restoreTBMWorkData();
@@ -222,17 +223,63 @@ function showDeletePopup() { showPopup('popup-delete'); }
 function showHelpPopup() { showPopup('popup-help'); }
 
 function stopRecording() {
+    if (recordingSeconds < MIN_RECORDING_SECONDS) {
+        closePopup('popup-stop');
+        showShortRecordingPopup();
+        return;
+    }
+
     if (recordingTimer) clearInterval(recordingTimer);
     if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
     closePopup('popup-stop');
     changeRecordingState('completed');
 }
 
-function deleteRecording() {
+function showShortRecordingPopup() {
+    if (recordingTimer) {
+        clearInterval(recordingTimer);
+        recordingTimer = null;
+    }
+    if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.pause();
+
+    const message = document.getElementById('short-recording-message');
+    if (message) {
+        message.textContent = `최소 녹음 시간 : 60초 / 현재 녹음 시간 : ${recordingSeconds}초`;
+    }
+    showPopup('popup-short-recording');
+}
+
+async function restartShortRecording() {
+    closePopup('popup-short-recording');
+    discardRecordingData();
+    await startRecording();
+}
+
+function discardRecordingData() {
+    if (recordingTimer) {
+        clearInterval(recordingTimer);
+        recordingTimer = null;
+    }
+    const recorderToDiscard = mediaRecorder;
+    mediaRecorder = null;
+    if (recorderToDiscard && recorderToDiscard.state !== 'inactive') {
+        recorderToDiscard.ondataavailable = null;
+        recorderToDiscard.onstop = null;
+        recorderToDiscard.stop();
+    }
+    if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+        currentStream = null;
+    }
     recordingSeconds = 0;
     recordedChunks = [];
     recordedBlob = null;
-    if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+    const timer = document.getElementById('timer');
+    if (timer) timer.textContent = '00:00';
+}
+
+function deleteRecording() {
+    discardRecordingData();
     const timer = document.getElementById('timer');
     if (timer) timer.style.display = 'none';
     closePopup('popup-delete');

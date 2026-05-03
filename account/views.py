@@ -237,7 +237,7 @@ def register_form_view(request):
         if User.objects.filter(email=email).exists():
             return JsonResponse({
                 "success": False,
-                "message": "이미 가입된 이메일입니다.",
+                "message": "이미 가입된 이메일입니다",
             }, status=400)
 
         user = User(
@@ -277,10 +277,13 @@ def send_verification_code(request):
     if not email:
         return JsonResponse({"success": False, "message": "이메일을 입력해주세요."}, status=400)
 
-    # 비밀번호 찾기용 요청 시 가입된 이메일인지 확인
-    if data.get("for_find"):
+    is_password_find = bool(data.get("for_find"))
+
+    if is_password_find:
         if not User.objects.filter(email=email).exists():
             return JsonResponse({"success": False, "message": "가입된 사용자를 찾을 수 없습니다."}, status=400)
+    elif User.objects.filter(email=email).exists():
+        return JsonResponse({"success": False, "message": "이미 가입된 이메일입니다"}, status=400)
 
     code = str(random.randint(100000, 999999))
     cache.set(f"auth_code_{email}", code, timeout=300)
@@ -326,7 +329,7 @@ def verify_certification_code(request):
     if expected_code is None:
         return JsonResponse({
             "success": False,
-            "message": "인증 시간이 만료되었거나 이메일 주소가 잘못되었습니다.",
+            "message": "인증 시간이 만료되었습니다. 인증번호를 다시 발송해주세요.",
         }, status=400)
 
     if expected_code != user_code:
@@ -415,21 +418,40 @@ def mypage_view(request):
         company_name = data.get("company_name", data.get("company", "")).strip()
         position = data.get("position", "").strip()
 
-        pattern = re.compile(r"^[가-힣a-zA-Z0-9\s]+$")
+        name_pattern = re.compile(r"^[가-힣a-zA-Z\s]+$")
+        text_pattern = re.compile(r"^[가-힣a-zA-Z0-9\s]+$")
 
-        if name and not pattern.match(name):
+        if len(name) > 20:
             return JsonResponse({
                 "success": False,
-                "message": "성명은 한글, 영어, 숫자만 입력 가능합니다.",
+                "message": "성명은 최대 20자까지 입력 가능합니다.",
             }, status=400)
 
-        if company_name and not pattern.match(company_name):
+        if len(company_name) > 50:
+            return JsonResponse({
+                "success": False,
+                "message": "업체명은 최대 50자까지 입력 가능합니다.",
+            }, status=400)
+
+        if len(position) > 50:
+            return JsonResponse({
+                "success": False,
+                "message": "직책은 최대 50자까지 입력 가능합니다.",
+            }, status=400)
+
+        if name and not name_pattern.match(name):
+            return JsonResponse({
+                "success": False,
+                "message": "성명은 문자만 입력 가능합니다.",
+            }, status=400)
+
+        if company_name and not text_pattern.match(company_name):
             return JsonResponse({
                 "success": False,
                 "message": "업체명은 한글, 영어, 숫자만 입력 가능합니다.",
             }, status=400)
 
-        if position and not pattern.match(position):
+        if position and not text_pattern.match(position):
             return JsonResponse({
                 "success": False,
                 "message": "직책은 한글, 영어, 숫자만 입력 가능합니다.",
@@ -467,7 +489,13 @@ def mypage_view(request):
         if not request.user.check_password(current_password):
             return JsonResponse({
                 "success": False,
-                "message": "현재 비밀번호가 올바르지 않습니다.",
+                "message": "현재 비밀번호가 일치하지 않습니다",
+            }, status=400)
+
+        if current_password == new_password:
+            return JsonResponse({
+                "success": False,
+                "message": "현재 비밀번호와 동일합니다",
             }, status=400)
 
         if new_password != new_password_confirm:

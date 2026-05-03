@@ -120,6 +120,17 @@
         </div>
     </div>
 
+    <!-- 팝업: 최소 녹음 시간 안내 -->
+    <div class="popup-overlay" id="popup-short-recording">
+        <div class="popup-box">
+            <h3>녹음 시간이 부족합니다.</h3>
+            <p id="short-recording-message">최소 녹음 시간 : 60초 / 현재 녹음 시간 : 0초</p>
+            <div class="popup-buttons">
+                <button class="btn btn-primary" onclick="restartShortRecording()">확인</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 팝업: 녹음 삭제 확인 -->
     <div class="popup-overlay" id="popup-delete">
         <div class="popup-box">

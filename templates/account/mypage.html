@@ -13,16 +13,10 @@
 
         <div class="content mypage-content">
             <div class="mypage-container">
-                <div class="tab-menu">
-                    <button class="tab-btn active" onclick="switchMypageTab('info')">
-                        정보 수정
-                    </button>
-                    <button class="tab-btn" onclick="switchMypageTab('password')">
-                        비밀번호 변경
-                    </button>
-                    <button class="tab-btn" onclick="switchMypageTab('withdrawal')">
-                        회원 탈퇴
-                    </button>
+                <div class="tab-menu mypage-tab-menu">
+                    <button class="tab-btn active" data-tab="info" onclick="switchMypageTab('info')">정보 수정</button>
+                    <button class="tab-btn" data-tab="password" onclick="switchMypageTab('password')">비밀번호 변경</button>
+                    <button class="tab-btn tab-btn-danger" data-tab="withdrawal" onclick="switchMypageTab('withdrawal')">회원 탈퇴</button>
                 </div>
 
                 <div class="tab-content-wrapper">
@@ -30,20 +24,23 @@
                         <div class="mypage-form">
                             <div class="form-group">
                                 <label>성명</label>
-                                <input type="text" id="info-name" value="{{ request.user.name }}" placeholder="성명" maxlength="20">
+                                <input type="text" id="info-name" value="{{ request.user.name }}" data-original="{{ request.user.name }}" placeholder="성명" maxlength="20">
                                 <div class="error-message" id="info-name-error"></div>
+                                <div class="success-message" id="info-name-success"></div>
                             </div>
 
                             <div class="form-group">
                                 <label>업체명</label>
-                                <input type="text" id="info-company" value="{{ request.user.company_name }}" placeholder="업체명" maxlength="50">
+                                <input type="text" id="info-company" value="{{ request.user.company_name }}" data-original="{{ request.user.company_name }}" placeholder="업체명" maxlength="50">
                                 <div class="error-message" id="info-company-error"></div>
+                                <div class="success-message" id="info-company-success"></div>
                             </div>
 
                             <div class="form-group">
                                 <label>직책</label>
-                                <input type="text" id="info-position" value="{{ request.user.position }}" placeholder="직책" maxlength="50">
+                                <input type="text" id="info-position" value="{{ request.user.position }}" data-original="{{ request.user.position }}" placeholder="직책" maxlength="50">
                                 <div class="error-message" id="info-position-error"></div>
+                                <div class="success-message" id="info-position-success"></div>
                             </div>
                         </div>
                     </div>
@@ -52,20 +49,21 @@
                         <div class="mypage-form">
                             <div class="form-group">
                                 <label>현재 비밀번호</label>
-                                <input type="password" id="current-password" placeholder="••••••••••">
+                                <input type="password" id="current-password" placeholder="현재 비밀번호">
                                 <div class="error-message" id="current-password-error"></div>
                             </div>
 
                             <div class="form-group">
                                 <label>새 비밀번호</label>
-                                <input type="password" id="new-password" placeholder="영문 대소문자, 숫자, 특수문자를 각각 최소 1개 이상 포함하여 8~16자이상 만들어주세요.">
+                                <input type="password" id="new-password" placeholder="영문 대/소문자, 숫자, 특수문자를 포함하여 8~16자로 입력해주세요.">
                                 <div class="error-message" id="new-password-error"></div>
                             </div>
 
                             <div class="form-group">
                                 <label>새 비밀번호 확인</label>
-                                <input type="password" id="new-password-confirm" placeholder="••••••••••••">
+                                <input type="password" id="new-password-confirm" placeholder="새 비밀번호 확인">
                                 <div class="error-message" id="new-password-confirm-error"></div>
+                                <div class="success-message" id="new-password-confirm-success"></div>
                             </div>
                         </div>
                     </div>
@@ -73,9 +71,9 @@
                     <div class="tab-content" id="tab-withdrawal">
                         <div class="mypage-form">
                             <div class="withdrawal-notice">
-                                <h4>⚠️ 회원 탈퇴 시 주의사항</h4>
+                                <h4>회원 탈퇴 전 주의사항</h4>
                                 <ul>
-                                    <li>계정 정보가 영구적으로 삭제 됩니다.</li>
+                                    <li>계정 정보가 영구적으로 삭제됩니다.</li>
                                     <li>TBM 기록이 모두 삭제됩니다.</li>
                                     <li>삭제된 데이터는 복구할 수 없습니다.</li>
                                 </ul>
@@ -83,14 +81,14 @@
 
                             <div class="form-group">
                                 <p class="withdrawal-instruction">회원 탈퇴를 진행하시려면 아래에 <strong style="color: #FF3B3B;">"회원탈퇴"</strong>를 입력해주세요.</p>
-                                <input type="text" id="withdrawal-confirm" placeholder="회원 탈퇴">
+                                <input type="text" id="withdrawal-confirm" placeholder="회원탈퇴">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="mypage-buttons">
-                    <button class="btn btn-primary" id="save-btn" onclick="saveMypageChanges()">저장</button>
+                    <button class="btn btn-primary" id="save-btn" onclick="saveMypageChanges()" disabled>저장</button>
                 </div>
 
                 <div class="withdrawal-buttons" id="withdrawal-btn-area" style="display: none;">
@@ -99,7 +97,6 @@
             </div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block extra_script %}

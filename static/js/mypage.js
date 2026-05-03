@@ -1,24 +1,60 @@
-// mypage.js - 마이페이지 전용
+// mypage.js - my page helpers.
 
 let currentMypageTab = 'info';
 let mypageModified = false;
 
+const INFO_FIELD_RULES = {
+    'info-name': {
+        maxLength: 20,
+        pattern: /^[가-힣a-zA-Z\s]*$/,
+        errorMessage: '문자만 입력 가능합니다',
+        successMessage: '사용 가능한 이름입니다.',
+    },
+    'info-company': {
+        maxLength: 50,
+        pattern: /^[가-힣a-zA-Z0-9\s]*$/,
+        errorMessage: '한글, 영어, 숫자만 입력 가능합니다.',
+        successMessage: '사용 가능합니다.',
+    },
+    'info-position': {
+        maxLength: 50,
+        pattern: /^[가-힣a-zA-Z0-9\s]*$/,
+        errorMessage: '한글, 영어, 숫자만 입력 가능합니다.',
+        successMessage: '사용 가능합니다.',
+    },
+};
+
 document.addEventListener('DOMContentLoaded', () => {
-    const inputs = document.querySelectorAll('#tab-info input, #tab-password input');
-    inputs.forEach(input => {
+    Object.keys(INFO_FIELD_RULES).forEach(id => {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.addEventListener('beforeinput', event => enforceMaxLength(event, input, INFO_FIELD_RULES[id]));
         input.addEventListener('input', () => {
             mypageModified = true;
+            validateInfoField(id);
+            updateSaveButtonState();
+        });
+    });
+
+    ['current-password', 'new-password', 'new-password-confirm'].forEach(id => {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.addEventListener('input', () => {
+            mypageModified = true;
+            validatePasswordForm();
+            updateSaveButtonState();
         });
     });
 
     const withdrawalInput = document.getElementById('withdrawal-confirm');
     const withdrawalBtn = document.getElementById('withdrawal-btn');
-
     if (withdrawalInput && withdrawalBtn) {
         withdrawalInput.addEventListener('input', () => {
             withdrawalBtn.disabled = withdrawalInput.value.trim() !== '회원탈퇴';
         });
     }
+
+    updateSaveButtonState();
 });
 
 function getCsrfToken() {
@@ -34,31 +70,176 @@ function getCsrfToken() {
     return '';
 }
 
+async function postMypage(payload) {
+    const response = await fetch('/account/mypage/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken(),
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: JSON.stringify(payload),
+    });
+
+    const result = await response.json();
+    if (!response.ok || !result.success) throw result;
+    return result;
+}
+
+function setFieldMessage(inputId, type, message) {
+    const errorEl = document.getElementById(`${inputId}-error`);
+    const successEl = document.getElementById(`${inputId}-success`);
+    const input = document.getElementById(inputId);
+
+    if (errorEl) {
+        errorEl.textContent = type === 'error' ? message : '';
+        errorEl.classList.toggle('show', type === 'error' && Boolean(message));
+    }
+    if (successEl) {
+        successEl.textContent = type === 'success' ? message : '';
+        successEl.classList.toggle('show', type === 'success' && Boolean(message));
+    }
+    if (input) input.classList.toggle('error', type === 'error' && Boolean(message));
+}
+
+function hasInfoChanged(input) {
+    return input.value.trim() !== (input.dataset.original || '').trim();
+}
+
+function enforceMaxLength(event, input, rule) {
+    if (!event.data) return;
+
+    const selectionLength = input.selectionEnd - input.selectionStart;
+    const nextLength = input.value.length - selectionLength + event.data.length;
+    if (nextLength > rule.maxLength) {
+        event.preventDefault();
+        mypageModified = true;
+        setFieldMessage(input.id, 'error', '더 이상 타이핑 할 수 없습니다.');
+    }
+}
+
+function validateInfoField(inputId) {
+    const input = document.getElementById(inputId);
+    const rule = INFO_FIELD_RULES[inputId];
+    if (!input || !rule) return false;
+
+    const value = input.value.trim();
+    const changed = hasInfoChanged(input);
+
+    if (!changed) {
+        setFieldMessage(inputId, null, '');
+        return true;
+    }
+
+    if (value.length > rule.maxLength) {
+        setFieldMessage(inputId, 'error', '더 이상 타이핑 할 수 없습니다.');
+        return false;
+    }
+
+    if (!value) {
+        setFieldMessage(inputId, 'error', '필수 항목입니다.');
+        return false;
+    }
+
+    if (!rule.pattern.test(value)) {
+        setFieldMessage(inputId, 'error', rule.errorMessage);
+        return false;
+    }
+
+    setFieldMessage(inputId, 'success', rule.successMessage);
+    return true;
+}
+
+function validateInfoForm() {
+    const changed = Object.keys(INFO_FIELD_RULES).some(id => {
+        const input = document.getElementById(id);
+        return input && hasInfoChanged(input);
+    });
+    const valid = Object.keys(INFO_FIELD_RULES).every(validateInfoField);
+    return changed && valid;
+}
+
+function getPasswordValidationMessage(password) {
+    if (!password) return '';
+    const errors = [];
+    if (password.length < 8 || password.length > 16) errors.push('8~16자');
+    if (!/[A-Z]/.test(password)) errors.push('영문 대문자');
+    if (!/[a-z]/.test(password)) errors.push('영문 소문자');
+    if (!/[0-9]/.test(password)) errors.push('숫자');
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) errors.push('특수문자');
+    return errors.length ? `${errors.join(', ')}를 포함해야 합니다.` : '';
+}
+
+function validatePasswordForm() {
+    const currentPw = document.getElementById('current-password')?.value || '';
+    const newPw = document.getElementById('new-password')?.value || '';
+    const confirmPw = document.getElementById('new-password-confirm')?.value || '';
+
+    let valid = true;
+
+    if (currentPw) setFieldMessage('current-password', null, '');
+    if (!currentPw) valid = false;
+
+    const passwordError = getPasswordValidationMessage(newPw);
+    if (passwordError) {
+        setFieldMessage('new-password', 'error', passwordError);
+        valid = false;
+    } else if (newPw && currentPw && currentPw === newPw) {
+        setFieldMessage('new-password', 'error', '현재 비밀번호와 동일합니다');
+        valid = false;
+    } else {
+        setFieldMessage('new-password', null, '');
+        if (!newPw) valid = false;
+    }
+
+    if (!confirmPw) {
+        setFieldMessage('new-password-confirm', null, '');
+        valid = false;
+    } else if (newPw !== confirmPw) {
+        setFieldMessage('new-password-confirm', 'error', '비밀번호가 일치하지 않습니다.');
+        valid = false;
+    } else if (!passwordError && newPw && currentPw !== newPw) {
+        setFieldMessage('new-password-confirm', 'success', '비밀번호가 일치합니다.');
+    }
+
+    return valid;
+}
+
+function updateSaveButtonState() {
+    const saveBtn = document.getElementById('save-btn');
+    if (!saveBtn) return;
+
+    if (currentMypageTab === 'info') {
+        saveBtn.disabled = !validateInfoForm();
+    } else if (currentMypageTab === 'password') {
+        saveBtn.disabled = !validatePasswordForm();
+    } else {
+        saveBtn.disabled = true;
+    }
+}
+
 function switchMypageTab(tabName) {
     currentMypageTab = tabName;
 
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+    });
     document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
     const saveBtn = document.getElementById('save-btn');
     const withdrawalBtnArea = document.getElementById('withdrawal-btn-area');
+    const targetContent = document.getElementById(`tab-${tabName}`);
+    if (targetContent) targetContent.classList.add('active');
 
-    if (tabName === 'info') {
-        document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
-        document.getElementById('tab-info').classList.add('active');
-        saveBtn.parentElement.style.display = 'flex';
-        if (withdrawalBtnArea) withdrawalBtnArea.style.display = 'none';
-    } else if (tabName === 'password') {
-        document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
-        document.getElementById('tab-password').classList.add('active');
-        saveBtn.parentElement.style.display = 'flex';
-        if (withdrawalBtnArea) withdrawalBtnArea.style.display = 'none';
-    } else if (tabName === 'withdrawal') {
-        document.querySelector('.tab-btn:nth-child(3)').classList.add('active');
-        document.getElementById('tab-withdrawal').classList.add('active');
-        saveBtn.parentElement.style.display = 'none';
+    if (tabName === 'withdrawal') {
+        if (saveBtn?.parentElement) saveBtn.parentElement.style.display = 'none';
         if (withdrawalBtnArea) withdrawalBtnArea.style.display = 'flex';
+    } else {
+        if (saveBtn?.parentElement) saveBtn.parentElement.style.display = 'flex';
+        if (withdrawalBtnArea) withdrawalBtnArea.style.display = 'none';
     }
+
+    updateSaveButtonState();
 }
 
 function confirmBackMypage() {
@@ -83,148 +264,87 @@ function saveMypageChanges() {
 }
 
 async function saveInfoChanges() {
+    if (!validateInfoForm()) return;
+
     const name = document.getElementById('info-name').value.trim();
     const company = document.getElementById('info-company').value.trim();
     const position = document.getElementById('info-position').value.trim();
 
-    hideError('info-name', 'info-name-error');
-    hideError('info-company', 'info-company-error');
-    hideError('info-position', 'info-position-error');
-
-    let isValid = true;
-
-    if (!name) {
-        showError('info-name', 'info-name-error', '성명을 입력해주세요.');
-        isValid = false;
-    }
-    if (!company) {
-        showError('info-company', 'info-company-error', '업체명을 입력해주세요.');
-        isValid = false;
-    }
-    if (!position) {
-        showError('info-position', 'info-position-error', '직책을 입력해주세요.');
-        isValid = false;
-    }
-    if (!isValid) return;
-
     try {
-        const response = await fetch('/account/mypage/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken(),
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            body: JSON.stringify({
-                action: 'update_info',
-                name,
-                company,
-                position,
-            }),
+        const result = await postMypage({
+            action: 'update_info',
+            name,
+            company,
+            position,
         });
 
-        const result = await response.json();
-        if (!response.ok || !result.success) {
-            alert(result.message || '개인정보 수정에 실패했습니다.');
-            return;
-        }
+        ['info-name', 'info-company', 'info-position'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.dataset.original = input.value.trim();
+            setFieldMessage(id, null, '');
+        });
 
         mypageModified = false;
-        openAlert('개인정보가 성공적으로 변경되었습니다.', () => navigateTo('main.html'));
+        updateSaveButtonState();
+        openAlert(result.message || '개인정보가 성공적으로 변경되었습니다.');
     } catch (error) {
-        alert('개인정보 수정 중 오류가 발생했습니다.');
+        openAlert(error.message || '개인정보 수정에 실패했습니다.');
     }
 }
 
 async function savePasswordChanges() {
+    if (!validatePasswordForm()) return;
+
     const currentPw = document.getElementById('current-password').value;
     const newPw = document.getElementById('new-password').value;
     const confirmPw = document.getElementById('new-password-confirm').value;
 
-    hideError('current-password', 'current-password-error');
-    hideError('new-password', 'new-password-error');
-    hideError('new-password-confirm', 'new-password-confirm-error');
-
-    let isValid = true;
-
-    if (!currentPw) {
-        showError('current-password', 'current-password-error', '현재 비밀번호를 입력해주세요.');
-        isValid = false;
-    }
-    if (!newPw) {
-        showError('new-password', 'new-password-error', '새 비밀번호를 입력해주세요.');
-        isValid = false;
-    }
-    if (!confirmPw) {
-        showError('new-password-confirm', 'new-password-confirm-error', '비밀번호 확인을 입력해주세요.');
-        isValid = false;
-    } else if (newPw !== confirmPw) {
-        showError('new-password-confirm', 'new-password-confirm-error', '비밀번호가 일치하지 않습니다.');
-        isValid = false;
-    }
-    if (!isValid) return;
-
     try {
-        const response = await fetch('/account/mypage/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken(),
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            body: JSON.stringify({
-                action: 'change_password',
-                current_password: currentPw,
-                new_password: newPw,
-                new_password_confirm: confirmPw,
-            }),
+        const result = await postMypage({
+            action: 'change_password',
+            current_password: currentPw,
+            new_password: newPw,
+            new_password_confirm: confirmPw,
         });
 
-        const result = await response.json();
-        if (!response.ok || !result.success) {
-            alert(result.message || '비밀번호 변경에 실패했습니다.');
+        mypageModified = false;
+        ['current-password', 'new-password', 'new-password-confirm'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.value = '';
+            setFieldMessage(id, null, '');
+        });
+        updateSaveButtonState();
+        openAlert(result.message || '비밀번호가 변경되었습니다.');
+    } catch (error) {
+        if (error.message === '현재 비밀번호가 일치하지 않습니다') {
+            setFieldMessage('current-password', 'error', error.message);
+            updateSaveButtonState();
             return;
         }
-
-        mypageModified = false;
-        document.getElementById('current-password').value = '';
-        document.getElementById('new-password').value = '';
-        document.getElementById('new-password-confirm').value = '';
-        openAlert('비밀번호가 성공적으로 변경되었습니다.', () => navigateTo('main.html'));
-    } catch (error) {
-        alert('비밀번호 변경 중 오류가 발생했습니다.');
+        if (error.message === '현재 비밀번호와 동일합니다') {
+            setFieldMessage('new-password', 'error', error.message);
+            updateSaveButtonState();
+            return;
+        }
+        openAlert(error.message || '비밀번호 변경에 실패했습니다.');
     }
 }
 
 function confirmWithdrawal() {
-    openAlert('그동안 이용해주셔서 감사합니다', proceedWithdrawal);
+    openAlert('그동안 이용해주셔서 감사합니다.', proceedWithdrawal);
 }
 
 async function proceedWithdrawal() {
     const confirmText = document.getElementById('withdrawal-confirm').value.trim();
 
     try {
-        const response = await fetch('/account/mypage/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken(),
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            body: JSON.stringify({
-                action: 'withdraw',
-                confirm_text: confirmText,
-            }),
+        const result = await postMypage({
+            action: 'withdraw',
+            confirm_text: confirmText,
         });
-
-        const result = await response.json();
-        if (!response.ok || !result.success) {
-            alert(result.message || '회원 탈퇴에 실패했습니다.');
-            return;
-        }
 
         window.location.href = result.redirect_url || '/account/login/';
     } catch (error) {
-        alert('회원 탈퇴 중 오류가 발생했습니다.');
+        openAlert(error.message || '회원 탈퇴에 실패했습니다.');
     }
 }

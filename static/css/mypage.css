@@ -6,6 +6,8 @@
 .tab-btn:hover { color: #666; }
 .tab-btn.active { color: #2B83FF; }
 .tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background-color: #2B83FF; }
+.tab-btn-danger.active { color: #FF3B3B; }
+.tab-btn-danger.active::after { background-color: #FF3B3B; }
 .tab-content-wrapper { flex: 1; overflow-y: auto; padding: 30px 40px; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
@@ -17,6 +19,7 @@
 .form-group label { display: block; font-size: 15px; font-weight: 600; color: #333; margin-bottom: 8px; }
 .form-group input { width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; min-height: 48px; height: 48px; }
 .form-group input:focus { outline: none; border-color: #2B83FF; background-color: #EBF3FF; }
+.form-group input.error { border-color: #FF0000; }
 
 /* Account withdrawal */
 .withdrawal-notice { background-color: #FFF3F3; border: 1px solid #FFD6D6; border-radius: 8px; padding: 20px; margin-bottom: 24px; }

@@ -9,7 +9,7 @@
 
 {% block content %}
     <div class="container">
-        {% include "common/header.html" with title="안전한 하루의 시작, HelpMet과 함께" only %}
+        {% include "common/header.html" with title="안전한 하루의 시작, HelpMet과 함께" back_onclick="location.href='/account/login/'" only %}
 
         <div class="content">
             <div class="success-complete">
@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="success-message-text">
-                    <p>회원가입이 완료되었습니다<br>이제 다양한 서비스를 이용해보세요</p>
+                    <p>회원가입이 완료되었습니다.<br>이제 다양한 서비스를 이용해보세요.</p>
                 </div>
 
                 <button class="btn btn-primary" onclick="location.href='/account/login/'" style="width: auto; min-width: 150px;">로그인</button>

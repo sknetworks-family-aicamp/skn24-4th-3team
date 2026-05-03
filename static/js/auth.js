@@ -19,6 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             const sendBtn = document.getElementById('check-email-btn');
             if (sendBtn) sendBtn.disabled = !emailRegex.test(this.value.trim());
+            sessionStorage.removeItem('registerEmailVerified');
+            hideError('register-email', 'register-email-error');
+            hideSuccess('register-email-success');
+            hideError('register-verification-code', 'register-code-error');
+            hideSuccess('register-code-success');
         });
         // 05_01 회원가입 수정 - 코드 발송 후 이메일 클릭 시 수정 확인 모달 표시
         registerEmail.addEventListener('click', function() {
@@ -116,6 +121,8 @@ let verificationTimer;
 let registerVerificationTimer;
 // 05_01 회원가입 수정 - 인증번호 발송 후 이메일 수정 감지용 플래그
 let isCodeSent = false;
+let isVerifyingRegisterCode = false;
+let isVerifyingFindCode = false;
 
 function startTimerForElement(elementId, duration) {
     const timerElement = document.getElementById(elementId);
@@ -202,6 +209,8 @@ async function sendVerificationCode() {
 }
 
 async function verifyCode() {
+    if (isVerifyingFindCode) return;
+
     const email = document.getElementById('find-email')?.value.trim();
     const code = document.getElementById('verification-code')?.value.trim();
 
@@ -215,6 +224,9 @@ async function verifyCode() {
     }
 
     try {
+        isVerifyingFindCode = true;
+        const verifyBtn = document.getElementById('verify-code-btn');
+        if (verifyBtn) verifyBtn.disabled = true;
         await postJson('/account/verify-certification-code/', { email, code });
         hideError('verification-code', 'code-error');
         showSuccess('code-success', '인증번호가 확인되었습니다.');
@@ -229,7 +241,11 @@ async function verifyCode() {
         if (timer) timer.style.display = 'none';
         checkFindFormComplete();
     } catch (error) {
-        showError('verification-code', 'code-error', error.message || '인증번호 확인에 실패했습니다.');
+        const verifyBtn = document.getElementById('verify-code-btn');
+        if (verifyBtn) verifyBtn.disabled = code.length !== 6;
+        showError('verification-code', 'code-error', error.message || '인증번호가 일치하지 않습니다.');
+    } finally {
+        isVerifyingFindCode = false;
     }
 }
 
@@ -300,20 +316,22 @@ async function checkEmailDuplicate() {
             : '인증번호가 발송되었습니다.';
         showSuccess('register-email-success', msg);
         openAlert('인증번호 발송이 완료되었습니다.\n5분 이내에 인증번호를 입력해주세요');
+        clearInterval(registerVerificationTimer);
+        registerVerificationTimer = startTimerForElement('register-verification-timer', 300);
+        const sendBtn = document.getElementById('check-email-btn');
+        if (sendBtn) sendBtn.textContent = '재전송';
+        isCodeSent = true;
+        sessionStorage.removeItem('registerEmailVerified');
+        document.getElementById('register-email').readOnly = true;
     } catch (error) {
+        hideSuccess('register-email-success');
         showError('register-email', 'register-email-error', error.message || '인증번호 발송에 실패했습니다.');
     }
-
-    // 05_01 회원가입 수정 - 발송 후 버튼 텍스트 재전송, 이메일 readonly
-    clearInterval(registerVerificationTimer);
-    registerVerificationTimer = startTimerForElement('register-verification-timer', 300);
-    const sendBtn = document.getElementById('check-email-btn');
-    if (sendBtn) sendBtn.textContent = '재전송';
-    isCodeSent = true;
-    document.getElementById('register-email').readOnly = true;
 }
 
 async function verifyRegisterCode() {
+    if (isVerifyingRegisterCode) return;
+
     const email = document.getElementById('register-email')?.value.trim();
     const code = document.getElementById('register-verification-code')?.value.trim();
 
@@ -327,6 +345,9 @@ async function verifyRegisterCode() {
     }
 
     try {
+        isVerifyingRegisterCode = true;
+        const verifyBtn = document.getElementById('verify-register-code-btn');
+        if (verifyBtn) verifyBtn.disabled = true;
         await postJson('/account/verify-certification-code/', { email, code });
         hideError('register-verification-code', 'register-code-error');
         showSuccess('register-code-success', '인증번호가 확인되었습니다.');
@@ -342,7 +363,11 @@ async function verifyRegisterCode() {
         if (timer) timer.style.display = 'none';
         checkRegisterFormComplete();
     } catch (error) {
-        showError('register-verification-code', 'register-code-error', error.message || '인증번호 확인에 실패했습니다.');
+        const verifyBtn = document.getElementById('verify-register-code-btn');
+        if (verifyBtn) verifyBtn.disabled = code.length !== 6;
+        showError('register-verification-code', 'register-code-error', error.message || '인증번호가 일치하지 않습니다.');
+    } finally {
+        isVerifyingRegisterCode = false;
     }
 }
 
