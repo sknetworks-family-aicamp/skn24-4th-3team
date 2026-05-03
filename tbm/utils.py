@@ -13,7 +13,7 @@ def parse_weather_text(weather_text: str) -> dict:
     patterns = {
         'temperature':   r'기온\s*([\d.]+)도',
         'humidity':      r'습도\s*([\d]+)%',
-        'weather_status': r',\s*날씨\s+([^,]+)',
+        'weather_status': r'날씨\s*[:\s]\s*([^,]+)',
         'wind_speed':    r'풍속\s*([\d.]+)m/s',
         'precipitation': r'강수량\s*([\d.]+)mm',
     }

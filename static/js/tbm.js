@@ -324,13 +324,17 @@ function completeDraft() {
 // ── 편집 (tbm_edit) ───────────────────────────────────────────────────────────
 
 function confirmCancelEdit() { openConfirm('TBM 수정을 취소하시겠습니까?\n수정하신 모든 내용이 삭제됩니다.', cancelEdit, '예', '아니오'); }
-function cancelEdit() { goBack(); }
+function cancelEdit() { window.location.href = `/tbm/detail/${DRAFT_ID}/`; }
 function confirmDeleteTBM() { openConfirm('TBM 내역을 삭제하시겠습니까?\n삭제된 내용은 복구할 수 없습니다.', deleteTBM, '예', '아니오'); }
 
 async function deleteTBM() {
-    const response = await postJson(`/tbm/delete/${DRAFT_ID}/`);
-    if (response.ok) window.location.href = '/core/dashboard/';
-    else alert('삭제에 실패했습니다.');
+    try {
+        const response = await postJson(`/tbm/delete/${DRAFT_ID}/`);
+        if (response.ok) window.location.href = '/core/dashboard/';
+        else alert('삭제에 실패했습니다.');
+    } catch {
+        alert('네트워크 오류로 삭제에 실패했습니다.');
+    }
 }
 
 // ── 상세 (tbm_detail) ─────────────────────────────────────────────────────────
@@ -338,9 +342,13 @@ async function deleteTBM() {
 function confirmDeleteTBMDetail() { openConfirm('TBM 내역을 삭제하시겠습니까?\n삭제된 내용은 복구할 수 없습니다.', deleteTBMDetail, '예', '아니오'); }
 
 async function deleteTBMDetail() {
-    const response = await postJson(`/tbm/delete/${DRAFT_ID}/`);
-    if (response.ok) window.location.href = '/core/dashboard/';
-    else alert('삭제에 실패했습니다.');
+    try {
+        const response = await postJson(`/tbm/delete/${DRAFT_ID}/`);
+        if (response.ok) window.location.href = '/core/dashboard/';
+        else alert('삭제에 실패했습니다.');
+    } catch {
+        alert('네트워크 오류로 삭제에 실패했습니다.');
+    }
 }
 
 function editTBMDetail() {

@@ -130,7 +130,7 @@ async function saveInfoChanges() {
         }
 
         mypageModified = false;
-        openAlert('개인정보가 성공적으로 변경되었습니다.');
+        openAlert('개인정보가 성공적으로 변경되었습니다.', () => navigateTo('main.html'));
     } catch (error) {
         alert('개인정보 수정 중 오류가 발생했습니다.');
     }
@@ -190,7 +190,7 @@ async function savePasswordChanges() {
         document.getElementById('current-password').value = '';
         document.getElementById('new-password').value = '';
         document.getElementById('new-password-confirm').value = '';
-        openAlert('개인정보가 성공적으로 변경되었습니다.');
+        openAlert('비밀번호가 성공적으로 변경되었습니다.', () => navigateTo('main.html'));
     } catch (error) {
         alert('비밀번호 변경 중 오류가 발생했습니다.');
     }
