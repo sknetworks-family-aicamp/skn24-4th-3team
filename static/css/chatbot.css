@@ -67,6 +67,7 @@
     max-width: 800px;
     width: 100%;
     margin: 0 auto;
+    align-items: stretch;
 }
 
 /* 개별 메시지 줄 (아바타 + 내용) */
