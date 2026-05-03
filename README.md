@@ -115,7 +115,7 @@
       <td align="center"><b>Database</b></td>
       <td>
         <img src="https://img.shields.io/badge/AWS_RDS_(MySQL)-527FFF?style=for-the-badge&logo=amazon-rds&logoColor=white">
-        <img src="https://img.shields.io/badge/Pinecone_(VDB)-000000?style=for-the-badge&logo=pinecone&logoColor=white">
+        <img src="https://img.shields.io/badge/chromaDB-CC1412?style=for-the-badge&logo=pinecone&logoColor=white">
       </td>
     </tr>
     <tr>
