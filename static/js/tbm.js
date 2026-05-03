@@ -249,10 +249,12 @@ function showShortRecordingPopup() {
     showPopup('popup-short-recording');
 }
 
-async function restartShortRecording() {
+function resetShortRecording() {
     closePopup('popup-short-recording');
     discardRecordingData();
-    await startRecording();
+    const timer = document.getElementById('timer');
+    if (timer) timer.style.display = 'none';
+    changeRecordingState('ready');
 }
 
 function discardRecordingData() {

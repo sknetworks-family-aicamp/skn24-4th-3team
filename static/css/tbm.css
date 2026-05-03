@@ -30,6 +30,7 @@
 /* Recording button group (prevent text wrapping issues) */
 .button-group-recording { display: flex; gap: 16px; justify-content: center; }
 .button-group-recording .btn { min-width: 150px; width: auto; padding: 16px 24px; white-space: nowrap; word-break: keep-all; }
+.button-group-recording .btn-primary { border-radius: 35px; font-size: 16px; font-weight: 600; }
 .btn-pause { background: linear-gradient(135deg, #FF5757 0%, #FF3B3B 100%); color: #ffffff; border: none; border-radius: 35px; padding: 16px 36px; font-size: 16px; font-weight: 600; cursor: pointer; white-space: nowrap; }
 .btn-stop { background: #4A4A4A; color: #ffffff; border: none; border-radius: 35px; padding: 16px 36px; font-size: 16px; font-weight: 600; cursor: pointer; white-space: nowrap; }
 

@@ -135,8 +135,8 @@ SESSION_COOKIE_AGE = 3600
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'otp-verification-cache',
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': os.getenv("REDIS_URL", "redis://redis:6379/1"),
     }
 }
 

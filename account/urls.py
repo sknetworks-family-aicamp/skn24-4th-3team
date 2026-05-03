@@ -13,4 +13,5 @@ urlpatterns = [
     path("password/find/", views.password_find_view, name="password-find"),
     path("send-verification-code/", views.send_verification_code, name="send-verification-code"),
     path("verify-certification-code/", views.verify_certification_code, name="verify-certification-code"),
+    path("verify-current-password/", views.verify_current_password, name="verify-current-password"),
 ]

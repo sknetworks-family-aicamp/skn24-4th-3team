@@ -26,6 +26,7 @@
     text-align: center;
     margin-bottom: 60px;
 }
+.chat-intro.hidden { display: none; }
 .intro-logo { margin-bottom: 20px; }
 .logo-text { font-size: 24px; font-weight: 800; color: #1a2b4c; background-color: #f1f5f9; display: inline-block; padding: 4px 16px; border-radius: 12px; margin-top: -10px; }
 .chat-intro h2 { font-size: 24px; font-weight: 700; color: #333; margin-bottom: 12px; }
@@ -58,7 +59,7 @@
 }
 
 .user-row { 
-    justify-content: flex-end; 
+    justify-content: flex-start; 
     align-items: flex-start; 
 }
 
@@ -84,7 +85,7 @@
 
 /* Message content (bubble + time) */
 .message-content { display: flex; flex-direction: column; max-width: 70%; }
-.user-row .message-content { align-items: flex-end; }
+.user-row .message-content { align-items: flex-start; }
 .bot-row .message-content { align-items: flex-start; }
 
 /* Common bubble styles */
@@ -100,7 +101,7 @@
 .user-bubble {
     background-color: #E2E8F0;
     color: #333;
-    border-radius: 20px 20px 0 20px; /* Only the bottom-right corner is square */
+    border-radius: 0 20px 20px 20px;
 }
 
 /* Chatbot bubble (left tail) */

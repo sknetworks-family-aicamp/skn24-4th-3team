@@ -349,6 +349,32 @@ def verify_certification_code(request):
     })
 
 
+@login_required
+@require_POST
+def verify_current_password(request):
+    data = get_request_data(request)
+    current_password = data.get("current_password", "")
+
+    if not current_password:
+        return JsonResponse({
+            "success": False,
+            "message": "현재 비밀번호를 입력해주세요.",
+        }, status=400)
+
+    if not request.user.check_password(current_password):
+        return JsonResponse({
+            "success": False,
+            "message": "현재 비밀번호가 일치하지 않습니다.",
+            "valid": False,
+        }, status=400)
+
+    return JsonResponse({
+        "success": True,
+        "message": "현재 비밀번호가 일치합니다.",
+        "valid": True,
+    })
+
+
 def password_find_view(request):
     if request.method == "GET":
         return render(request, "account/password_find.html")

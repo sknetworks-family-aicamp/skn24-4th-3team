@@ -2,6 +2,9 @@
 
 let currentMypageTab = 'info';
 let mypageModified = false;
+let currentPasswordValid = false;
+let currentPasswordCheckTimer = null;
+let currentPasswordRequestSeq = 0;
 
 const INFO_FIELD_RULES = {
     'info-name': {
@@ -36,7 +39,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    ['current-password', 'new-password', 'new-password-confirm'].forEach(id => {
+    const currentPassword = document.getElementById('current-password');
+    if (currentPassword) {
+        currentPassword.addEventListener('input', () => {
+            mypageModified = true;
+            currentPasswordValid = false;
+            validatePasswordForm();
+            scheduleCurrentPasswordCheck();
+            updateSaveButtonState();
+        });
+    }
+
+    ['new-password', 'new-password-confirm'].forEach(id => {
         const input = document.getElementById(id);
         if (!input) return;
         input.addEventListener('input', () => {
@@ -70,8 +84,8 @@ function getCsrfToken() {
     return '';
 }
 
-async function postMypage(payload) {
-    const response = await fetch('/account/mypage/', {
+async function postJson(url, payload) {
+    const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -159,6 +173,42 @@ function validateInfoForm() {
     return changed && valid;
 }
 
+function scheduleCurrentPasswordCheck() {
+    clearTimeout(currentPasswordCheckTimer);
+    const currentPw = document.getElementById('current-password')?.value || '';
+
+    if (!currentPw) {
+        currentPasswordValid = false;
+        setFieldMessage('current-password', null, '');
+        updateSaveButtonState();
+        return;
+    }
+
+    currentPasswordCheckTimer = setTimeout(() => {
+        checkCurrentPassword(currentPw);
+    }, 350);
+}
+
+async function checkCurrentPassword(currentPw) {
+    const seq = ++currentPasswordRequestSeq;
+
+    try {
+        await postJson('/account/verify-current-password/', { current_password: currentPw });
+        if (seq !== currentPasswordRequestSeq) return;
+        currentPasswordValid = true;
+        setFieldMessage('current-password', 'success', '현재 비밀번호가 일치합니다.');
+    } catch (error) {
+        if (seq !== currentPasswordRequestSeq) return;
+        currentPasswordValid = false;
+        setFieldMessage('current-password', 'error', error.message || '현재 비밀번호가 일치하지 않습니다.');
+    } finally {
+        if (seq === currentPasswordRequestSeq) {
+            validatePasswordForm();
+            updateSaveButtonState();
+        }
+    }
+}
+
 function getPasswordValidationMessage(password) {
     if (!password) return '';
     const errors = [];
@@ -175,10 +225,7 @@ function validatePasswordForm() {
     const newPw = document.getElementById('new-password')?.value || '';
     const confirmPw = document.getElementById('new-password-confirm')?.value || '';
 
-    let valid = true;
-
-    if (currentPw) setFieldMessage('current-password', null, '');
-    if (!currentPw) valid = false;
+    let valid = Boolean(currentPw && currentPasswordValid);
 
     const passwordError = getPasswordValidationMessage(newPw);
     if (passwordError) {
@@ -271,7 +318,7 @@ async function saveInfoChanges() {
     const position = document.getElementById('info-position').value.trim();
 
     try {
-        const result = await postMypage({
+        const result = await postJson('/account/mypage/', {
             action: 'update_info',
             name,
             company,
@@ -300,7 +347,7 @@ async function savePasswordChanges() {
     const confirmPw = document.getElementById('new-password-confirm').value;
 
     try {
-        const result = await postMypage({
+        const result = await postJson('/account/mypage/', {
             action: 'change_password',
             current_password: currentPw,
             new_password: newPw,
@@ -308,6 +355,7 @@ async function savePasswordChanges() {
         });
 
         mypageModified = false;
+        currentPasswordValid = false;
         ['current-password', 'new-password', 'new-password-confirm'].forEach(id => {
             const input = document.getElementById(id);
             if (input) input.value = '';
@@ -338,7 +386,7 @@ async function proceedWithdrawal() {
     const confirmText = document.getElementById('withdrawal-confirm').value.trim();
 
     try {
-        const result = await postMypage({
+        const result = await postJson('/account/mypage/', {
             action: 'withdraw',
             confirm_text: confirmText,
         });
