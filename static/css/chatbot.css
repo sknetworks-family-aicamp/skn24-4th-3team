@@ -59,7 +59,7 @@
 }
 
 .user-row { 
-    justify-content: flex-start; 
+    justify-content: flex-end; 
     align-items: flex-start; 
 }
 
@@ -85,7 +85,7 @@
 
 /* Message content (bubble + time) */
 .message-content { display: flex; flex-direction: column; max-width: 70%; }
-.user-row .message-content { align-items: flex-start; }
+.user-row .message-content { align-items: flex-end; }
 .bot-row .message-content { align-items: flex-start; }
 
 /* Common bubble styles */
@@ -101,7 +101,7 @@
 .user-bubble {
     background-color: #E2E8F0;
     color: #333;
-    border-radius: 0 20px 20px 20px;
+    border-radius: 20px 20px 0 20px;
 }
 
 /* Chatbot bubble (left tail) */
