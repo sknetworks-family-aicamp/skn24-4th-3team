@@ -151,7 +151,7 @@
 ![요구사항정의서](docs/images/요구사항정의서3.png)
 
 ## 6. 화면설계서
-![화면설계서](이미지_경로_또는_URL)
+[화면설계서](./docs/screen_design/)
 
 ## 7. WBS
 ![WBS](./docs/images/WBS.png)
