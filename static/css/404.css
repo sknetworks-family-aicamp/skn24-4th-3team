@@ -1,0 +1,74 @@
+/* 404.css */
+
+.error-container {
+    width: 1000px;
+    height: 950px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* 에러 컨텐츠 영역 */
+.error-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 80px;
+}
+
+/* 이미지 및 텍스트 디자인 */
+.error-img {
+    width: 320px;
+    margin-bottom: 20px;
+}
+
+.error-code {
+    font-size: 36px;
+    font-weight: 900;
+    color: #111;
+    margin-bottom: 25px;
+}
+
+.error-text-group {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.error-main-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.error-sub-text {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* 홈으로 버튼 */
+.error-btn {
+    width: 200px;
+    height: 56px;
+    background-color: #2B83FF;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+.error-btn:hover {
+    background-color: #1a6de0;
+}
