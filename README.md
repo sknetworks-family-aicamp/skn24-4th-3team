@@ -151,6 +151,16 @@
 ![요구사항정의서](docs/images/요구사항정의서3.png)
 
 ## 6. 화면설계서
+메인 대시보드
+<img width="2479" height="1552" alt="메인 대시보드" src="https://github.com/user-attachments/assets/8c61460f-4fd9-42f8-9aab-46d7257af8fb" />
+TBM 작성- 녹음시작
+<img width="2479" height="1237" alt="TBM 작성- 녹음시작" src="https://github.com/user-attachments/assets/a9df7cad-8416-457a-9a55-8a233f469a8a" />
+TBM작성 - 초안확인
+<img width="2479" height="1237" alt="TBM작성 - 초안확인" src="https://github.com/user-attachments/assets/2ae49b14-16f4-490c-8638-39d544299217" />
+챗봇
+<img width="2479" height="1237" alt="챗봇" src="https://github.com/user-attachments/assets/0d96c819-1329-4b84-abce-8e21942cf3e1" />
+
+
 [화면설계서 PDF](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN24-4th-3Team/tree/main/docs/screen_design)
 
 ## 7. WBS
