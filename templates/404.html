@@ -1,35 +1,32 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TBM 현장관리 - 404 ERROR</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/common.css">
-    <link rel="stylesheet" href="../css/404.css">
-</head>
-<body>
-    <div class="container">
-        <!-- 공통 헤더 규격과 완벽하게 일치시킨 헤더 -->
-        <div class="header error-header-fix">
-            <span class="title">HelpMet</span>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}HelpMet - 404 ERROR{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/404.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header error-header-fix">
+        <span class="title">HelpMet</span>
+    </div>
+
+    <main class="content error-content-fix">
+        <img src="{% static 'images/helpmet.png' %}" alt="HelpMet" class="error-img">
+
+        <h1 class="error-code">404 ERROR</h1>
+
+        <div class="error-text-group">
+            <p class="error-main-text">죄송합니다. 페이지를 찾을 수 없습니다.</p>
+            <p class="error-sub-text">
+                존재하지 않는 주소를 입력했거나<br>
+                요청하신 페이지의 주소가 변경 또는 삭제되었습니다.
+            </p>
         </div>
 
-        <div class="content error-content-fix">
-            <img src="/image/helpmet_logo.png" alt="HelpMet봇" class="error-img">
-            
-            <h1 class="error-code">404 ERROR</h1>
-            
-            <div class="error-text-group">
-                <p class="error-main-text">죄송합니다. 페이지를 찾을 수 없습니다.</p>
-                <p class="error-sub-text">
-                    존재하지 않는 주소를 입력하셨거나<br>
-                    요청하신 페이지의 주소가 변경, 삭제되어 찾을 수 없습니다.
-                </p>
-            </div>
-            
-            <button class="error-btn" onclick="location.href='dashboard.html'">홈으로</button>
-        </div>
-    </div>
-</body>
-</html>
+        <a class="error-btn" href="{% url 'dashboard' %}">홈으로</a>
+    </main>
+</div>
+{% endblock %}
